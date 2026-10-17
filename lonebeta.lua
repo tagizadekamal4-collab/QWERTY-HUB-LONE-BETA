@@ -1,3 +1,4 @@
+-- ==================== QWERTY-HUB | LONE-BETA (V17 FOV FIX) ====================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -21,3207 +22,477 @@ H.THEMES = {
     Orange = {Accent=Color3.fromRGB(255,140,40),  AccentHi=Color3.fromRGB(255,190,110), Purple=Color3.fromRGB(255,90,60),   Cyan=Color3.fromRGB(255,200,80),  Pink=Color3.fromRGB(255,120,90), Success=Color3.fromRGB(60,220,130), Danger=Color3.fromRGB(255,75,95),  Warning=Color3.fromRGB(255,185,60)},
     Mono   = {Accent=Color3.fromRGB(180,180,190), AccentHi=Color3.fromRGB(230,230,240), Purple=Color3.fromRGB(140,140,150), Cyan=Color3.fromRGB(200,200,210), Pink=Color3.fromRGB(160,160,170), Success=Color3.fromRGB(60,220,130), Danger=Color3.fromRGB(255,75,95),  Warning=Color3.fromRGB(255,185,60)},
 }
-H.THEME = {
-    BG = Color3.fromRGB(10,10,16), Panel = Color3.fromRGB(18,18,26), PanelHi = Color3.fromRGB(28,28,38),
-    Border = Color3.fromRGB(55,55,75),
-    Text = Color3.fromRGB(245,245,255), TextDim = Color3.fromRGB(160,165,185), TextMuted = Color3.fromRGB(90,95,115),
-    Shadow = Color3.fromRGB(0,0,0),
-}
+H.THEME = {BG = Color3.fromRGB(10,10,16), Panel = Color3.fromRGB(18,18,26), PanelHi = Color3.fromRGB(28,28,38), Border = Color3.fromRGB(55,55,75), Text = Color3.fromRGB(245,245,255), TextDim = Color3.fromRGB(160,165,185), TextMuted = Color3.fromRGB(90,95,115), Shadow = Color3.fromRGB(0,0,0)}
 for k, v in pairs(H.THEMES.Blue) do H.THEME[k] = v end
-H.applyTheme = function(name)
-    local t = H.THEMES[name]; if not t then return end
-    for k, v in pairs(t) do H.THEME[k] = v end
-end
+H.applyTheme = function(name) local t = H.THEMES[name]; if not t then return end; for k, v in pairs(t) do H.THEME[k] = v end end
 
 H.corner = function(p, r) local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(0, r or 8); c.Parent = p; return c end
-H.stroke = function(p, col, th, tr)
-    local s = Instance.new("UIStroke"); s.Color = col or H.THEME.Border; s.Thickness = th or 1
-    s.Transparency = tr or 0; s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; s.Parent = p; return s
-end
-H.grad = function(p, c1, c2, rot)
-    local g = Instance.new("UIGradient"); g.Color = ColorSequence.new(c1, c2)
-    g.Rotation = rot or 90; g.Parent = p; return g
-end
-H.shadow = function(parent, size, transparency)
-    local s = Instance.new("Frame")
-    s.Size = UDim2.new(1, size or 20, 1, size or 20)
-    s.Position = UDim2.new(0.5, 0, 0.5, 0)
-    s.AnchorPoint = Vector2.new(0.5, 0.5)
-    s.BackgroundColor3 = H.THEME.Shadow
-    s.BackgroundTransparency = transparency or 0.5
-    s.BorderSizePixel = 0
-    s.ZIndex = parent.ZIndex - 1
-    s.Parent = parent
-    H.corner(s, 999)
-    local g = Instance.new("UIGradient")
-    g.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0), NumberSequenceKeypoint.new(1,1)})
-    g.Parent = s
-    return s
-end
-H.glow = function(parent, color, transparency)
-    local g = Instance.new("Frame")
-    g.Size = UDim2.new(1, 12, 1, 12)
-    g.Position = UDim2.new(0.5, 0, 0.5, 0)
-    g.AnchorPoint = Vector2.new(0.5, 0.5)
-    g.BackgroundColor3 = color or H.THEME.Accent
-    g.BackgroundTransparency = transparency or 0.7
-    g.BorderSizePixel = 0
-    g.ZIndex = parent.ZIndex - 1
-    g.Parent = parent
-    H.corner(g, 999)
-    local gr = Instance.new("UIGradient")
-    gr.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0), NumberSequenceKeypoint.new(1,1)})
-    gr.Parent = g
-    return g
-end
+H.stroke = function(p, col, th, tr) local s = Instance.new("UIStroke"); s.Color = col or H.THEME.Border; s.Thickness = th or 1; s.Transparency = tr or 0; s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; s.Parent = p; return s end
+H.grad = function(p, c1, c2, rot) local g = Instance.new("UIGradient"); g.Color = ColorSequence.new(c1, c2); g.Rotation = rot or 90; g.Parent = p; return g end
+H.shadow = function(parent, size, transparency) local s = Instance.new("Frame"); s.Size = UDim2.new(1, size or 20, 1, size or 20); s.Position = UDim2.new(0.5, 0, 0.5, 0); s.AnchorPoint = Vector2.new(0.5, 0.5); s.BackgroundColor3 = H.THEME.Shadow; s.BackgroundTransparency = transparency or 0.5; s.BorderSizePixel = 0; s.ZIndex = parent.ZIndex - 1; s.Parent = parent; H.corner(s, 999); local g = Instance.new("UIGradient"); g.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0), NumberSequenceKeypoint.new(1,1)}); g.Parent = s; return s end
+H.glow = function(parent, color, transparency) local g = Instance.new("Frame"); g.Size = UDim2.new(1, 12, 1, 12); g.Position = UDim2.new(0.5, 0, 0.5, 0); g.AnchorPoint = Vector2.new(0.5, 0.5); g.BackgroundColor3 = color or H.THEME.Accent; g.BackgroundTransparency = transparency or 0.7; g.BorderSizePixel = 0; g.ZIndex = parent.ZIndex - 1; g.Parent = parent; H.corner(g, 999); local gr = Instance.new("UIGradient"); gr.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0), NumberSequenceKeypoint.new(1,1)}); gr.Parent = g; return g end
 
 H.State = {
-    Aimbot=false, AimbotSmooth=80, AimbotFOV=150, ShowAimbotFOV=false,
+    Aimbot=false, AimbotSmooth=80, AimbotFOV=90, ShowAimbotFOV=true, AimbotKey=Enum.UserInputType.MouseButton2, AimbotWallCheck=true,
     HitboxExpand=false, HitboxPart="Body", HitboxSize=8, NPCHitbox=false,
-    PlayerESP=false, ESPBox=true, ESPName=true, ESPDistance=true,
-    ESPHealth=true, ESPSMaxDist=1000, ESPSkeleton=false, ESPSkeletonColor="Accent",
-    ESPBoxFilled=false, ESPBoxColor="Cyan", ESPBoxThickness=2,
-    ESPTracer=false, ESPTracerOrigin="Top", ESPTracerThickness=2, NPCEsp=false, Chams=false,
-    Fullbright=false, RemoveGrass=false, RemoveLeaves=false, Fly=false, FlySpeed=50,
-    Noclip=false, DoubleJump=false, AntiFall=false, SpeedHack=false, WalkSpeedValue=60,
-    Zoom=false, ZoomKey=Enum.KeyCode.Z, ZoomValue=20, FOVChanger=false, FOVValue=90,
-    FreeCam=false, FreeCamKey=Enum.KeyCode.V, FreeCamSpeed=50,
-    FlyKey=Enum.KeyCode.G, NoclipKey=Enum.KeyCode.N, SpeedKey=Enum.KeyCode.M, AntiFallKey=Enum.KeyCode.F,
-    Crosshair=true, CrosshairShape="Cross", CrosshairSize=12, CrosshairGap=4,
-    CrosshairThickness=2, CrosshairSpin=0, CrosshairRGB=false, CrosshairRGBSpeed=5,
-    AntiAim=false, AntiAimType="Spin", AntiAimSpinSpeed=10, AntiAimJitter=10,
-    Watermark=true, AntiAFK=false, TimeChanger=false, TimeValue=12, Theme="Blue",
-    ProfileName="default", UISoundEnabled=true, UISoundVolume=50,
+    PlayerESP=false, ESPBox=true, ESPName=true, ESPDistance=true, ESPHealth=true, ESPSMaxDist=1000, ESPSkeleton=false, ESPSkeletonColor="Accent",
+    ESPBoxFilled=false, ESPBoxColor="Cyan", ESPBoxThickness=2, ESPTracer=false, ESPTracerOrigin="Top", ESPTracerThickness=2, Chams=false,
+    NPCEsp=false, Fullbright=false, RemoveGrass=false, RemoveLeaves=false, Fly=false, FlySpeed=50, Noclip=false,
+    DoubleJump=false, AntiFall=false, SpeedHack=false, WalkSpeedValue=60, Zoom=false, ZoomKey=Enum.KeyCode.Z, ZoomValue=20,
+    FOVChanger=false, FOVValue=90, FreeCam=false, FreeCamKey=Enum.KeyCode.V, FreeCamSpeed=50, FlyKey=Enum.KeyCode.G,
+    NoclipKey=Enum.KeyCode.N, SpeedKey=Enum.KeyCode.M, AntiFallKey=Enum.KeyCode.F, Crosshair=true, CrosshairShape="Star",
+    CrosshairSize=12, CrosshairGap=4, CrosshairThickness=2, CrosshairSpin=0, CrosshairRGB=false, CrosshairRGBSpeed=5,
+    AntiAim=false, AntiAimType="Spin", AntiAimSpinSpeed=10, AntiAimJitter=10, Watermark=true, AntiAFK=false,
+    TimeChanger=false, TimeValue=12, Theme="Blue", ProfileName="default", UISoundEnabled=true, UISoundVolume=50,
 }
 
-H.CFG_FOLDER = "qwerty_hub"
-H.CFG_PROFILES = "qwerty_hub/profiles"
-H.CFG_ACTIVE = "qwerty_hub/active_profile.txt"
-H.ensureFolders = function()
-    if not makefolder then return end
-    pcall(function()
-        if not isfolder(H.CFG_FOLDER) then makefolder(H.CFG_FOLDER) end
-        if not isfolder(H.CFG_PROFILES) then makefolder(H.CFG_PROFILES) end
-    end)
-end
-H.serializeValue = function(v)
-    if typeof(v) == "EnumItem" then return {__t="E", v=v.Name, enum=tostring(v.EnumType)} end
-    return v
-end
-H.deserializeValue = function(v)
-    if type(v) == "table" and v.__t == "E" then return Enum[v.enum][v.v] end
-    return v
-end
-H.saveProfile = function(name)
-    H.ensureFolders(); if not writefile then return false end
-    name = name or H.State.ProfileName or "default"
-    local data = {}
-    for k, v in pairs(H.State) do data[k] = H.serializeValue(v) end
-    local ok = pcall(function() writefile(H.CFG_PROFILES .. "/" .. name .. ".json", game:GetService("HttpService"):JSONEncode(data)) end)
-    pcall(function() writefile(H.CFG_ACTIVE, name) end)
-    return ok
-end
-H.loadProfile = function(name)
-    if not isfile then return false end
-    name = name or H.State.ProfileName or "default"
-    local path = H.CFG_PROFILES .. "/" .. name .. ".json"
-    if not isfile(path) then return false end
-    local ok, data = pcall(function() return readfile(path) end)
-    if not ok or not data then return false end
-    local dok, decoded = pcall(function() return game:GetService("HttpService"):JSONDecode(data) end)
-    if not dok or not decoded then return false end
-    for k, v in pairs(decoded) do
-        if H.State[k] ~= nil then H.State[k] = H.deserializeValue(v) end
-    end
-    return true
-end
-H.listProfiles = function()
-    H.ensureFolders(); local out = {}
-    if not listfiles then return out end
-    local ok, files = pcall(function() return listfiles(H.CFG_PROFILES) end)
-    if not ok or not files then return out end
-    for _, f in ipairs(files) do
-        local n = f:match("([^/\\]+)%.json$")
-        if n then table.insert(out, n) end
-    end
-    return out
-end
+H.CFG_FOLDER = "qwerty_hub"; H.CFG_PROFILES = "qwerty_hub/profiles"; H.CFG_ACTIVE = "qwerty_hub/active_profile.txt"
+H.ensureFolders = function() if not makefolder then return end; pcall(function() if not isfolder(H.CFG_FOLDER) then makefolder(H.CFG_FOLDER) end; if not isfolder(H.CFG_PROFILES) then makefolder(H.CFG_PROFILES) end end) end
+H.serializeValue = function(v) if typeof(v) == "EnumItem" then return {__t="E", v=v.Name, enum=tostring(v.EnumType)} end return v end
+H.deserializeValue = function(v) if type(v) == "table" and v.__t == "E" then return Enum[v.enum][v.v] end return v end
+H.saveProfile = function(name) H.ensureFolders(); if not writefile then return false end; name = name or H.State.ProfileName or "default"; local data = {}; for k, v in pairs(H.State) do data[k] = H.serializeValue(v) end; local ok = pcall(function() writefile(H.CFG_PROFILES .. "/" .. name .. ".json", game:GetService("HttpService"):JSONEncode(data)) end); pcall(function() writefile(H.CFG_ACTIVE, name) end); return ok end
+H.loadProfile = function(name) if not isfile then return false end; name = name or H.State.ProfileName or "default"; local path = H.CFG_PROFILES .. "/" .. name .. ".json"; if not isfile(path) then return false end; local ok, data = pcall(function() return readfile(path) end); if not ok or not data then return false end; local dok, decoded = pcall(function() return game:GetService("HttpService"):JSONDecode(data) end); if not dok or not decoded then return false end; for k, v in pairs(decoded) do if H.State[k] ~= nil then H.State[k] = H.deserializeValue(v) end end; return true end
+H.listProfiles = function() H.ensureFolders(); local out = {}; if not listfiles then return out end; local ok, files = pcall(function() return listfiles(H.CFG_PROFILES) end); if not ok or not files then return out end; for _, f in ipairs(files) do local n = f:match("([^/\\]+)%.json$"); if n then table.insert(out, n) end end; return out end
 
-H.soundHolder = Instance.new("Folder")
-H.soundHolder.Name = "QwertySounds"
-H.soundHolder.Parent = SoundService
-H.UI_SOUNDS = {
-    Click = "rbxassetid://6895079853", Hover = "rbxassetid://6895079507",
-    ToggleOn = "rbxassetid://6895079853", ToggleOff = "rbxassetid://6895079507",
-    Open = "rbxassetid://6895079507", Close = "rbxassetid://6895079507",
-}
-H.playSound = function(name, volume, pitch)
-    if not H.State.UISoundEnabled then return end
-    local id = H.UI_SOUNDS[name]; if not id then return end
-    local s = Instance.new("Sound")
-    s.SoundId = id
-    s.Volume = (volume or 0.5) * ((H.State.UISoundVolume or 50) / 50)
-    s.PlaybackSpeed = pitch or 1
-    s.Parent = H.soundHolder
-    pcall(function() s:Play() end)
-    task.delay(5, function() if s then s:Destroy() end end)
-end
+H.soundHolder = Instance.new("Folder"); H.soundHolder.Name = "QwertySounds"; H.soundHolder.Parent = SoundService
+H.UI_SOUNDS = {Click = "rbxassetid://6895079853", Hover = "rbxassetid://6895079507", ToggleOn = "rbxassetid://6895079853", ToggleOff = "rbxassetid://6895079507", Open = "rbxassetid://6895079507", Close = "rbxassetid://6895079507"}
+H.playSound = function(name, volume, pitch) if not H.State.UISoundEnabled then return end; local id = H.UI_SOUNDS[name]; if not id then return end; local s = Instance.new("Sound"); s.SoundId = id; s.Volume = (volume or 0.5) * ((H.State.UISoundVolume or 50) / 50); s.PlaybackSpeed = pitch or 1; s.Parent = H.soundHolder; pcall(function() s:Play() end); task.delay(5, function() if s then s:Destroy() end end) end
 
-H.KEY_FILE = "qwerty_hub_key.txt"
-H.CORRECT_KEY = "LoneBetaKey"
-H.CHECKPOINT_LINK = "https://work.ink/XXXXX"
-H.loadKey = function()
-    if not isfile then return nil end
-    local ok, data = pcall(function() if isfile(H.KEY_FILE) then return readfile(H.KEY_FILE) end end)
-    if ok and data then return data:gsub("%s", "") end
-end
+H.KEY_FILE = "qwerty_hub_key.txt"; H.CORRECT_KEY = "LoneBetaKey"; H.CHECKPOINT_LINK = "https://discord.gg/C5Z43gku8U"
+H.loadKey = function() if not isfile then return nil end; local ok, data = pcall(function() if isfile(H.KEY_FILE) then return readfile(H.KEY_FILE) end end); if ok and data then return data:gsub("%s", "") end end
 H.saveKey = function(key) if not writefile then return end; pcall(function() writefile(H.KEY_FILE, key) end) end
 
-H.keyGui = Instance.new("ScreenGui")
-H.keyGui.Name = "QwertyKey"
-H.keyGui.ResetOnSpawn = false
-H.keyGui.IgnoreGuiInset = true
-H.keyGui.DisplayOrder = 1002
-H.keyGui.Parent = PlayerGui
-
-H.kBg = Instance.new("Frame")
-H.kBg.Size = UDim2.new(1, 0, 1, 0)
-H.kBg.BackgroundColor3 = H.THEME.BG
-H.kBg.BorderSizePixel = 0
-H.kBg.ZIndex = 6000
-H.kBg.Parent = H.keyGui
+H.keyGui = Instance.new("ScreenGui"); H.keyGui.Name = "QwertyKey"; H.keyGui.ResetOnSpawn = false; H.keyGui.IgnoreGuiInset = true; H.keyGui.DisplayOrder = 1002; H.keyGui.Parent = PlayerGui
+H.kBg = Instance.new("Frame"); H.kBg.Size = UDim2.new(1, 0, 1, 0); H.kBg.BackgroundColor3 = H.THEME.BG; H.kBg.BorderSizePixel = 0; H.kBg.ZIndex = 6000; H.kBg.Parent = H.keyGui
 H.kBgGrad = H.grad(H.kBg, Color3.fromRGB(8,8,16), Color3.fromRGB(20,12,35), 135)
-task.spawn(function()
-    while H.kBg.Parent do
-        for r = 0, 360, 2 do
-            if not H.kBg.Parent then break end
-            H.kBgGrad.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
-
-for x = 0, 40 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(0, 1, 1, 0)
-    l.Position = UDim2.new(0, x*40, 0, 0)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.95
-    l.BorderSizePixel = 0
-    l.ZIndex = 6000
-    l.Parent = H.kBg
-end
-for y = 0, 25 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(1, 0, 0, 1)
-    l.Position = UDim2.new(0, 0, 0, y*40)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.95
-    l.BorderSizePixel = 0
-    l.ZIndex = 6000
-    l.Parent = H.kBg
-end
+task.spawn(function() while H.kBg.Parent do for r = 0, 360, 2 do if not H.kBg.Parent then break end H.kBgGrad.Rotation = r; RunService.RenderStepped:Wait() end end end)
+for x = 0, 40 do local l = Instance.new("Frame"); l.Size = UDim2.new(0, 1, 1, 0); l.Position = UDim2.new(0, x*40, 0, 0); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.95; l.BorderSizePixel = 0; l.ZIndex = 6000; l.Parent = H.kBg end
+for y = 0, 25 do local l = Instance.new("Frame"); l.Size = UDim2.new(1, 0, 0, 1); l.Position = UDim2.new(0, 0, 0, y*40); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.95; l.BorderSizePixel = 0; l.ZIndex = 6000; l.Parent = H.kBg end
 
 H.kParticles = {}
-for i = 1, 100 do
-    local p = Instance.new("Frame")
-    local sz = math.random(2,7)
-    p.Size = UDim2.new(0, sz, 0, sz)
-    p.Position = UDim2.new(math.random(), 0, math.random(), 0)
-    p.BackgroundColor3 = i % 3 == 0 and H.THEME.AccentHi or (i % 3 == 1 and H.THEME.Pink or H.THEME.Cyan)
-    p.BackgroundTransparency = math.random(20,70)/100
-    p.BorderSizePixel = 0
-    p.ZIndex = 6001
-    p.Parent = H.kBg
-    H.corner(p, 999)
-    local g = H.glow(p, p.BackgroundColor3, 0.5)
-    table.insert(H.kParticles, {frame=p, glow=g, sx=(math.random()-0.5)*0.0008, sy=-math.random(1,7)*0.0004, pulse=math.random()*math.pi*2, drift=(math.random()-0.5)*0.0004})
-end
-task.spawn(function()
-    while H.kBg.Parent do
-        local dt = RunService.RenderStepped:Wait()
-        for _, pt in ipairs(H.kParticles) do
-            local pos = pt.frame.Position
-            local nx = pos.X.Scale + pt.sx + math.sin(tick()*2 + pt.pulse) * pt.drift
-            local ny = pos.Y.Scale + pt.sy
-            if ny < -0.05 then ny = 1.05; nx = math.random() end
-            if nx < -0.05 then nx = 1.05 end
-            if nx > 1.05 then nx = -0.05 end
-            pt.frame.Position = UDim2.new(nx, 0, ny, 0)
-            pt.pulse = pt.pulse + dt * 3
-            local t = 0.3 + math.sin(pt.pulse)*0.35
-            pt.frame.BackgroundTransparency = t
-            if pt.glow then pt.glow.BackgroundTransparency = t + 0.2 end
-        end
-    end
-end)
+for i = 1, 100 do local p = Instance.new("Frame"); local sz = math.random(2,7); p.Size = UDim2.new(0, sz, 0, sz); p.Position = UDim2.new(math.random(), 0, math.random(), 0); p.BackgroundColor3 = i % 3 == 0 and H.THEME.AccentHi or (i % 3 == 1 and H.THEME.Pink or H.THEME.Cyan); p.BackgroundTransparency = math.random(20,70)/100; p.BorderSizePixel = 0; p.ZIndex = 6001; p.Parent = H.kBg; H.corner(p, 999); local g = H.glow(p, p.BackgroundColor3, 0.5); table.insert(H.kParticles, {frame=p, glow=g, sx=(math.random()-0.5)*0.0008, sy=-math.random(1,7)*0.0004, pulse=math.random()*math.pi*2, drift=(math.random()-0.5)*0.0004}) end
+task.spawn(function() while H.kBg.Parent do local dt = RunService.RenderStepped:Wait(); for _, pt in ipairs(H.kParticles) do local pos = pt.frame.Position; local nx = pos.X.Scale + pt.sx + math.sin(tick()*2 + pt.pulse) * pt.drift; local ny = pos.Y.Scale + pt.sy; if ny < -0.05 then ny = 1.05; nx = math.random() end; if nx < -0.05 then nx = 1.05 end; if nx > 1.05 then nx = -0.05 end; pt.frame.Position = UDim2.new(nx, 0, ny, 0); pt.pulse = pt.pulse + dt * 3; local t = 0.3 + math.sin(pt.pulse)*0.35; pt.frame.BackgroundTransparency = t; if pt.glow then pt.glow.BackgroundTransparency = t + 0.2 end end end end)
 
-for i = 1, 10 do
-    task.spawn(function()
-        while H.kBg.Parent do
-            local line = Instance.new("Frame")
-            line.Size = UDim2.new(0, math.random(80, 200), 0, math.random(1, 2))
-            line.Position = UDim2.new(-0.2, 0, math.random(), 0)
-            line.BackgroundColor3 = i % 2 == 0 and H.THEME.AccentHi or H.THEME.Pink
-            line.BackgroundTransparency = 0.7
-            line.BorderSizePixel = 0
-            line.ZIndex = 6001
-            line.Parent = H.kBg
-            local dur = math.random(30, 60) / 10
-            TweenService:Create(line, TweenInfo.new(dur, Enum.EasingStyle.Linear), {Position = UDim2.new(1.2, 0, math.random(), 0)}):Play()
-            task.wait(dur + 0.1)
-            if line.Parent then line:Destroy() end
-            task.wait(math.random(1, 4))
-        end
-    end)
-end
+for i = 1, 10 do task.spawn(function() while H.kBg.Parent do local line = Instance.new("Frame"); line.Size = UDim2.new(0, math.random(80, 200), 0, math.random(1, 2)); line.Position = UDim2.new(-0.2, 0, math.random(), 0); line.BackgroundColor3 = i % 2 == 0 and H.THEME.AccentHi or H.THEME.Pink; line.BackgroundTransparency = 0.7; line.BorderSizePixel = 0; line.ZIndex = 6001; line.Parent = H.kBg; local dur = math.random(30, 60) / 10; TweenService:Create(line, TweenInfo.new(dur, Enum.EasingStyle.Linear), {Position = UDim2.new(1.2, 0, math.random(), 0)}):Play(); task.wait(dur + 0.1); if line.Parent then line:Destroy() end; task.wait(math.random(1, 4)) end end) end
 
-task.spawn(function()
-    while H.kBg.Parent do
-        local line = Instance.new("Frame")
-        line.Size = UDim2.new(1, 0, 0, 3)
-        line.Position = UDim2.new(0, 0, -0.01, 0)
-        line.BackgroundColor3 = H.THEME.AccentHi
-        line.BackgroundTransparency = 0.55
-        line.BorderSizePixel = 0
-        line.ZIndex = 6002
-        line.Parent = H.kBg
-        TweenService:Create(line, TweenInfo.new(4, Enum.EasingStyle.Linear), {Position = UDim2.new(0, 0, 1.01, 0)}):Play()
-        task.wait(4)
-        if line.Parent then line:Destroy() end
-        task.wait(math.random(5, 9))
-    end
-end)
+task.spawn(function() while H.kBg.Parent do local line = Instance.new("Frame"); line.Size = UDim2.new(1, 0, 0, 3); line.Position = UDim2.new(0, 0, -0.01, 0); line.BackgroundColor3 = H.THEME.AccentHi; line.BackgroundTransparency = 0.55; line.BorderSizePixel = 0; line.ZIndex = 6002; line.Parent = H.kBg; TweenService:Create(line, TweenInfo.new(4, Enum.EasingStyle.Linear), {Position = UDim2.new(0, 0, 1.01, 0)}):Play(); task.wait(4); if line.Parent then line:Destroy() end; task.wait(math.random(5, 9)) end end)
 
-H.raysHolder = Instance.new("Frame")
-H.raysHolder.Size = UDim2.new(1, 0, 1, 0)
-H.raysHolder.BackgroundTransparency = 1
-H.raysHolder.ZIndex = 6000
-H.raysHolder.Parent = H.kBg
-for i = 1, 12 do
-    local ray = Instance.new("Frame")
-    ray.Size = UDim2.new(0, 2, 0, 500)
-    ray.AnchorPoint = Vector2.new(0.5, 0.5)
-    ray.Position = UDim2.new(0.5, 0, 0.5, 0)
-    ray.BackgroundColor3 = H.THEME.Accent
-    ray.BackgroundTransparency = 0.92
-    ray.BorderSizePixel = 0
-    ray.Rotation = i * 30
-    ray.ZIndex = 6000
-    ray.Parent = H.raysHolder
-    H.corner(ray, 2)
-    task.spawn(function()
-        while ray.Parent do
-            TweenService:Create(ray, TweenInfo.new(2 + math.random(), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.75}):Play()
-            task.wait(2)
-            if not ray.Parent then break end
-            TweenService:Create(ray, TweenInfo.new(2 + math.random(), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.95}):Play()
-            task.wait(2)
-        end
-    end)
-end
-task.spawn(function()
-    while H.raysHolder.Parent do
-        for r = 0, 360, 1 do
-            if not H.raysHolder.Parent then break end
-            H.raysHolder.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
+H.raysHolder = Instance.new("Frame"); H.raysHolder.Size = UDim2.new(1, 0, 1, 0); H.raysHolder.BackgroundTransparency = 1; H.raysHolder.ZIndex = 6000; H.raysHolder.Parent = H.kBg
+for i = 1, 12 do local ray = Instance.new("Frame"); ray.Size = UDim2.new(0, 2, 0, 500); ray.AnchorPoint = Vector2.new(0.5, 0.5); ray.Position = UDim2.new(0.5, 0, 0.5, 0); ray.BackgroundColor3 = H.THEME.Accent; ray.BackgroundTransparency = 0.92; ray.BorderSizePixel = 0; ray.Rotation = i * 30; ray.ZIndex = 6000; ray.Parent = H.raysHolder; H.corner(ray, 2); task.spawn(function() while ray.Parent do TweenService:Create(ray, TweenInfo.new(2 + math.random(), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.75}):Play(); task.wait(2); if not ray.Parent then break end; TweenService:Create(ray, TweenInfo.new(2 + math.random(), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.95}):Play(); task.wait(2) end end) end
+task.spawn(function() while H.raysHolder.Parent do for r = 0, 360, 1 do if not H.raysHolder.Parent then break end H.raysHolder.Rotation = r; RunService.RenderStepped:Wait() end end end)
 
-H.kRingHolder = Instance.new("Frame")
-H.kRingHolder.Size = UDim2.new(0, 200, 0, 200)
-H.kRingHolder.Position = UDim2.new(0.5, -100, 0.5, -330)
-H.kRingHolder.BackgroundTransparency = 1
-H.kRingHolder.ZIndex = 6001
-H.kRingHolder.Parent = H.kBg
-for i = 1, 4 do
-    local ring = Instance.new("Frame")
-    ring.Size = UDim2.new(1 - (i-1)*0.18, 0, 1 - (i-1)*0.18, 0)
-    ring.Position = UDim2.new(0.5, 0, 0.5, 0)
-    ring.AnchorPoint = Vector2.new(0.5, 0.5)
-    ring.BackgroundTransparency = 1
-    ring.ZIndex = 6001
-    ring.Parent = H.kRingHolder
-    H.corner(ring, 999)
-    local ringCol = i == 1 and H.THEME.Accent or (i == 2 and H.THEME.Purple or (i == 3 and H.THEME.Pink or H.THEME.Cyan))
-    H.stroke(ring, ringCol, 2.5, 0.4)
-    task.spawn(function()
-        local dir = i % 2 == 0 and -1 or 1
-        local speed = 0.8 + i * 0.4
-        while ring.Parent do
-            for r = 0, 360, 4 do
-                if not ring.Parent then break end
-                ring.Rotation = r * dir * speed
-                RunService.RenderStepped:Wait()
-            end
-        end
-    end)
-end
+H.kRingHolder = Instance.new("Frame"); H.kRingHolder.Size = UDim2.new(0, 200, 0, 200); H.kRingHolder.Position = UDim2.new(0.5, -100, 0.5, -330); H.kRingHolder.BackgroundTransparency = 1; H.kRingHolder.ZIndex = 6001; H.kRingHolder.Parent = H.kBg
+for i = 1, 4 do local ring = Instance.new("Frame"); ring.Size = UDim2.new(1 - (i-1)*0.18, 0, 1 - (i-1)*0.18, 0); ring.Position = UDim2.new(0.5, 0, 0.5, 0); ring.AnchorPoint = Vector2.new(0.5, 0.5); ring.BackgroundTransparency = 1; ring.ZIndex = 6001; ring.Parent = H.kRingHolder; H.corner(ring, 999); local ringCol = i == 1 and H.THEME.Accent or (i == 2 and H.THEME.Purple or (i == 3 and H.THEME.Pink or H.THEME.Cyan)); H.stroke(ring, ringCol, 2.5, 0.4); task.spawn(function() local dir = i % 2 == 0 and -1 or 1; local speed = 0.8 + i * 0.4; while ring.Parent do for r = 0, 360, 4 do if not ring.Parent then break end ring.Rotation = r * dir * speed; RunService.RenderStepped:Wait() end end end) end
 
-H.kLogo = Instance.new("Frame")
-H.kLogo.Size = UDim2.new(0, 110, 0, 110)
-H.kLogo.Position = UDim2.new(0.5, -55, 0.5, -285)
-H.kLogo.BackgroundColor3 = H.THEME.Accent
-H.kLogo.BorderSizePixel = 0
-H.kLogo.ZIndex = 6002
-H.kLogo.Parent = H.kBg
-H.corner(H.kLogo, 28)
-H.kLGrad = H.grad(H.kLogo, H.THEME.Accent, H.THEME.Purple, 135)
-H.stroke(H.kLogo, H.THEME.AccentHi, 2, 0.3)
-H.shadow(H.kLogo, 24, 0.6)
-H.kLGlow = H.glow(H.kLogo, H.THEME.Accent, 0.35)
-task.spawn(function()
-    while H.kLogo.Parent do
-        for r = 0, 360, 4 do
-            if not H.kLogo.Parent then break end
-            H.kLGrad.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
-task.spawn(function()
-    while H.kLGlow.Parent do
-        RunService.RenderStepped:Wait()
-        H.kLGlow.BackgroundTransparency = 0.35 + math.sin(tick()*2)*0.15
-        H.kLGlow.Size = UDim2.new(1, 12 + math.sin(tick()*2)*6, 1, 12 + math.sin(tick()*2)*6)
-    end
-end)
+H.kLogo = Instance.new("Frame"); H.kLogo.Size = UDim2.new(0, 110, 0, 110); H.kLogo.Position = UDim2.new(0.5, -55, 0.5, -285); H.kLogo.BackgroundColor3 = H.THEME.Accent; H.kLogo.BorderSizePixel = 0; H.kLogo.ZIndex = 6002; H.kLogo.Parent = H.kBg; H.corner(H.kLogo, 28); H.kLGrad = H.grad(H.kLogo, H.THEME.Accent, H.THEME.Purple, 135); H.stroke(H.kLogo, H.THEME.AccentHi, 2, 0.3); H.shadow(H.kLogo, 24, 0.6); H.kLGlow = H.glow(H.kLogo, H.THEME.Accent, 0.35)
+task.spawn(function() while H.kLogo.Parent do for r = 0, 360, 4 do if not H.kLogo.Parent then break end H.kLGrad.Rotation = r; RunService.RenderStepped:Wait() end end end)
+task.spawn(function() while H.kLGlow.Parent do RunService.RenderStepped:Wait(); H.kLGlow.BackgroundTransparency = 0.35 + math.sin(tick()*2)*0.15; H.kLGlow.Size = UDim2.new(1, 12 + math.sin(tick()*2)*6, 1, 12 + math.sin(tick()*2)*6) end end)
 
-H.kLogoText = Instance.new("TextLabel")
-H.kLogoText.Size = UDim2.new(1, 0, 1, 0)
-H.kLogoText.Position = UDim2.new(0, 0, 0, -8)
-H.kLogoText.BackgroundTransparency = 1
-H.kLogoText.Text = "Q"
-H.kLogoText.TextColor3 = Color3.new(1,1,1)
-H.kLogoText.Font = Enum.Font.GothamBold
-H.kLogoText.TextSize = 56
-H.kLogoText.TextXAlignment = Enum.TextXAlignment.Center
-H.kLogoText.TextYAlignment = Enum.TextYAlignment.Center
-H.kLogoText.ZIndex = 6003
-H.kLogoText.Parent = H.kLogo
-task.spawn(function()
-    while H.kLogoText.Parent do
-        task.wait(math.random(3, 8))
-        if not H.kLogoText.Parent then break end
-        for i = 1, 4 do
-            H.kLogoText.Position = UDim2.new(math.random(-4,4)/100, 0, math.random(-4,4)/100 - 0.08, 0)
-            H.kLogoText.TextColor3 = i % 2 == 0 and Color3.new(1,1,1) or H.THEME.AccentHi
-            task.wait(0.05)
-        end
-        H.kLogoText.Position = UDim2.new(0, 0, 0, -8)
-        H.kLogoText.TextColor3 = Color3.new(1,1,1)
-    end
-end)
+H.kLogoText = Instance.new("TextLabel"); H.kLogoText.Size = UDim2.new(1, 0, 1, 0); H.kLogoText.Position = UDim2.new(0, 0, 0, -8); H.kLogoText.BackgroundTransparency = 1; H.kLogoText.Text = "Q"; H.kLogoText.TextColor3 = Color3.new(1,1,1); H.kLogoText.Font = Enum.Font.GothamBold; H.kLogoText.TextSize = 56; H.kLogoText.TextXAlignment = Enum.TextXAlignment.Center; H.kLogoText.TextYAlignment = Enum.TextYAlignment.Center; H.kLogoText.ZIndex = 6003; H.kLogoText.Parent = H.kLogo
+task.spawn(function() while H.kLogoText.Parent do task.wait(math.random(3, 8)); if not H.kLogoText.Parent then break end; for i = 1, 4 do H.kLogoText.Position = UDim2.new(math.random(-4,4)/100, 0, math.random(-4,4)/100 - 0.08, 0); H.kLogoText.TextColor3 = i % 2 == 0 and Color3.new(1,1,1) or H.THEME.AccentHi; task.wait(0.05) end; H.kLogoText.Position = UDim2.new(0, 0, 0, -8); H.kLogoText.TextColor3 = Color3.new(1,1,1) end end)
 
-H.kTitle = Instance.new("TextLabel")
-H.kTitle.Size = UDim2.new(1, 0, 0, 42)
-H.kTitle.Position = UDim2.new(0.5, 0, 0.5, -100)
-H.kTitle.AnchorPoint = Vector2.new(0.5, 0)
-H.kTitle.BackgroundTransparency = 1
-H.kTitle.Text = H.HUB_NAME
-H.kTitle.TextColor3 = H.THEME.Text
-H.kTitle.Font = Enum.Font.GothamBlack
-H.kTitle.TextSize = 42
-H.kTitle.ZIndex = 6002
-H.kTitle.Parent = H.kBg
+H.kTitle = Instance.new("TextLabel"); H.kTitle.Size = UDim2.new(1, 0, 0, 42); H.kTitle.Position = UDim2.new(0.5, 0, 0.5, -100); H.kTitle.AnchorPoint = Vector2.new(0.5, 0); H.kTitle.BackgroundTransparency = 1; H.kTitle.Text = H.HUB_NAME; H.kTitle.TextColor3 = H.THEME.Text; H.kTitle.Font = Enum.Font.GothamBlack; H.kTitle.TextSize = 42; H.kTitle.ZIndex = 6002; H.kTitle.Parent = H.kBg
+H.kSub = Instance.new("TextLabel"); H.kSub.Size = UDim2.new(1, 0, 0, 18); H.kSub.Position = UDim2.new(0.5, 0, 0.5, -48); H.kSub.AnchorPoint = Vector2.new(0.5, 0); H.kSub.BackgroundTransparency = 1; H.kSub.Text = "◆ AUTHORIZATION REQUIRED ◆"; H.kSub.TextColor3 = H.THEME.Warning; H.kSub.Font = Enum.Font.GothamBold; H.kSub.TextSize = 12; H.kSub.ZIndex = 6002; H.kSub.Parent = H.kBg
+task.spawn(function() while H.kSub.Parent do RunService.RenderStepped:Wait(); local b = 0.5 + math.sin(tick()*4)*0.5; H.kSub.TextColor3 = H.THEME.Warning:Lerp(H.THEME.Danger, b) end end)
 
-H.kSub = Instance.new("TextLabel")
-H.kSub.Size = UDim2.new(1, 0, 0, 18)
-H.kSub.Position = UDim2.new(0.5, 0, 0.5, -48)
-H.kSub.AnchorPoint = Vector2.new(0.5, 0)
-H.kSub.BackgroundTransparency = 1
-H.kSub.Text = "◆ AUTHORIZATION REQUIRED ◆"
-H.kSub.TextColor3 = H.THEME.Warning
-H.kSub.Font = Enum.Font.GothamBold
-H.kSub.TextSize = 12
-H.kSub.ZIndex = 6002
-H.kSub.Parent = H.kBg
-task.spawn(function()
-    while H.kSub.Parent do
-        RunService.RenderStepped:Wait()
-        local b = 0.5 + math.sin(tick()*4)*0.5
-        H.kSub.TextColor3 = H.THEME.Warning:Lerp(H.THEME.Danger, b)
-    end
-end)
+H.kInputFrame = Instance.new("Frame"); H.kInputFrame.Size = UDim2.new(0, 460, 0, 60); H.kInputFrame.Position = UDim2.new(0.5, -230, 0.5, 0); H.kInputFrame.BackgroundColor3 = H.THEME.Panel; H.kInputFrame.BackgroundTransparency = 0.15; H.kInputFrame.BorderSizePixel = 0; H.kInputFrame.ZIndex = 6002; H.kInputFrame.Parent = H.kBg; H.corner(H.kInputFrame, 14); H.stroke(H.kInputFrame, H.THEME.Border, 1.5, 0.4); H.shadow(H.kInputFrame, 12, 0.7)
+H.kInput = Instance.new("TextBox"); H.kInput.Size = UDim2.new(1, -40, 1, 0); H.kInput.Position = UDim2.new(0, 20, 0, 0); H.kInput.BackgroundTransparency = 1; H.kInput.Text = ""; H.kInput.PlaceholderText = "Enter access key..."; H.kInput.PlaceholderColor3 = H.THEME.TextMuted; H.kInput.TextColor3 = H.THEME.Text; H.kInput.Font = Enum.Font.GothamBold; H.kInput.TextSize = 15; H.kInput.TextXAlignment = Enum.TextXAlignment.Center; H.kInput.ClearTextOnFocus = true; H.kInput.ZIndex = 6003; H.kInput.Parent = H.kInputFrame; task.defer(function() H.kInput.Text = "" end)
 
-H.kInputFrame = Instance.new("Frame")
-H.kInputFrame.Size = UDim2.new(0, 460, 0, 60)
-H.kInputFrame.Position = UDim2.new(0.5, -230, 0.5, 0)
-H.kInputFrame.BackgroundColor3 = H.THEME.Panel
-H.kInputFrame.BackgroundTransparency = 0.15
-H.kInputFrame.BorderSizePixel = 0
-H.kInputFrame.ZIndex = 6002
-H.kInputFrame.Parent = H.kBg
-H.corner(H.kInputFrame, 14)
-H.stroke(H.kInputFrame, H.THEME.Border, 1.5, 0.4)
-H.shadow(H.kInputFrame, 12, 0.7)
-
-H.kInput = Instance.new("TextBox")
-H.kInput.Size = UDim2.new(1, -40, 1, 0)
-H.kInput.Position = UDim2.new(0, 20, 0, 0)
-H.kInput.BackgroundTransparency = 1
-H.kInput.Text = ""
-H.kInput.PlaceholderText = "Enter access key..."
-H.kInput.PlaceholderColor3 = H.THEME.TextMuted
-H.kInput.TextColor3 = H.THEME.Text
-H.kInput.Font = Enum.Font.GothamBold
-H.kInput.TextSize = 15
-H.kInput.TextXAlignment = Enum.TextXAlignment.Center
-H.kInput.ClearTextOnFocus = true
-H.kInput.ZIndex = 6003
-H.kInput.Parent = H.kInputFrame
-task.defer(function() H.kInput.Text = "" end)
-
-H.kBtnRow = Instance.new("Frame")
-H.kBtnRow.Size = UDim2.new(0, 460, 0, 56)
-H.kBtnRow.Position = UDim2.new(0.5, -230, 0.5, 72)
-H.kBtnRow.BackgroundTransparency = 1
-H.kBtnRow.ZIndex = 6002
-H.kBtnRow.Parent = H.kBg
-
-H.makeKeyBtn = function(text, c1, c2, pos, xSize)
-    local b = Instance.new("TextButton")
-    b.Size = UDim2.new(xSize, -4, 1, 0)
-    b.Position = UDim2.new(pos, 4, 0, 0)
-    b.BackgroundColor3 = c1
-    b.Text = ""
-    b.BorderSizePixel = 0
-    b.AutoButtonColor = false
-    b.ClipsDescendants = true
-    b.ZIndex = 6003
-    b.Parent = H.kBtnRow
-    H.corner(b, 14)
-    local bgGrad = H.grad(b, c1, c2, 0)
-    local btnStroke = H.stroke(b, H.THEME.AccentHi, 1.5, 0.2)
-    local gl = H.glow(b, c1, 0.5)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, 0, 1, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = text
-    lbl.TextColor3 = Color3.new(1,1,1)
-    lbl.Font = Enum.Font.GothamBlack
-    lbl.TextSize = 14
-    lbl.ZIndex = 6005
-    lbl.Parent = b
-    b.MouseEnter:Connect(function()
-        TweenService:Create(gl, TweenInfo.new(0.2), {BackgroundTransparency=0.15}):Play()
-        TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency=0}):Play()
-    end)
-    b.MouseLeave:Connect(function()
-        TweenService:Create(gl, TweenInfo.new(0.2), {BackgroundTransparency=0.5}):Play()
-        TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency=0.2}):Play()
-    end)
-    b.MouseButton1Click:Connect(function()
-        H.playSound("Click", 0.3, 1)
-    end)
-    return b
-end
-
+H.kBtnRow = Instance.new("Frame"); H.kBtnRow.Size = UDim2.new(0, 460, 0, 56); H.kBtnRow.Position = UDim2.new(0.5, -230, 0.5, 72); H.kBtnRow.BackgroundTransparency = 1; H.kBtnRow.ZIndex = 6002; H.kBtnRow.Parent = H.kBg
+H.makeKeyBtn = function(text, c1, c2, pos, xSize) local b = Instance.new("TextButton"); b.Size = UDim2.new(xSize, -4, 1, 0); b.Position = UDim2.new(pos, 4, 0, 0); b.BackgroundColor3 = c1; b.Text = ""; b.BorderSizePixel = 0; b.AutoButtonColor = false; b.ClipsDescendants = true; b.ZIndex = 6003; b.Parent = H.kBtnRow; H.corner(b, 14); local bgGrad = H.grad(b, c1, c2, 0); local btnStroke = H.stroke(b, H.THEME.AccentHi, 1.5, 0.2); local gl = H.glow(b, c1, 0.5); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(1, 0, 1, 0); lbl.BackgroundTransparency = 1; lbl.Text = text; lbl.TextColor3 = Color3.new(1,1,1); lbl.Font = Enum.Font.GothamBlack; lbl.TextSize = 14; lbl.ZIndex = 6005; lbl.Parent = b; b.MouseEnter:Connect(function() TweenService:Create(gl, TweenInfo.new(0.2), {BackgroundTransparency=0.15}):Play(); TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency=0}):Play() end); b.MouseLeave:Connect(function() TweenService:Create(gl, TweenInfo.new(0.2), {BackgroundTransparency=0.5}):Play(); TweenService:Create(btnStroke, TweenInfo.new(0.2), {Transparency=0.2}):Play() end); b.MouseButton1Click:Connect(function() H.playSound("Click", 0.3, 1) end); return b end
 H.kGetBtn = H.makeKeyBtn("GET KEY", H.THEME.Cyan, H.THEME.Purple, 0, 0.5)
 H.kBtn = H.makeKeyBtn("VERIFY", H.THEME.Pink, H.THEME.Accent, 0.5, 0.5)
 
-H.kDiscordBtn = Instance.new("TextButton")
-H.kDiscordBtn.Size = UDim2.new(0, 460, 0, 34)
-H.kDiscordBtn.Position = UDim2.new(0.5, -230, 0.5, 140)
-H.kDiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-H.kDiscordBtn.Text = "Have issues? Join our Discord channel"
-H.kDiscordBtn.TextColor3 = Color3.new(1,1,1)
-H.kDiscordBtn.Font = Enum.Font.GothamBold
-H.kDiscordBtn.TextSize = 13
-H.kDiscordBtn.BorderSizePixel = 0
-H.kDiscordBtn.AutoButtonColor = false
-H.kDiscordBtn.ZIndex = 6002
-H.kDiscordBtn.Parent = H.kBg
-H.corner(H.kDiscordBtn, 8)
+H.kDiscordBtn = Instance.new("TextButton"); H.kDiscordBtn.Size = UDim2.new(0, 460, 0, 34); H.kDiscordBtn.Position = UDim2.new(0.5, -230, 0.5, 140); H.kDiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242); H.kDiscordBtn.Text = "Have issues? Join our Discord channel"; H.kDiscordBtn.TextColor3 = Color3.new(1,1,1); H.kDiscordBtn.Font = Enum.Font.GothamBold; H.kDiscordBtn.TextSize = 13; H.kDiscordBtn.BorderSizePixel = 0; H.kDiscordBtn.AutoButtonColor = false; H.kDiscordBtn.ZIndex = 6002; H.kDiscordBtn.Parent = H.kBg; H.corner(H.kDiscordBtn, 8)
+H.kDiscordBtn.MouseButton1Click:Connect(function() if setclipboard then pcall(setclipboard, "https://discord.gg/feUpD8p2ra") end; H.kStatus.Text = "Discord link copied!"; H.kStatus.TextColor3 = H.THEME.Success; task.delay(2, function() if H.kStatus.Text == "Discord link copied!" then H.kStatus.Text = "" end end) end)
 
-H.kDiscordBtn.MouseButton1Click:Connect(function()
-    if setclipboard then pcall(setclipboard, "https://discord.gg/feUpD8p2ra") end
-    H.kStatus.Text = "Discord link copied!"
-    H.kStatus.TextColor3 = H.THEME.Success
-    task.delay(2, function() if H.kStatus.Text == "Discord link copied!" then H.kStatus.Text = "" end end)
-end)
+H.kStatus = Instance.new("TextLabel"); H.kStatus.Size = UDim2.new(1, 0, 0, 20); H.kStatus.Position = UDim2.new(0.5, 0, 0.5, 190); H.kStatus.AnchorPoint = Vector2.new(0.5, 0); H.kStatus.BackgroundTransparency = 1; H.kStatus.Text = ""; H.kStatus.TextColor3 = H.THEME.Danger; H.kStatus.Font = Enum.Font.GothamBold; H.kStatus.TextSize = 12; H.kStatus.ZIndex = 6002; H.kStatus.Parent = H.kBg
+H.kGetBtn.MouseButton1Click:Connect(function() if setclipboard then pcall(setclipboard, H.CHECKPOINT_LINK) end; H.kStatus.Text = "Link copied"; H.kStatus.TextColor3 = H.THEME.AccentHi; task.delay(2, function() if H.kStatus.Text == "Link copied" then H.kStatus.Text = "" end end) end)
 
-H.kStatus = Instance.new("TextLabel")
-H.kStatus.Size = UDim2.new(1, 0, 0, 20)
-H.kStatus.Position = UDim2.new(0.5, 0, 0.5, 190)
-H.kStatus.AnchorPoint = Vector2.new(0.5, 0)
-H.kStatus.BackgroundTransparency = 1
-H.kStatus.Text = ""
-H.kStatus.TextColor3 = H.THEME.Danger
-H.kStatus.Font = Enum.Font.GothamBold
-H.kStatus.TextSize = 12
-H.kStatus.ZIndex = 6002
-H.kStatus.Parent = H.kBg
-
-H.kGetBtn.MouseButton1Click:Connect(function()
-    if setclipboard then pcall(setclipboard, H.CHECKPOINT_LINK) end
-    H.kStatus.Text = "Link copied"
-    H.kStatus.TextColor3 = H.THEME.AccentHi
-    task.delay(2, function() if H.kStatus.Text == "Link copied" then H.kStatus.Text = "" end end)
-end)
-
--- CURSOR
-H.cursorGui = Instance.new("ScreenGui")
-H.cursorGui.Name = "QwertyCursor"
-H.cursorGui.ResetOnSpawn = false
-H.cursorGui.IgnoreGuiInset = true
-H.cursorGui.DisplayOrder = 9999
-H.cursorGui.Enabled = false
-H.cursorGui.Parent = PlayerGui
-
+H.cursorGui = Instance.new("ScreenGui"); H.cursorGui.Name = "QwertyCursor"; H.cursorGui.ResetOnSpawn = false; H.cursorGui.IgnoreGuiInset = true; H.cursorGui.DisplayOrder = 9999; H.cursorGui.Enabled = false; H.cursorGui.Parent = PlayerGui
 H.cursorTrail = {}
-for i = 1, 14 do
-    local t = Instance.new("Frame")
-    t.Size = UDim2.new(0, math.max(2, 12 - i), 0, math.max(2, 12 - i))
-    t.AnchorPoint = Vector2.new(0.5, 0.5)
-    t.BackgroundColor3 = H.THEME.AccentHi
-    t.BackgroundTransparency = 0.35 + i*0.04
-    t.BorderSizePixel = 0
-    t.ZIndex = 9980 + i
-    t.Parent = H.cursorGui
-    H.corner(t, 999)
-    table.insert(H.cursorTrail, {frame=t, x=0, y=0})
-end
+for i = 1, 14 do local t = Instance.new("Frame"); t.Size = UDim2.new(0, math.max(2, 12 - i), 0, math.max(2, 12 - i)); t.AnchorPoint = Vector2.new(0.5, 0.5); t.BackgroundColor3 = H.THEME.AccentHi; t.BackgroundTransparency = 0.35 + i*0.04; t.BorderSizePixel = 0; t.ZIndex = 9980 + i; t.Parent = H.cursorGui; H.corner(t, 999); table.insert(H.cursorTrail, {frame=t, x=0, y=0}) end
+H.cursorDot = Instance.new("Frame"); H.cursorDot.Size = UDim2.new(0, 10, 0, 10); H.cursorDot.AnchorPoint = Vector2.new(0.5, 0.5); H.cursorDot.BackgroundColor3 = H.THEME.AccentHi; H.cursorDot.BorderSizePixel = 0; H.cursorDot.ZIndex = 9999; H.cursorDot.Parent = H.cursorGui; H.corner(H.cursorDot, 999); H.stroke(H.cursorDot, Color3.new(1,1,1), 1, 0.2); H.cursorDotGlow = H.glow(H.cursorDot, H.THEME.Accent, 0.4)
+H.cursorRing = Instance.new("Frame"); H.cursorRing.Size = UDim2.new(0, 32, 0, 32); H.cursorRing.AnchorPoint = Vector2.new(0.5, 0.5); H.cursorRing.BackgroundTransparency = 1; H.cursorRing.ZIndex = 9998; H.cursorRing.Parent = H.cursorGui; H.corner(H.cursorRing, 999); H.stroke(H.cursorRing, H.THEME.Accent, 1.5, 0.3)
+H.cursorRing2 = Instance.new("Frame"); H.cursorRing2.Size = UDim2.new(0, 46, 0, 46); H.cursorRing2.AnchorPoint = Vector2.new(0.5, 0.5); H.cursorRing2.BackgroundTransparency = 1; H.cursorRing2.ZIndex = 9997; H.cursorRing2.Parent = H.cursorGui; H.corner(H.cursorRing2, 999); H.stroke(H.cursorRing2, H.THEME.Pink, 1, 0.55)
+task.spawn(function() while H.cursorGui.Parent do RunService.RenderStepped:Wait(); if not H.cursorGui.Enabled then continue end; local loc = UserInputService:GetMouseLocation(); H.cursorDot.Position = UDim2.new(0, loc.X, 0, loc.Y); H.cursorRing.Position = UDim2.new(0, loc.X, 0, loc.Y); H.cursorRing2.Position = UDim2.new(0, loc.X, 0, loc.Y); H.cursorRing.Size = UDim2.new(0, 32 + math.sin(tick()*4)*3, 0, 32 + math.sin(tick()*4)*3); H.cursorRing2.Size = UDim2.new(0, 46 + math.cos(tick()*3)*4, 0, 46 + math.cos(tick()*3)*4); H.cursorDotGlow.BackgroundTransparency = 0.35 + math.sin(tick()*5)*0.15; local prevX, prevY = loc.X, loc.Y; for i, t in ipairs(H.cursorTrail) do t.x = t.x + (prevX - t.x) * 0.35; t.y = t.y + (prevY - t.y) * 0.35; t.frame.Position = UDim2.new(0, t.x, 0, t.y); prevX, prevY = t.x, t.y end end end)
 
-H.cursorDot = Instance.new("Frame")
-H.cursorDot.Size = UDim2.new(0, 10, 0, 10)
-H.cursorDot.AnchorPoint = Vector2.new(0.5, 0.5)
-H.cursorDot.BackgroundColor3 = H.THEME.AccentHi
-H.cursorDot.BorderSizePixel = 0
-H.cursorDot.ZIndex = 9999
-H.cursorDot.Parent = H.cursorGui
-H.corner(H.cursorDot, 999)
-H.stroke(H.cursorDot, Color3.new(1,1,1), 1, 0.2)
-H.cursorDotGlow = H.glow(H.cursorDot, H.THEME.Accent, 0.4)
-
-H.cursorRing = Instance.new("Frame")
-H.cursorRing.Size = UDim2.new(0, 32, 0, 32)
-H.cursorRing.AnchorPoint = Vector2.new(0.5, 0.5)
-H.cursorRing.BackgroundTransparency = 1
-H.cursorRing.ZIndex = 9998
-H.cursorRing.Parent = H.cursorGui
-H.corner(H.cursorRing, 999)
-H.stroke(H.cursorRing, H.THEME.Accent, 1.5, 0.3)
-
-H.cursorRing2 = Instance.new("Frame")
-H.cursorRing2.Size = UDim2.new(0, 46, 0, 46)
-H.cursorRing2.AnchorPoint = Vector2.new(0.5, 0.5)
-H.cursorRing2.BackgroundTransparency = 1
-H.cursorRing2.ZIndex = 9997
-H.cursorRing2.Parent = H.cursorGui
-H.corner(H.cursorRing2, 999)
-H.stroke(H.cursorRing2, H.THEME.Pink, 1, 0.55)
-
-task.spawn(function()
-    while H.cursorGui.Parent do
-        RunService.RenderStepped:Wait()
-        if not H.cursorGui.Enabled then continue end
-        local loc = UserInputService:GetMouseLocation()
-        H.cursorDot.Position = UDim2.new(0, loc.X, 0, loc.Y)
-        H.cursorRing.Position = UDim2.new(0, loc.X, 0, loc.Y)
-        H.cursorRing2.Position = UDim2.new(0, loc.X, 0, loc.Y)
-        H.cursorRing.Size = UDim2.new(0, 32 + math.sin(tick()*4)*3, 0, 32 + math.sin(tick()*4)*3)
-        H.cursorRing2.Size = UDim2.new(0, 46 + math.cos(tick()*3)*4, 0, 46 + math.cos(tick()*3)*4)
-        H.cursorDotGlow.BackgroundTransparency = 0.35 + math.sin(tick()*5)*0.15
-        local prevX, prevY = loc.X, loc.Y
-        for i, t in ipairs(H.cursorTrail) do
-            t.x = t.x + (prevX - t.x) * 0.35
-            t.y = t.y + (prevY - t.y) * 0.35
-            t.frame.Position = UDim2.new(0, t.x, 0, t.y)
-            prevX, prevY = t.x, t.y
-        end
-    end
-end)
-
--- ROOT GUI
-H.screenGui = Instance.new("ScreenGui")
-H.screenGui.Name = "QwertyGUI"
-H.screenGui.ResetOnSpawn = false
-H.screenGui.IgnoreGuiInset = true
-H.screenGui.DisplayOrder = 100
-H.screenGui.Enabled = false
-H.screenGui.Parent = PlayerGui
-
--- LOADING
-H.loadingGui = Instance.new("ScreenGui")
-H.loadingGui.Name = "QwertyLoading"
-H.loadingGui.ResetOnSpawn = false
-H.loadingGui.IgnoreGuiInset = true
-H.loadingGui.DisplayOrder = 5000
-H.loadingGui.Enabled = false
-H.loadingGui.Parent = PlayerGui
-
-H.loadBg = Instance.new("Frame")
-H.loadBg.Size = UDim2.new(1, 0, 1, 0)
-H.loadBg.BackgroundColor3 = H.THEME.BG
-H.loadBg.BorderSizePixel = 0
-H.loadBg.ZIndex = 7000
-H.loadBg.Parent = H.loadingGui
+H.screenGui = Instance.new("ScreenGui"); H.screenGui.Name = "QwertyGUI"; H.screenGui.ResetOnSpawn = false; H.screenGui.IgnoreGuiInset = true; H.screenGui.DisplayOrder = 100; H.screenGui.Enabled = false; H.screenGui.Parent = PlayerGui
+H.loadingGui = Instance.new("ScreenGui"); H.loadingGui.Name = "QwertyLoading"; H.loadingGui.ResetOnSpawn = false; H.loadingGui.IgnoreGuiInset = true; H.loadingGui.DisplayOrder = 5000; H.loadingGui.Enabled = false; H.loadingGui.Parent = PlayerGui
+H.loadBg = Instance.new("Frame"); H.loadBg.Size = UDim2.new(1, 0, 1, 0); H.loadBg.BackgroundColor3 = H.THEME.BG; H.loadBg.BorderSizePixel = 0; H.loadBg.ZIndex = 7000; H.loadBg.Parent = H.loadingGui
 H.loadBgGrad = H.grad(H.loadBg, Color3.fromRGB(8,8,16), Color3.fromRGB(20,12,35), 135)
-task.spawn(function()
-    while H.loadBg.Parent do
-        for r = 0, 360, 2 do
-            if not H.loadBg.Parent then break end
-            H.loadBgGrad.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
+task.spawn(function() while H.loadBg.Parent do for r = 0, 360, 2 do if not H.loadBg.Parent then break end H.loadBgGrad.Rotation = r; RunService.RenderStepped:Wait() end end end)
+for x = 0, 40 do local l = Instance.new("Frame"); l.Size = UDim2.new(0, 1, 1, 0); l.Position = UDim2.new(0, x*40, 0, 0); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.94; l.BorderSizePixel = 0; l.ZIndex = 7001; l.Parent = H.loadBg end
+for y = 0, 25 do local l = Instance.new("Frame"); l.Size = UDim2.new(1, 0, 0, 1); l.Position = UDim2.new(0, 0, 0, y*40); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.94; l.BorderSizePixel = 0; l.ZIndex = 7001; l.Parent = H.loadBg end
+H.loadLogoFrame = Instance.new("Frame"); H.loadLogoFrame.Size = UDim2.new(0, 140, 0, 140); H.loadLogoFrame.Position = UDim2.new(0.5, -70, 0.5, -180); H.loadLogoFrame.BackgroundColor3 = H.THEME.Accent; H.loadLogoFrame.BorderSizePixel = 0; H.loadLogoFrame.ZIndex = 7003; H.loadLogoFrame.Parent = H.loadBg; H.corner(H.loadLogoFrame, 36); H.loadLogoGrad = H.grad(H.loadLogoFrame, H.THEME.Accent, H.THEME.Purple, 135); H.stroke(H.loadLogoFrame, H.THEME.AccentHi, 2.5, 0.2); H.shadow(H.loadLogoFrame, 30, 0.55)
+task.spawn(function() while H.loadLogoFrame.Parent do for r = 0, 360, 4 do if not H.loadLogoFrame.Parent then break end H.loadLogoGrad.Rotation = r; RunService.RenderStepped:Wait() end end end)
+H.loadLogoText = Instance.new("TextLabel"); H.loadLogoText.Size = UDim2.new(1, 0, 1, 0); H.loadLogoText.Position = UDim2.new(0, 0, 0, -12); H.loadLogoText.BackgroundTransparency = 1; H.loadLogoText.Text = "Q"; H.loadLogoText.TextColor3 = Color3.new(1,1,1); H.loadLogoText.Font = Enum.Font.GothamBold; H.loadLogoText.TextSize = 72; H.loadLogoText.TextXAlignment = Enum.TextXAlignment.Center; H.loadLogoText.TextYAlignment = Enum.TextYAlignment.Center; H.loadLogoText.ZIndex = 7004; H.loadLogoText.Parent = H.loadLogoFrame
+H.loadTitle = Instance.new("TextLabel"); H.loadTitle.Size = UDim2.new(1, 0, 0, 40); H.loadTitle.Position = UDim2.new(0, 0, 0.5, -20); H.loadTitle.BackgroundTransparency = 1; H.loadTitle.Text = H.HUB_NAME; H.loadTitle.TextColor3 = H.THEME.Text; H.loadTitle.Font = Enum.Font.GothamBlack; H.loadTitle.TextSize = 34; H.loadTitle.ZIndex = 7003; H.loadTitle.Parent = H.loadBg
+H.loadBarBg = Instance.new("Frame"); H.loadBarBg.Size = UDim2.new(0, 460, 0, 12); H.loadBarBg.Position = UDim2.new(0.5, -230, 0.5, 70); H.loadBarBg.BackgroundColor3 = H.THEME.Panel; H.loadBarBg.BorderSizePixel = 0; H.loadBarBg.ZIndex = 7003; H.loadBarBg.Parent = H.loadBg; H.corner(H.loadBarBg, 6); H.stroke(H.loadBarBg, H.THEME.Border, 1.5, 0.4)
+H.loadBarFill = Instance.new("Frame"); H.loadBarFill.Size = UDim2.new(0, 0, 1, 0); H.loadBarFill.BackgroundColor3 = H.THEME.Accent; H.loadBarFill.BorderSizePixel = 0; H.loadBarFill.ZIndex = 7004; H.loadBarFill.Parent = H.loadBarBg; H.corner(H.loadBarFill, 6); H.loadBarGrad = H.grad(H.loadBarFill, H.THEME.Accent, H.THEME.Pink, 0)
+H.loadPercent = Instance.new("TextLabel"); H.loadPercent.Size = UDim2.new(1, 0, 0, 18); H.loadPercent.Position = UDim2.new(0, 0, 0, 92); H.loadPercent.BackgroundTransparency = 1; H.loadPercent.Text = "0%"; H.loadPercent.TextColor3 = H.THEME.AccentHi; H.loadPercent.Font = Enum.Font.GothamBold; H.loadPercent.TextSize = 14; H.loadPercent.ZIndex = 7004; H.loadPercent.Parent = H.loadBarBg
+H.loadStatus = Instance.new("TextLabel"); H.loadStatus.Size = UDim2.new(1, 0, 0, 16); H.loadStatus.Position = UDim2.new(0, 0, 0, 114); H.loadStatus.BackgroundTransparency = 1; H.loadStatus.Text = "Initializing..."; H.loadStatus.TextColor3 = H.THEME.TextDim; H.loadStatus.Font = Enum.Font.Gotham; H.loadStatus.TextSize = 11; H.loadStatus.ZIndex = 7004; H.loadStatus.Parent = H.loadBarBg
 
-for x = 0, 40 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(0, 1, 1, 0)
-    l.Position = UDim2.new(0, x*40, 0, 0)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.94
-    l.BorderSizePixel = 0
-    l.ZIndex = 7001
-    l.Parent = H.loadBg
-end
-for y = 0, 25 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(1, 0, 0, 1)
-    l.Position = UDim2.new(0, 0, 0, y*40)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.94
-    l.BorderSizePixel = 0
-    l.ZIndex = 7001
-    l.Parent = H.loadBg
-end
+H.showLoading = function(callback) H.loadingGui.Enabled = true; H.loadBarFill.Size = UDim2.new(0, 0, 1, 0); H.loadPercent.Text = "0%"; H.loadStatus.Text = "Initializing..."; local steps = {{0.10, "Loading core..."}, {0.25, "Loading UI..."}, {0.45, "Loading ESP..."}, {0.60, "Loading modules..."}, {0.75, "Loading config..."}, {0.90, "Finalizing..."}, {1.00, "Ready"}}; local lastP = 0; task.spawn(function() for _, s in ipairs(steps) do TweenService:Create(H.loadBarFill, TweenInfo.new(0.32, Enum.EasingStyle.Quad), {Size = UDim2.new(s[1], 0, 1, 0)}):Play(); H.loadStatus.Text = s[2]; local startP = lastP; local endP = math.floor(s[1]*100); task.spawn(function() for p = startP, endP do H.loadPercent.Text = p .. "%"; task.wait(0.32 / math.max(endP - startP, 1)) end end); lastP = endP; task.wait(0.32) end; task.wait(0.25); H.loadingGui.Enabled = false; if callback then callback() end end) end
 
-H.loadLogoFrame = Instance.new("Frame")
-H.loadLogoFrame.Size = UDim2.new(0, 140, 0, 140)
-H.loadLogoFrame.Position = UDim2.new(0.5, -70, 0.5, -180)
-H.loadLogoFrame.BackgroundColor3 = H.THEME.Accent
-H.loadLogoFrame.BorderSizePixel = 0
-H.loadLogoFrame.ZIndex = 7003
-H.loadLogoFrame.Parent = H.loadBg
-H.corner(H.loadLogoFrame, 36)
-H.loadLogoGrad = H.grad(H.loadLogoFrame, H.THEME.Accent, H.THEME.Purple, 135)
-H.stroke(H.loadLogoFrame, H.THEME.AccentHi, 2.5, 0.2)
-H.shadow(H.loadLogoFrame, 30, 0.55)
-task.spawn(function()
-    while H.loadLogoFrame.Parent do
-        for r = 0, 360, 4 do
-            if not H.loadLogoFrame.Parent then break end
-            H.loadLogoGrad.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
-
-H.loadLogoText = Instance.new("TextLabel")
-H.loadLogoText.Size = UDim2.new(1, 0, 1, 0)
-H.loadLogoText.Position = UDim2.new(0, 0, 0, -12)
-H.loadLogoText.BackgroundTransparency = 1
-H.loadLogoText.Text = "Q"
-H.loadLogoText.TextColor3 = Color3.new(1,1,1)
-H.loadLogoText.Font = Enum.Font.GothamBold
-H.loadLogoText.TextSize = 72
-H.loadLogoText.TextXAlignment = Enum.TextXAlignment.Center
-H.loadLogoText.TextYAlignment = Enum.TextYAlignment.Center
-H.loadLogoText.ZIndex = 7004
-H.loadLogoText.Parent = H.loadLogoFrame
-
-H.loadTitle = Instance.new("TextLabel")
-H.loadTitle.Size = UDim2.new(1, 0, 0, 40)
-H.loadTitle.Position = UDim2.new(0, 0, 0.5, -20)
-H.loadTitle.BackgroundTransparency = 1
-H.loadTitle.Text = H.HUB_NAME
-H.loadTitle.TextColor3 = H.THEME.Text
-H.loadTitle.Font = Enum.Font.GothamBlack
-H.loadTitle.TextSize = 34
-H.loadTitle.ZIndex = 7003
-H.loadTitle.Parent = H.loadBg
-
-H.loadBarBg = Instance.new("Frame")
-H.loadBarBg.Size = UDim2.new(0, 460, 0, 12)
-H.loadBarBg.Position = UDim2.new(0.5, -230, 0.5, 70)
-H.loadBarBg.BackgroundColor3 = H.THEME.Panel
-H.loadBarBg.BorderSizePixel = 0
-H.loadBarBg.ZIndex = 7003
-H.loadBarBg.Parent = H.loadBg
-H.corner(H.loadBarBg, 6)
-H.stroke(H.loadBarBg, H.THEME.Border, 1.5, 0.4)
-
-H.loadBarFill = Instance.new("Frame")
-H.loadBarFill.Size = UDim2.new(0, 0, 1, 0)
-H.loadBarFill.BackgroundColor3 = H.THEME.Accent
-H.loadBarFill.BorderSizePixel = 0
-H.loadBarFill.ZIndex = 7004
-H.loadBarFill.Parent = H.loadBarBg
-H.corner(H.loadBarFill, 6)
-H.loadBarGrad = H.grad(H.loadBarFill, H.THEME.Accent, H.THEME.Pink, 0)
-
-H.loadPercent = Instance.new("TextLabel")
-H.loadPercent.Size = UDim2.new(1, 0, 0, 18)
-H.loadPercent.Position = UDim2.new(0, 0, 0, 92)
-H.loadPercent.BackgroundTransparency = 1
-H.loadPercent.Text = "0%"
-H.loadPercent.TextColor3 = H.THEME.AccentHi
-H.loadPercent.Font = Enum.Font.GothamBold
-H.loadPercent.TextSize = 14
-H.loadPercent.ZIndex = 7004
-H.loadPercent.Parent = H.loadBarBg
-
-H.loadStatus = Instance.new("TextLabel")
-H.loadStatus.Size = UDim2.new(1, 0, 0, 16)
-H.loadStatus.Position = UDim2.new(0, 0, 0, 114)
-H.loadStatus.BackgroundTransparency = 1
-H.loadStatus.Text = "Initializing..."
-H.loadStatus.TextColor3 = H.THEME.TextDim
-H.loadStatus.Font = Enum.Font.Gotham
-H.loadStatus.TextSize = 11
-H.loadStatus.ZIndex = 7004
-H.loadStatus.Parent = H.loadBarBg
-
-H.showLoading = function(callback)
-    H.loadingGui.Enabled = true
-    H.loadBarFill.Size = UDim2.new(0, 0, 1, 0)
-    H.loadPercent.Text = "0%"
-    H.loadStatus.Text = "Initializing..."
-    local steps = {
-        {0.10, "Loading core..."}, {0.25, "Loading UI..."}, {0.45, "Loading ESP..."},
-        {0.60, "Loading modules..."}, {0.75, "Loading config..."}, {0.90, "Finalizing..."}, {1.00, "Ready"}
-    }
-    local lastP = 0
-    task.spawn(function()
-        for _, s in ipairs(steps) do
-            TweenService:Create(H.loadBarFill, TweenInfo.new(0.32, Enum.EasingStyle.Quad), {Size = UDim2.new(s[1], 0, 1, 0)}):Play()
-            H.loadStatus.Text = s[2]
-            local startP = lastP
-            local endP = math.floor(s[1]*100)
-            task.spawn(function()
-                for p = startP, endP do
-                    H.loadPercent.Text = p .. "%"
-                    task.wait(0.32 / math.max(endP - startP, 1))
-                end
-            end)
-            lastP = endP
-            task.wait(0.32)
-        end
-        task.wait(0.25)
-        H.loadingGui.Enabled = false
-        if callback then callback() end
-    end)
-end
-
--- MAIN
-H.main = Instance.new("Frame")
-H.main.Size = UDim2.new(0, 860, 0, 560)
-H.main.Position = UDim2.new(0.5, -430, 0.5, -280)
-H.main.BackgroundColor3 = H.THEME.BG
-H.main.BackgroundTransparency = 0.15
-H.main.BorderSizePixel = 0
-H.main.Active = true
-H.main.Draggable = true
-H.main.ClipsDescendants = true
-H.main.Visible = false
-H.main.ZIndex = 10
-H.main.Parent = H.screenGui
-H.corner(H.main, 16)
-H.stroke(H.main, H.THEME.Border, 1.5, 0.3)
-H.shadow(H.main, 30, 0.6)
-
+H.main = Instance.new("Frame"); H.main.Size = UDim2.new(0, 860, 0, 560); H.main.Position = UDim2.new(0.5, -430, 0.5, -280); H.main.BackgroundColor3 = H.THEME.BG; H.main.BackgroundTransparency = 0.15; H.main.BorderSizePixel = 0; H.main.Active = true; H.main.Draggable = true; H.main.ClipsDescendants = true; H.main.Visible = false; H.main.ZIndex = 10; H.main.Parent = H.screenGui; H.corner(H.main, 16); H.stroke(H.main, H.THEME.Border, 1.5, 0.3); H.shadow(H.main, 30, 0.6)
 H.origPos = UDim2.new(0.5, -430, 0.5, -280)
+H.protectInteraction = function(g) g.MouseEnter:Connect(function() H.main.Draggable = false end); g.MouseLeave:Connect(function() H.main.Draggable = true end) end
+H.aurora = Instance.new("Frame"); H.aurora.Size = UDim2.new(1, 0, 1, 0); H.aurora.BackgroundColor3 = H.THEME.Accent; H.aurora.BackgroundTransparency = 0.88; H.aurora.BorderSizePixel = 0; H.aurora.ZIndex = 10; H.aurora.Parent = H.main; H.corner(H.aurora, 16); H.auroraGrad = Instance.new("UIGradient"); H.auroraGrad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, H.THEME.Accent), ColorSequenceKeypoint.new(0.33, H.THEME.Purple), ColorSequenceKeypoint.new(0.66, H.THEME.Pink), ColorSequenceKeypoint.new(1, H.THEME.Cyan)}); H.auroraGrad.Parent = H.aurora
+task.spawn(function() while H.aurora.Parent do for r = 0, 360, 1 do if not H.aurora.Parent then break end H.auroraGrad.Rotation = r; RunService.RenderStepped:Wait() end end end)
+for y = 0, 560, 40 do local l = Instance.new("Frame"); l.Size = UDim2.new(1, 0, 0, 1); l.Position = UDim2.new(0, 0, 0, y); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.96; l.BorderSizePixel = 0; l.ZIndex = 10; l.Parent = H.main end
+for x = 0, 860, 40 do local l = Instance.new("Frame"); l.Size = UDim2.new(0, 1, 1, 0); l.Position = UDim2.new(0, x, 0, 0); l.BackgroundColor3 = H.THEME.Accent; l.BackgroundTransparency = 0.96; l.BorderSizePixel = 0; l.ZIndex = 10; l.Parent = H.main end
+task.spawn(function() while H.main.Parent do local line = Instance.new("Frame"); line.Size = UDim2.new(1, 0, 0, 3); line.Position = UDim2.new(0, 0, -0.01, 0); line.BackgroundColor3 = H.THEME.AccentHi; line.BackgroundTransparency = 0.6; line.BorderSizePixel = 0; line.ZIndex = 15; line.Parent = H.main; TweenService:Create(line, TweenInfo.new(3, Enum.EasingStyle.Linear), {Position = UDim2.new(0, 0, 1.01, 0)}):Play(); task.wait(3); if line.Parent then line:Destroy() end; task.wait(math.random(4, 8)) end end)
 
-H.protectInteraction = function(g)
-    g.MouseEnter:Connect(function() H.main.Draggable = false end)
-    g.MouseLeave:Connect(function() H.main.Draggable = true end)
-end
+H.sidebar = Instance.new("Frame"); H.sidebar.Size = UDim2.new(0, 220, 1, 0); H.sidebar.BackgroundColor3 = H.THEME.Panel; H.sidebar.BackgroundTransparency = 0.3; H.sidebar.BorderSizePixel = 0; H.sidebar.ZIndex = 11; H.sidebar.Parent = H.main; H.corner(H.sidebar, 16)
+H.logoFrame = Instance.new("Frame"); H.logoFrame.Size = UDim2.new(1, -24, 0, 60); H.logoFrame.Position = UDim2.new(0, 12, 0, 18); H.logoFrame.BackgroundTransparency = 1; H.logoFrame.ZIndex = 13; H.logoFrame.Parent = H.sidebar
+H.logoViewport = Instance.new("ViewportFrame"); H.logoViewport.Size = UDim2.new(0, 42, 0, 42); H.logoViewport.Position = UDim2.new(0, 0, 0, 8); H.logoViewport.BackgroundColor3 = H.THEME.BG; H.logoViewport.BackgroundTransparency = 0.3; H.logoViewport.BorderSizePixel = 0; H.logoViewport.ZIndex = 14; H.logoViewport.Parent = H.logoFrame; H.corner(H.logoViewport, 12); H.stroke(H.logoViewport, H.THEME.AccentHi, 1.5, 0.3)
+H.vpCam = Instance.new("Camera"); H.vpCam.Parent = H.logoViewport; H.logoViewport.CurrentCamera = H.vpCam; H.vpCam.CFrame = CFrame.new(Vector3.new(0, 0, 6), Vector3.new(0, 0, 0))
+H.vpPart = Instance.new("Part"); H.vpPart.Size = Vector3.new(1.6, 1.6, 1.6); H.vpPart.Anchored = true; H.vpPart.CanCollide = false; H.vpPart.Material = Enum.Material.Neon; H.vpPart.Color = H.THEME.Accent; H.vpPart.Parent = H.logoViewport
+H.vpLight = Instance.new("PointLight"); H.vpLight.Color = H.THEME.Accent; H.vpLight.Brightness = 3; H.vpLight.Range = 20; H.vpLight.Parent = H.vpPart
+task.spawn(function() while H.logoViewport.Parent do local t = tick(); H.vpPart.CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(t * 0.7, t * 1.0, 0); H.vpPart.Color = Color3.fromHSV((t * 0.15) % 1, 0.7, 1); H.vpLight.Color = H.vpPart.Color; RunService.RenderStepped:Wait() end end)
+H.logoText = Instance.new("TextLabel"); H.logoText.Size = UDim2.new(1, -54, 0, 18); H.logoText.Position = UDim2.new(0, 54, 0, 4); H.logoText.BackgroundTransparency = 1; H.logoText.Text = H.HUB_NAME; H.logoText.TextColor3 = H.THEME.Text; H.logoText.Font = Enum.Font.GothamBlack; H.logoText.TextSize = 15; H.logoText.TextXAlignment = Enum.TextXAlignment.Left; H.logoText.ZIndex = 14; H.logoText.Parent = H.logoFrame
+H.logoTag = Instance.new("TextLabel"); H.logoTag.Size = UDim2.new(1, -54, 0, 14); H.logoTag.Position = UDim2.new(0, 54, 0, 22); H.logoTag.BackgroundTransparency = 1; H.logoTag.Text = H.HUB_TAG; H.logoTag.TextColor3 = H.THEME.AccentHi; H.logoTag.Font = Enum.Font.GothamBold; H.logoTag.TextSize = 11; H.logoTag.TextXAlignment = Enum.TextXAlignment.Left; H.logoTag.ZIndex = 14; H.logoTag.Parent = H.logoFrame
+H.logoSub = Instance.new("TextLabel"); H.logoSub.Size = UDim2.new(1, -54, 0, 12); H.logoSub.Position = UDim2.new(0, 54, 0, 36); H.logoSub.BackgroundTransparency = 1; H.logoSub.Text = "STEALTH v17"; H.logoSub.TextColor3 = H.THEME.TextMuted; H.logoSub.Font = Enum.Font.Gotham; H.logoSub.TextSize = 9; H.logoSub.TextXAlignment = Enum.TextXAlignment.Left; H.logoSub.ZIndex = 14; H.logoSub.Parent = H.logoFrame
+H.tabContainer = Instance.new("ScrollingFrame"); H.tabContainer.Size = UDim2.new(1, -24, 1, -240); H.tabContainer.Position = UDim2.new(0, 12, 0, 96); H.tabContainer.BackgroundTransparency = 1; H.tabContainer.BorderSizePixel = 0; H.tabContainer.ScrollBarThickness = 2; H.tabContainer.ScrollBarImageColor3 = H.THEME.Accent; H.tabContainer.CanvasSize = UDim2.new(0, 0, 0, 0); H.tabContainer.ZIndex = 13; H.tabContainer.Parent = H.sidebar; H.tabLayout = Instance.new("UIListLayout", H.tabContainer); H.tabLayout.Padding = UDim.new(0, 4); H.tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+H.tabs = {}; H.activeTab = nil
+H.createTab = function(name, displayName, iconText, accentColor) accentColor = accentColor or H.THEME.Accent; local btn = Instance.new("TextButton"); btn.Size = UDim2.new(1, 0, 0, 42); btn.BackgroundColor3 = H.THEME.Panel; btn.BackgroundTransparency = 1; btn.Text = ""; btn.BorderSizePixel = 0; btn.AutoButtonColor = false; btn.ClipsDescendants = true; btn.ZIndex = 14; btn.Parent = H.tabContainer; H.corner(btn, 10); H.protectInteraction(btn); local iconLbl = Instance.new("TextLabel"); iconLbl.Size = UDim2.new(0, 28, 1, 0); iconLbl.Position = UDim2.new(0, 12, 0, 0); iconLbl.BackgroundTransparency = 1; iconLbl.Text = iconText; iconLbl.TextColor3 = H.THEME.TextDim; iconLbl.Font = Enum.Font.GothamBold; iconLbl.TextSize = 17; iconLbl.ZIndex = 15; iconLbl.Parent = btn; local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(1, -50, 1, 0); lbl.Position = UDim2.new(0, 46, 0, 0); lbl.BackgroundTransparency = 1; lbl.Text = displayName; lbl.TextColor3 = H.THEME.TextDim; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 13; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = btn; local ind = Instance.new("Frame"); ind.Size = UDim2.new(0, 3, 0, 0); ind.Position = UDim2.new(0, 0, 0.5, 0); ind.AnchorPoint = Vector2.new(0, 0.5); ind.BackgroundColor3 = accentColor; ind.BorderSizePixel = 0; ind.ZIndex = 16; ind.Parent = btn; H.corner(ind, 2); btn.MouseEnter:Connect(function() if H.activeTab == btn then return end; TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency=0.85, BackgroundColor3=H.THEME.PanelHi}):Play(); TweenService:Create(lbl, TweenInfo.new(0.15), {TextColor3=H.THEME.Text}):Play() end); btn.MouseLeave:Connect(function() if H.activeTab == btn then return end; TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency=1}):Play(); TweenService:Create(lbl, TweenInfo.new(0.15), {TextColor3=H.THEME.TextDim}):Play() end); H.tabs[name] = {button=btn, label=lbl, icon=iconLbl, indicator=ind, color=accentColor}; return btn end
+H.setActiveTab = function(name) for tn, d in pairs(H.tabs) do if tn == name then TweenService:Create(d.button, TweenInfo.new(0.2), {BackgroundTransparency=0.7, BackgroundColor3=d.color}):Play(); TweenService:Create(d.label, TweenInfo.new(0.2), {TextColor3=H.THEME.Text}):Play(); TweenService:Create(d.icon, TweenInfo.new(0.2), {TextColor3=d.color}):Play(); TweenService:Create(d.indicator, TweenInfo.new(0.25, Enum.EasingStyle.Back), {Size=UDim2.new(0,3,0,28)}):Play(); H.activeTab = d.button else TweenService:Create(d.button, TweenInfo.new(0.2), {BackgroundTransparency=1}):Play(); TweenService:Create(d.label, TweenInfo.new(0.2), {TextColor3=H.THEME.TextDim}):Play(); TweenService:Create(d.icon, TweenInfo.new(0.2), {TextColor3=H.THEME.TextDim}):Play(); TweenService:Create(d.indicator, TweenInfo.new(0.2), {Size=UDim2.new(0,3,0,0)}):Play() end end end
+H.userCard = Instance.new("Frame"); H.userCard.Size = UDim2.new(1, -24, 0, 60); H.userCard.Position = UDim2.new(0, 12, 1, -72); H.userCard.BackgroundColor3 = H.THEME.PanelHi; H.userCard.BackgroundTransparency = 0.3; H.userCard.BorderSizePixel = 0; H.userCard.ZIndex = 13; H.userCard.Parent = H.sidebar; H.corner(H.userCard, 12); H.stroke(H.userCard, H.THEME.Border, 1, 0.5)
+H.avatar = Instance.new("ImageLabel"); H.avatar.Size = UDim2.new(0, 42, 0, 42); H.avatar.Position = UDim2.new(0, 9, 0.5, -21); H.avatar.BackgroundColor3 = H.THEME.BG; H.avatar.BorderSizePixel = 0; H.avatar.Image = "rbxthumb://type=AvatarHeadShot&id=" .. LocalPlayer.UserId .. "&w=48&h=48"; H.avatar.ZIndex = 14; H.avatar.Parent = H.userCard; H.corner(H.avatar, 21); H.stroke(H.avatar, H.THEME.AccentHi, 1.5, 0.3)
+H.userName = Instance.new("TextLabel"); H.userName.Size = UDim2.new(1, -62, 0, 16); H.userName.Position = UDim2.new(0, 60, 0, 12); H.userName.BackgroundTransparency = 1; H.userName.Text = LocalPlayer.DisplayName or LocalPlayer.Name; H.userName.TextColor3 = H.THEME.Text; H.userName.Font = Enum.Font.GothamBold; H.userName.TextSize = 13; H.userName.TextXAlignment = Enum.TextXAlignment.Left; H.userName.ZIndex = 14; H.userName.Parent = H.userCard
+H.userStatus = Instance.new("TextLabel"); H.userStatus.Size = UDim2.new(1, -62, 0, 14); H.userStatus.Position = UDim2.new(0, 60, 0, 32); H.userStatus.BackgroundTransparency = 1; H.userStatus.Text = "● Online"; H.userStatus.TextColor3 = H.THEME.Success; H.userStatus.Font = Enum.Font.Gotham; H.userStatus.TextSize = 10; H.userStatus.TextXAlignment = Enum.TextXAlignment.Left; H.userStatus.ZIndex = 14; H.userStatus.Parent = H.userCard
+H.topBar = Instance.new("Frame"); H.topBar.Size = UDim2.new(1, -240, 0, 70); H.topBar.Position = UDim2.new(0, 232, 0, 14); H.topBar.BackgroundTransparency = 1; H.topBar.ZIndex = 12; H.topBar.Parent = H.main
+H.pageTitle = Instance.new("TextLabel"); H.pageTitle.Size = UDim2.new(1, -240, 0, 30); H.pageTitle.Position = UDim2.new(0, 0, 0, 2); H.pageTitle.BackgroundTransparency = 1; H.pageTitle.Text = "Combat"; H.pageTitle.TextColor3 = H.THEME.Text; H.pageTitle.Font = Enum.Font.GothamBlack; H.pageTitle.TextSize = 26; H.pageTitle.TextXAlignment = Enum.TextXAlignment.Left; H.pageTitle.ZIndex = 13; H.pageTitle.Parent = H.topBar
+H.glitchTitle = H.pageTitle:Clone(); H.glitchTitle.TextColor3 = H.THEME.Pink; H.glitchTitle.TextTransparency = 0.5; H.glitchTitle.ZIndex = 12; H.glitchTitle.Parent = H.topBar
+task.spawn(function() while H.glitchTitle.Parent do task.wait(math.random(2, 5)); if not H.glitchTitle.Parent then break end; for i = 1, 4 do H.glitchTitle.Position = UDim2.new(math.random(-3,3)/100, 0, math.random(-2,2)/100, 0); H.glitchTitle.TextColor3 = i % 2 == 0 and H.THEME.Cyan or H.THEME.Pink; task.wait(0.04) end; H.glitchTitle.Position = UDim2.new(0, 0, 0, 2); H.glitchTitle.TextColor3 = H.THEME.Pink end end)
+H.pageSub = Instance.new("TextLabel"); H.pageSub.Size = UDim2.new(1, -240, 0, 16); H.pageSub.Position = UDim2.new(0, 2, 0, 34); H.pageSub.BackgroundTransparency = 1; H.pageSub.Text = "Silent aim · Aimbot · Hitbox"; H.pageSub.TextColor3 = H.THEME.TextDim; H.pageSub.Font = Enum.Font.Gotham; H.pageSub.TextSize = 11; H.pageSub.TextXAlignment = Enum.TextXAlignment.Left; H.pageSub.ZIndex = 13; H.pageSub.Parent = H.topBar
+H.fpsLbl = Instance.new("TextLabel"); H.fpsLbl.Size = UDim2.new(0, 100, 0, 22); H.fpsLbl.Position = UDim2.new(0, 2, 0, 50); H.fpsLbl.BackgroundTransparency = 1; H.fpsLbl.Text = "⚡ -- FPS"; H.fpsLbl.TextColor3 = H.THEME.TextMuted; H.fpsLbl.Font = Enum.Font.Gotham; H.fpsLbl.TextSize = 10; H.fpsLbl.TextXAlignment = Enum.TextXAlignment.Left; H.fpsLbl.ZIndex = 14; H.fpsLbl.Parent = H.topBar
+task.spawn(function() local frames, t = 0, 0; while H.fpsLbl.Parent do frames = frames + 1; t = t + RunService.RenderStepped:Wait(); if t >= 1 then H.fpsLbl.Text = "⚡ " .. frames .. " FPS"; frames = 0; t = 0 end end end)
+H.closeBtn = Instance.new("TextButton"); H.closeBtn.Size = UDim2.new(0, 34, 0, 34); H.closeBtn.Position = UDim2.new(1, -44, 0, 50); H.closeBtn.BackgroundColor3 = H.THEME.Panel; H.closeBtn.BackgroundTransparency = 0.15; H.closeBtn.Text = "✕"; H.closeBtn.TextColor3 = H.THEME.Danger; H.closeBtn.Font = Enum.Font.GothamBold; H.closeBtn.TextSize = 14; H.closeBtn.BorderSizePixel = 0; H.closeBtn.AutoButtonColor = false; H.closeBtn.ZIndex = 13; H.closeBtn.Parent = H.topBar; H.corner(H.closeBtn, 10); H.stroke(H.closeBtn, H.THEME.Border, 1, 0.5); H.protectInteraction(H.closeBtn)
+H.minBtn = Instance.new("TextButton"); H.minBtn.Size = UDim2.new(0, 34, 0, 34); H.minBtn.Position = UDim2.new(1, -84, 0, 50); H.minBtn.BackgroundColor3 = H.THEME.Panel; H.minBtn.BackgroundTransparency = 0.15; H.minBtn.Text = "—"; H.minBtn.TextColor3 = H.THEME.Warning; H.minBtn.Font = Enum.Font.GothamBold; H.minBtn.TextSize = 14; H.minBtn.BorderSizePixel = 0; H.minBtn.AutoButtonColor = false; H.minBtn.ZIndex = 13; H.minBtn.Parent = H.topBar; H.corner(H.minBtn, 10); H.stroke(H.minBtn, H.THEME.Border, 1, 0.5); H.protectInteraction(H.minBtn)
+H.notifHolder = Instance.new("Frame"); H.notifHolder.Size = UDim2.new(0, 260, 1, -20); H.notifHolder.Position = UDim2.new(1, -280, 0, 10); H.notifHolder.BackgroundTransparency = 1; H.notifHolder.ZIndex = 60; H.notifHolder.Parent = H.main; H.notifList = Instance.new("UIListLayout", H.notifHolder); H.notifList.Padding = UDim.new(0, 6); H.notifList.SortOrder = Enum.SortOrder.LayoutOrder
+H.notify = function(text, color) color = color or H.THEME.Accent; local n = Instance.new("Frame"); n.Size = UDim2.new(1, 0, 0, 34); n.BackgroundColor3 = H.THEME.Panel; n.BackgroundTransparency = 0.15; n.BorderSizePixel = 0; n.ZIndex = 61; n.Parent = H.notifHolder; H.corner(n, 8); H.stroke(n, color, 1.5, 0.3); H.shadow(n, 10, 0.7); local bar = Instance.new("Frame"); bar.Size = UDim2.new(0, 3, 1, 0); bar.BackgroundColor3 = color; bar.BorderSizePixel = 0; bar.ZIndex = 62; bar.Parent = n; H.corner(bar, 2); local t = Instance.new("TextLabel"); t.Size = UDim2.new(1, -20, 1, 0); t.Position = UDim2.new(0, 12, 0, 0); t.BackgroundTransparency = 1; t.Text = text; t.TextColor3 = H.THEME.Text; t.Font = Enum.Font.GothamBold; t.TextSize = 11; t.TextXAlignment = Enum.TextXAlignment.Left; t.ZIndex = 62; t.Parent = n; n.Position = UDim2.new(1.2, 0, 0, 0); TweenService:Create(n, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)}):Play(); task.delay(3, function() if n.Parent then TweenService:Create(n, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1.2, 0, 0, 0)}):Play(); task.wait(0.4); if n.Parent then n:Destroy() end end end) end
+H.content = Instance.new("ScrollingFrame"); H.content.Size = UDim2.new(1, -260, 1, -105); H.content.Position = UDim2.new(0, 232, 0, 92); H.content.BackgroundTransparency = 1; H.content.BorderSizePixel = 0; H.content.ScrollBarThickness = 4; H.content.ScrollBarImageColor3 = H.THEME.Accent; H.content.CanvasSize = UDim2.new(0, 0, 0, 0); H.content.ZIndex = 12; H.content.Parent = H.main; H.protectInteraction(H.content); H.contentList = Instance.new("UIListLayout", H.content); H.contentList.Padding = UDim.new(0, 14); H.contentList.SortOrder = Enum.SortOrder.LayoutOrder
+H.updateCanvas = function() H.content.CanvasSize = UDim2.new(0, 0, 0, H.contentList.AbsoluteContentSize.Y + 20) end
+H.updateTabCanvas = function() H.tabContainer.CanvasSize = UDim2.new(0, 0, 0, H.tabLayout.AbsoluteContentSize.Y + 10) end
+H.sectionCard = function(title, subtitle) local card = Instance.new("Frame"); card.Size = UDim2.new(1, -12, 0, 50); card.BackgroundColor3 = H.THEME.Panel; card.BackgroundTransparency = 0.15; card.BorderSizePixel = 0; card.ZIndex = 13; card.Parent = H.content; H.corner(card, 12); H.stroke(card, H.THEME.Border, 1, 0.6); local accent = Instance.new("Frame"); accent.Size = UDim2.new(0, 3, 0, 26); accent.Position = UDim2.new(0, 0, 0.5, -13); accent.BackgroundColor3 = H.THEME.Accent; accent.BorderSizePixel = 0; accent.ZIndex = 14; accent.Parent = card; H.corner(accent, 2); H.grad(accent, H.THEME.Accent, H.THEME.Purple, 90); local t = Instance.new("TextLabel"); t.Size = UDim2.new(1, -40, 0, 20); t.Position = UDim2.new(0, 18, 0, 8); t.BackgroundTransparency = 1; t.Text = title; t.TextColor3 = H.THEME.Text; t.Font = Enum.Font.GothamBold; t.TextSize = 14; t.TextXAlignment = Enum.TextXAlignment.Left; t.ZIndex = 14; t.Parent = card; if subtitle then local s = Instance.new("TextLabel"); s.Size = UDim2.new(1, -40, 0, 14); s.Position = UDim2.new(0, 18, 0, 28); s.BackgroundTransparency = 1; s.Text = subtitle; s.TextColor3 = H.THEME.TextDim; s.Font = Enum.Font.Gotham; s.TextSize = 10; s.TextXAlignment = Enum.TextXAlignment.Left; s.ZIndex = 14; s.Parent = card end; return card end
+H.container = function() local c = Instance.new("Frame"); c.Size = UDim2.new(1, -12, 0, 10); c.AutomaticSize = Enum.AutomaticSize.Y; c.BackgroundColor3 = H.THEME.Panel; c.BackgroundTransparency = 0.15; c.BorderSizePixel = 0; c.ZIndex = 13; c.Parent = H.content; H.corner(c, 12); H.stroke(c, H.THEME.Border, 1, 0.6); local l = Instance.new("UIListLayout", c); l.Padding = UDim.new(0, 4); l.SortOrder = Enum.SortOrder.LayoutOrder; local u = Instance.new("UIPadding", c); u.PaddingTop = UDim.new(0, 8); u.PaddingBottom = UDim.new(0, 8); u.PaddingLeft = UDim.new(0, 8); u.PaddingRight = UDim.new(0, 8); return c end
+H.toggleRow = function(parent, name, default, accent, stateKey, onChange) accent = accent or H.THEME.Accent; if stateKey then if H.State[stateKey] ~= nil then default = H.State[stateKey] else H.State[stateKey] = default end end; local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 42); row.BackgroundColor3 = H.THEME.PanelHi; row.BackgroundTransparency = 0.3; row.BorderSizePixel = 0; row.ZIndex = 14; row.Parent = parent; H.corner(row, 8); H.protectInteraction(row); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(1, -90, 1, 0); lbl.Position = UDim2.new(0, 14, 0, 0); lbl.BackgroundTransparency = 1; lbl.Text = name; lbl.TextColor3 = H.THEME.Text; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = row; local swBg = Instance.new("Frame"); swBg.Size = UDim2.new(0, 42, 0, 22); swBg.Position = UDim2.new(1, -56, 0.5, -11); swBg.BackgroundColor3 = default and accent or H.THEME.Panel; swBg.BorderSizePixel = 0; swBg.ZIndex = 15; swBg.Parent = row; H.corner(swBg, 11); local swStroke = H.stroke(swBg, H.THEME.Border, 1, default and 0 or 0.5); local swKnob = Instance.new("Frame"); swKnob.Size = UDim2.new(0, 16, 0, 16); swKnob.Position = default and UDim2.new(1, -20, 0.5, -8) or UDim2.new(0, 3, 0.5, -8); swKnob.BackgroundColor3 = Color3.new(1,1,1); swKnob.BorderSizePixel = 0; swKnob.ZIndex = 16; swKnob.Parent = swBg; H.corner(swKnob, 8); local enabled = default; local function setState(v) enabled = v; if v then H.playSound("ToggleOn", 0.3, 1.1) else H.playSound("ToggleOff", 0.3, 0.9) end; if stateKey then H.State[stateKey] = v end; TweenService:Create(swBg, TweenInfo.new(0.25, Enum.EasingStyle.Back), {BackgroundColor3 = v and accent or H.THEME.Panel}):Play(); TweenService:Create(swStroke, TweenInfo.new(0.25), {Transparency = v and 0 or 0.5}):Play(); TweenService:Create(swKnob, TweenInfo.new(0.25, Enum.EasingStyle.Back), {Position = v and UDim2.new(1,-20,0.5,-8) or UDim2.new(0,3,0.5,-8)}):Play(); if onChange then pcall(onChange, v) end end; row.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then setState(not enabled) end end); return setState end
+H.sliderRow = function(parent, name, min, max, default, decimals, stateKey, onChange) decimals = decimals or 0; if stateKey then if H.State[stateKey] ~= nil then default = H.State[stateKey] else H.State[stateKey] = default end end; local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 58); row.BackgroundColor3 = H.THEME.PanelHi; row.BackgroundTransparency = 0.3; row.BorderSizePixel = 0; row.ZIndex = 14; row.Parent = parent; H.corner(row, 8); H.protectInteraction(row); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(0.6, 0, 0, 18); lbl.Position = UDim2.new(0, 14, 0, 8); lbl.BackgroundTransparency = 1; lbl.Text = name; lbl.TextColor3 = H.THEME.Text; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = row; local valLbl = Instance.new("TextLabel"); valLbl.Size = UDim2.new(0.3, 0, 0, 18); valLbl.Position = UDim2.new(0.6, 0, 0, 8); valLbl.BackgroundTransparency = 1; valLbl.Text = tostring(default); valLbl.TextColor3 = H.THEME.AccentHi; valLbl.Font = Enum.Font.GothamBold; valLbl.TextSize = 12; valLbl.TextXAlignment = Enum.TextXAlignment.Right; valLbl.ZIndex = 15; valLbl.Parent = row; local track = Instance.new("Frame"); track.Size = UDim2.new(1, -28, 0, 6); track.Position = UDim2.new(0, 14, 0, 38); track.BackgroundColor3 = H.THEME.BG; track.BorderSizePixel = 0; track.ZIndex = 15; track.Parent = row; H.corner(track, 3); local fill = Instance.new("Frame"); fill.Size = UDim2.new((default-min)/math.max((max-min), 0.0001), 0, 1, 0); fill.BackgroundColor3 = H.THEME.Accent; fill.BorderSizePixel = 0; fill.ZIndex = 16; fill.Parent = track; H.corner(fill, 3); H.grad(fill, H.THEME.Accent, H.THEME.Purple, 0); local knob = Instance.new("Frame"); knob.Size = UDim2.new(0, 14, 0, 14); knob.Position = UDim2.new((default-min)/math.max((max-min), 0.0001), 0, 0.5, -7); knob.AnchorPoint = Vector2.new(0.5, 0); knob.BackgroundColor3 = Color3.new(1,1,1); knob.BorderSizePixel = 0; knob.ZIndex = 17; knob.Parent = track; H.corner(knob, 7); H.stroke(knob, H.THEME.AccentHi, 1.5, 0); local dragging = false; local function update(x) local rel = math.clamp((x - track.AbsolutePosition.X) / track.AbsoluteSize.X, 0, 1); local val = min + (max-min) * rel; if decimals > 0 then val = math.floor(val * (10^decimals)) / (10^decimals) else val = math.floor(val + 0.5) end; fill.Size = UDim2.new((val-min)/math.max((max-min), 0.0001), 0, 1, 0); knob.Position = UDim2.new((val-min)/math.max((max-min), 0.0001), 0, 0.5, -7); valLbl.Text = tostring(val); if stateKey then H.State[stateKey] = val end; if onChange then pcall(onChange, val) end end; track.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input.Position.X) end end); UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input.Position.X) end end); UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end) end
+H.buttonRow = function(parent, name, color, onClick) color = color or H.THEME.Accent; local b = Instance.new("TextButton"); b.Size = UDim2.new(1, 0, 0, 40); b.BackgroundColor3 = color; b.Text = name; b.TextColor3 = Color3.new(1,1,1); b.Font = Enum.Font.GothamBold; b.TextSize = 12; b.BorderSizePixel = 0; b.AutoButtonColor = false; b.ZIndex = 14; b.Parent = parent; H.corner(b, 8); H.grad(b, color, color:Lerp(Color3.new(1,1,1), 0.2), 0); H.protectInteraction(b); b.MouseButton1Click:Connect(function() H.playSound("Click", 0.3, 1); if onClick then onClick() end end); return b end
+H.keybindRow = function(parent, name, defaultKey, stateKey) if stateKey then if H.State[stateKey] ~= nil then defaultKey = H.State[stateKey] else H.State[stateKey] = defaultKey end end; local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 42); row.BackgroundColor3 = H.THEME.PanelHi; row.BackgroundTransparency = 0.3; row.BorderSizePixel = 0; row.ZIndex = 14; row.Parent = parent; H.corner(row, 8); H.protectInteraction(row); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(0.5, 0, 1, 0); lbl.Position = UDim2.new(0, 14, 0, 0); lbl.BackgroundTransparency = 1; lbl.Text = name; lbl.TextColor3 = H.THEME.Text; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = row; local btn = Instance.new("TextButton"); btn.Size = UDim2.new(0.45, 0, 0, 26); btn.Position = UDim2.new(0.5, -14, 0.5, -13); btn.BackgroundColor3 = H.THEME.Panel; btn.Text = tostring(defaultKey.Name); btn.TextColor3 = H.THEME.AccentHi; btn.Font = Enum.Font.GothamBold; btn.TextSize = 11; btn.BorderSizePixel = 0; btn.AutoButtonColor = false; btn.ZIndex = 15; btn.Parent = row; H.corner(btn, 6); H.stroke(btn, H.THEME.Border, 1, 0.5); local listening = false; btn.MouseButton1Click:Connect(function() if listening then return end; H.playSound("Click", 0.2, 1); listening = true; btn.Text = "..."; btn.TextColor3 = H.THEME.Warning; local conn; conn = UserInputService.InputBegan:Connect(function(input, gp) if gp then return end; if input.UserInputType ~= Enum.UserInputType.Keyboard and input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.MouseButton2 then return end; if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.Unknown then return end; btn.Text = tostring(input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode.Name or input.UserInputType.Name); btn.TextColor3 = H.THEME.AccentHi; listening = false; if stateKey then H.State[stateKey] = input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode or input.UserInputType end; conn:Disconnect() end) end) end
+H.dropdownRow = function(parent, name, options, default, stateKey, onChange) if stateKey then if H.State[stateKey] ~= nil then default = H.State[stateKey] else H.State[stateKey] = default end end; local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 42); row.BackgroundColor3 = H.THEME.PanelHi; row.BackgroundTransparency = 0.3; row.BorderSizePixel = 0; row.ZIndex = 14; row.Parent = parent; H.corner(row, 8); H.protectInteraction(row); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(0.5, 0, 1, 0); lbl.Position = UDim2.new(0, 14, 0, 0); lbl.BackgroundTransparency = 1; lbl.Text = name; lbl.TextColor3 = H.THEME.Text; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = row; local btn = Instance.new("TextButton"); btn.Size = UDim2.new(0.45, 0, 0, 26); btn.Position = UDim2.new(0.5, -14, 0.5, -13); btn.BackgroundColor3 = H.THEME.Panel; btn.Text = tostring(default); btn.TextColor3 = H.THEME.AccentHi; btn.Font = Enum.Font.GothamBold; btn.TextSize = 11; btn.BorderSizePixel = 0; btn.AutoButtonColor = false; btn.ZIndex = 15; btn.Parent = row; H.corner(btn, 6); H.stroke(btn, H.THEME.Border, 1, 0.5); local listFrame = Instance.new("Frame"); listFrame.Size = UDim2.new(0.45, 0, 0, 0); listFrame.Position = UDim2.new(0.5, -14, 1, 4); listFrame.BackgroundColor3 = H.THEME.Panel; listFrame.BorderSizePixel = 0; listFrame.Visible = false; listFrame.ZIndex = 50; listFrame.Parent = row; H.corner(listFrame, 6); H.stroke(listFrame, H.THEME.Border, 1, 0.4); local listLayout = Instance.new("UIListLayout", listFrame); listLayout.Padding = UDim.new(0, 2); listLayout.SortOrder = Enum.SortOrder.LayoutOrder; local u = Instance.new("UIPadding", listFrame); u.PaddingTop = UDim.new(0, 4); u.PaddingBottom = UDim.new(0, 4); u.PaddingLeft = UDim.new(0, 4); u.PaddingRight = UDim.new(0, 4); for _, opt in ipairs(options) do local optBtn = Instance.new("TextButton"); optBtn.Size = UDim2.new(1, 0, 0, 24); optBtn.BackgroundColor3 = H.THEME.PanelHi; optBtn.Text = tostring(opt); optBtn.TextColor3 = H.THEME.Text; optBtn.Font = Enum.Font.Gotham; optBtn.TextSize = 11; optBtn.BorderSizePixel = 0; optBtn.AutoButtonColor = false; optBtn.ZIndex = 51; optBtn.Parent = listFrame; H.corner(optBtn, 4); optBtn.MouseButton1Click:Connect(function() H.playSound("Click", 0.2, 1.1); btn.Text = tostring(opt); listFrame.Visible = false; if stateKey then H.State[stateKey] = opt end; if onChange then pcall(onChange, opt) end end) end; btn.MouseButton1Click:Connect(function() H.playSound("Click", 0.2, 1); listFrame.Visible = not listFrame.Visible; if listFrame.Visible then listFrame.Size = UDim2.new(0.45, 0, 0, listLayout.AbsoluteContentSize.Y + 10) end end) end
+H.textInputRow = function(parent, name, placeholder, default, stateKey, onConfirm) if stateKey then if H.State[stateKey] ~= nil then default = H.State[stateKey] else H.State[stateKey] = default end end; local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 42); row.BackgroundColor3 = H.THEME.PanelHi; row.BackgroundTransparency = 0.3; row.BorderSizePixel = 0; row.ZIndex = 14; row.Parent = parent; H.corner(row, 8); H.protectInteraction(row); local lbl = Instance.new("TextLabel"); lbl.Size = UDim2.new(0.5, 0, 1, 0); lbl.Position = UDim2.new(0, 14, 0, 0); lbl.BackgroundTransparency = 1; lbl.Text = name; lbl.TextColor3 = H.THEME.Text; lbl.Font = Enum.Font.GothamMedium; lbl.TextSize = 12; lbl.TextXAlignment = Enum.TextXAlignment.Left; lbl.ZIndex = 15; lbl.Parent = row; local box = Instance.new("TextBox"); box.Size = UDim2.new(0.45, 0, 0, 26); box.Position = UDim2.new(0.5, -14, 0.5, -13); box.BackgroundColor3 = H.THEME.Panel; box.Text = tostring(default or ""); box.PlaceholderText = placeholder or ""; box.PlaceholderColor3 = H.THEME.TextMuted; box.TextColor3 = H.THEME.AccentHi; box.Font = Enum.Font.GothamBold; box.TextSize = 11; box.BorderSizePixel = 0; box.ClearTextOnFocus = false; box.ZIndex = 15; box.Parent = row; H.corner(box, 6); H.stroke(box, H.THEME.Border, 1, 0.5); box.FocusLost:Connect(function() if stateKey then H.State[stateKey] = box.Text end; if onConfirm then pcall(onConfirm, box.Text) end end) end
 
-H.aurora = Instance.new("Frame")
-H.aurora.Size = UDim2.new(1, 0, 1, 0)
-H.aurora.BackgroundColor3 = H.THEME.Accent
-H.aurora.BackgroundTransparency = 0.88
-H.aurora.BorderSizePixel = 0
-H.aurora.ZIndex = 10
-H.aurora.Parent = H.main
-H.corner(H.aurora, 16)
-H.auroraGrad = Instance.new("UIGradient")
-H.auroraGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, H.THEME.Accent),
-    ColorSequenceKeypoint.new(0.33, H.THEME.Purple),
-    ColorSequenceKeypoint.new(0.66, H.THEME.Pink),
-    ColorSequenceKeypoint.new(1, H.THEME.Cyan),
-})
-H.auroraGrad.Parent = H.aurora
-task.spawn(function()
-    while H.aurora.Parent do
-        for r = 0, 360, 1 do
-            if not H.aurora.Parent then break end
-            H.auroraGrad.Rotation = r
-            RunService.RenderStepped:Wait()
-        end
-    end
-end)
-
-for y = 0, 560, 40 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(1, 0, 0, 1)
-    l.Position = UDim2.new(0, 0, 0, y)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.96
-    l.BorderSizePixel = 0
-    l.ZIndex = 10
-    l.Parent = H.main
-end
-for x = 0, 860, 40 do
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(0, 1, 1, 0)
-    l.Position = UDim2.new(0, x, 0, 0)
-    l.BackgroundColor3 = H.THEME.Accent
-    l.BackgroundTransparency = 0.96
-    l.BorderSizePixel = 0
-    l.ZIndex = 10
-    l.Parent = H.main
-end
-
-task.spawn(function()
-    while H.main.Parent do
-        local line = Instance.new("Frame")
-        line.Size = UDim2.new(1, 0, 0, 3)
-        line.Position = UDim2.new(0, 0, -0.01, 0)
-        line.BackgroundColor3 = H.THEME.AccentHi
-        line.BackgroundTransparency = 0.6
-        line.BorderSizePixel = 0
-        line.ZIndex = 15
-        line.Parent = H.main
-        TweenService:Create(line, TweenInfo.new(3, Enum.EasingStyle.Linear), {Position = UDim2.new(0, 0, 1.01, 0)}):Play()
-        task.wait(3)
-        if line.Parent then line:Destroy() end
-        task.wait(math.random(4, 8))
-    end
-end)
-
--- SIDEBAR
-H.sidebar = Instance.new("Frame")
-H.sidebar.Size = UDim2.new(0, 220, 1, 0)
-H.sidebar.BackgroundColor3 = H.THEME.Panel
-H.sidebar.BackgroundTransparency = 0.3
-H.sidebar.BorderSizePixel = 0
-H.sidebar.ZIndex = 11
-H.sidebar.Parent = H.main
-H.corner(H.sidebar, 16)
-
-H.logoFrame = Instance.new("Frame")
-H.logoFrame.Size = UDim2.new(1, -24, 0, 60)
-H.logoFrame.Position = UDim2.new(0, 12, 0, 18)
-H.logoFrame.BackgroundTransparency = 1
-H.logoFrame.ZIndex = 13
-H.logoFrame.Parent = H.sidebar
-
-H.logoViewport = Instance.new("ViewportFrame")
-H.logoViewport.Size = UDim2.new(0, 42, 0, 42)
-H.logoViewport.Position = UDim2.new(0, 0, 0, 8)
-H.logoViewport.BackgroundColor3 = H.THEME.BG
-H.logoViewport.BackgroundTransparency = 0.3
-H.logoViewport.BorderSizePixel = 0
-H.logoViewport.ZIndex = 14
-H.logoViewport.Parent = H.logoFrame
-H.corner(H.logoViewport, 12)
-H.stroke(H.logoViewport, H.THEME.AccentHi, 1.5, 0.3)
-
-H.vpCam = Instance.new("Camera")
-H.vpCam.Parent = H.logoViewport
-H.logoViewport.CurrentCamera = H.vpCam
-H.vpCam.CFrame = CFrame.new(Vector3.new(0, 0, 6), Vector3.new(0, 0, 0))
-
-H.vpPart = Instance.new("Part")
-H.vpPart.Size = Vector3.new(1.6, 1.6, 1.6)
-H.vpPart.Anchored = true
-H.vpPart.CanCollide = false
-H.vpPart.Material = Enum.Material.Neon
-H.vpPart.Color = H.THEME.Accent
-H.vpPart.Parent = H.logoViewport
-
-H.vpLight = Instance.new("PointLight")
-H.vpLight.Color = H.THEME.Accent
-H.vpLight.Brightness = 3
-H.vpLight.Range = 20
-H.vpLight.Parent = H.vpPart
-
-task.spawn(function()
-    while H.logoViewport.Parent do
-        local t = tick()
-        H.vpPart.CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(t * 0.7, t * 1.0, 0)
-        H.vpPart.Color = Color3.fromHSV((t * 0.15) % 1, 0.7, 1)
-        H.vpLight.Color = H.vpPart.Color
-        RunService.RenderStepped:Wait()
-    end
-end)
-
-H.logoText = Instance.new("TextLabel")
-H.logoText.Size = UDim2.new(1, -54, 0, 18)
-H.logoText.Position = UDim2.new(0, 54, 0, 4)
-H.logoText.BackgroundTransparency = 1
-H.logoText.Text = H.HUB_NAME
-H.logoText.TextColor3 = H.THEME.Text
-H.logoText.Font = Enum.Font.GothamBlack
-H.logoText.TextSize = 15
-H.logoText.TextXAlignment = Enum.TextXAlignment.Left
-H.logoText.ZIndex = 14
-H.logoText.Parent = H.logoFrame
-
-H.logoTag = Instance.new("TextLabel")
-H.logoTag.Size = UDim2.new(1, -54, 0, 14)
-H.logoTag.Position = UDim2.new(0, 54, 0, 22)
-H.logoTag.BackgroundTransparency = 1
-H.logoTag.Text = H.HUB_TAG
-H.logoTag.TextColor3 = H.THEME.AccentHi
-H.logoTag.Font = Enum.Font.GothamBold
-H.logoTag.TextSize = 11
-H.logoTag.TextXAlignment = Enum.TextXAlignment.Left
-H.logoTag.ZIndex = 14
-H.logoTag.Parent = H.logoFrame
-
-H.logoSub = Instance.new("TextLabel")
-H.logoSub.Size = UDim2.new(1, -54, 0, 12)
-H.logoSub.Position = UDim2.new(0, 54, 0, 36)
-H.logoSub.BackgroundTransparency = 1
-H.logoSub.Text = "STEALTH v13"
-H.logoSub.TextColor3 = H.THEME.TextMuted
-H.logoSub.Font = Enum.Font.Gotham
-H.logoSub.TextSize = 9
-H.logoSub.TextXAlignment = Enum.TextXAlignment.Left
-H.logoSub.ZIndex = 14
-H.logoSub.Parent = H.logoFrame
-
-H.tabContainer = Instance.new("ScrollingFrame")
-H.tabContainer.Size = UDim2.new(1, -24, 1, -240)
-H.tabContainer.Position = UDim2.new(0, 12, 0, 96)
-H.tabContainer.BackgroundTransparency = 1
-H.tabContainer.BorderSizePixel = 0
-H.tabContainer.ScrollBarThickness = 2
-H.tabContainer.ScrollBarImageColor3 = H.THEME.Accent
-H.tabContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
-H.tabContainer.ZIndex = 13
-H.tabContainer.Parent = H.sidebar
-H.tabLayout = Instance.new("UIListLayout", H.tabContainer)
-H.tabLayout.Padding = UDim.new(0, 4)
-H.tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-H.tabs = {}
-H.activeTab = nil
-
-H.createTab = function(name, displayName, iconText, accentColor)
-    accentColor = accentColor or H.THEME.Accent
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 42)
-    btn.BackgroundColor3 = H.THEME.Panel
-    btn.BackgroundTransparency = 1
-    btn.Text = ""
-    btn.BorderSizePixel = 0
-    btn.AutoButtonColor = false
-    btn.ClipsDescendants = true
-    btn.ZIndex = 14
-    btn.Parent = H.tabContainer
-    H.corner(btn, 10)
-    H.protectInteraction(btn)
-    local iconLbl = Instance.new("TextLabel")
-    iconLbl.Size = UDim2.new(0, 28, 1, 0)
-    iconLbl.Position = UDim2.new(0, 12, 0, 0)
-    iconLbl.BackgroundTransparency = 1
-    iconLbl.Text = iconText
-    iconLbl.TextColor3 = H.THEME.TextDim
-    iconLbl.Font = Enum.Font.GothamBold
-    iconLbl.TextSize = 17
-    iconLbl.ZIndex = 15
-    iconLbl.Parent = btn
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -50, 1, 0)
-    lbl.Position = UDim2.new(0, 46, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = displayName
-    lbl.TextColor3 = H.THEME.TextDim
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 13
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = btn
-    local ind = Instance.new("Frame")
-    ind.Size = UDim2.new(0, 3, 0, 0)
-    ind.Position = UDim2.new(0, 0, 0.5, 0)
-    ind.AnchorPoint = Vector2.new(0, 0.5)
-    ind.BackgroundColor3 = accentColor
-    ind.BorderSizePixel = 0
-    ind.ZIndex = 16
-    ind.Parent = btn
-    H.corner(ind, 2)
-    btn.MouseEnter:Connect(function()
-        if H.activeTab == btn then return end
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency=0.85, BackgroundColor3=H.THEME.PanelHi}):Play()
-        TweenService:Create(lbl, TweenInfo.new(0.15), {TextColor3=H.THEME.Text}):Play()
-    end)
-    btn.MouseLeave:Connect(function()
-        if H.activeTab == btn then return end
-        TweenService:Create(btn, TweenInfo.new(0.15), {BackgroundTransparency=1}):Play()
-        TweenService:Create(lbl, TweenInfo.new(0.15), {TextColor3=H.THEME.TextDim}):Play()
-    end)
-    H.tabs[name] = {button=btn, label=lbl, icon=iconLbl, indicator=ind, color=accentColor}
-    return btn
-end
-
-H.setActiveTab = function(name)
-    for tn, d in pairs(H.tabs) do
-        if tn == name then
-            TweenService:Create(d.button, TweenInfo.new(0.2), {BackgroundTransparency=0.7, BackgroundColor3=d.color}):Play()
-            TweenService:Create(d.label, TweenInfo.new(0.2), {TextColor3=H.THEME.Text}):Play()
-            TweenService:Create(d.icon, TweenInfo.new(0.2), {TextColor3=d.color}):Play()
-            TweenService:Create(d.indicator, TweenInfo.new(0.25, Enum.EasingStyle.Back), {Size=UDim2.new(0,3,0,28)}):Play()
-            H.activeTab = d.button
-        else
-            TweenService:Create(d.button, TweenInfo.new(0.2), {BackgroundTransparency=1}):Play()
-            TweenService:Create(d.label, TweenInfo.new(0.2), {TextColor3=H.THEME.TextDim}):Play()
-            TweenService:Create(d.icon, TweenInfo.new(0.2), {TextColor3=H.THEME.TextDim}):Play()
-            TweenService:Create(d.indicator, TweenInfo.new(0.2), {Size=UDim2.new(0,3,0,0)}):Play()
-        end
-    end
-end
-
--- USER CARD
-H.userCard = Instance.new("Frame")
-H.userCard.Size = UDim2.new(1, -24, 0, 60)
-H.userCard.Position = UDim2.new(0, 12, 1, -72)
-H.userCard.BackgroundColor3 = H.THEME.PanelHi
-H.userCard.BackgroundTransparency = 0.3
-H.userCard.BorderSizePixel = 0
-H.userCard.ZIndex = 13
-H.userCard.Parent = H.sidebar
-H.corner(H.userCard, 12)
-H.stroke(H.userCard, H.THEME.Border, 1, 0.5)
-
-H.avatar = Instance.new("ImageLabel")
-H.avatar.Size = UDim2.new(0, 42, 0, 42)
-H.avatar.Position = UDim2.new(0, 9, 0.5, -21)
-H.avatar.BackgroundColor3 = H.THEME.BG
-H.avatar.BorderSizePixel = 0
-H.avatar.Image = "rbxthumb://type=AvatarHeadShot&id=" .. LocalPlayer.UserId .. "&w=48&h=48"
-H.avatar.ZIndex = 14
-H.avatar.Parent = H.userCard
-H.corner(H.avatar, 21)
-H.stroke(H.avatar, H.THEME.AccentHi, 1.5, 0.3)
-
-H.userName = Instance.new("TextLabel")
-H.userName.Size = UDim2.new(1, -62, 0, 16)
-H.userName.Position = UDim2.new(0, 60, 0, 12)
-H.userName.BackgroundTransparency = 1
-H.userName.Text = LocalPlayer.DisplayName or LocalPlayer.Name
-H.userName.TextColor3 = H.THEME.Text
-H.userName.Font = Enum.Font.GothamBold
-H.userName.TextSize = 13
-H.userName.TextXAlignment = Enum.TextXAlignment.Left
-H.userName.ZIndex = 14
-H.userName.Parent = H.userCard
-
-H.userStatus = Instance.new("TextLabel")
-H.userStatus.Size = UDim2.new(1, -62, 0, 14)
-H.userStatus.Position = UDim2.new(0, 60, 0, 32)
-H.userStatus.BackgroundTransparency = 1
-H.userStatus.Text = "● Online"
-H.userStatus.TextColor3 = H.THEME.Success
-H.userStatus.Font = Enum.Font.Gotham
-H.userStatus.TextSize = 10
-H.userStatus.TextXAlignment = Enum.TextXAlignment.Left
-H.userStatus.ZIndex = 14
-H.userStatus.Parent = H.userCard
-
--- TOPBAR
-H.topBar = Instance.new("Frame")
-H.topBar.Size = UDim2.new(1, -240, 0, 70)
-H.topBar.Position = UDim2.new(0, 232, 0, 14)
-H.topBar.BackgroundTransparency = 1
-H.topBar.ZIndex = 12
-H.topBar.Parent = H.main
-
-H.pageTitle = Instance.new("TextLabel")
-H.pageTitle.Size = UDim2.new(1, -240, 0, 30)
-H.pageTitle.Position = UDim2.new(0, 0, 0, 2)
-H.pageTitle.BackgroundTransparency = 1
-H.pageTitle.Text = "Combat"
-H.pageTitle.TextColor3 = H.THEME.Text
-H.pageTitle.Font = Enum.Font.GothamBlack
-H.pageTitle.TextSize = 26
-H.pageTitle.TextXAlignment = Enum.TextXAlignment.Left
-H.pageTitle.ZIndex = 13
-H.pageTitle.Parent = H.topBar
-
-H.glitchTitle = H.pageTitle:Clone()
-H.glitchTitle.TextColor3 = H.THEME.Pink
-H.glitchTitle.TextTransparency = 0.5
-H.glitchTitle.ZIndex = 12
-H.glitchTitle.Parent = H.topBar
-task.spawn(function()
-    while H.glitchTitle.Parent do
-        task.wait(math.random(2, 5))
-        if not H.glitchTitle.Parent then break end
-        for i = 1, 4 do
-            H.glitchTitle.Position = UDim2.new(math.random(-3,3)/100, 0, math.random(-2,2)/100, 0)
-            H.glitchTitle.TextColor3 = i % 2 == 0 and H.THEME.Cyan or H.THEME.Pink
-            task.wait(0.04)
-        end
-        H.glitchTitle.Position = UDim2.new(0, 0, 0, 2)
-        H.glitchTitle.TextColor3 = H.THEME.Pink
-    end
-end)
-
-H.pageSub = Instance.new("TextLabel")
-H.pageSub.Size = UDim2.new(1, -240, 0, 16)
-H.pageSub.Position = UDim2.new(0, 2, 0, 34)
-H.pageSub.BackgroundTransparency = 1
-H.pageSub.Text = "Silent aim · Aimbot · Hitbox"
-H.pageSub.TextColor3 = H.THEME.TextDim
-H.pageSub.Font = Enum.Font.Gotham
-H.pageSub.TextSize = 11
-H.pageSub.TextXAlignment = Enum.TextXAlignment.Left
-H.pageSub.ZIndex = 13
-H.pageSub.Parent = H.topBar
-
-H.fpsLbl = Instance.new("TextLabel")
-H.fpsLbl.Size = UDim2.new(0, 100, 0, 22)
-H.fpsLbl.Position = UDim2.new(0, 2, 0, 50)
-H.fpsLbl.BackgroundTransparency = 1
-H.fpsLbl.Text = "⚡ -- FPS"
-H.fpsLbl.TextColor3 = H.THEME.TextMuted
-H.fpsLbl.Font = Enum.Font.Gotham
-H.fpsLbl.TextSize = 10
-H.fpsLbl.TextXAlignment = Enum.TextXAlignment.Left
-H.fpsLbl.ZIndex = 14
-H.fpsLbl.Parent = H.topBar
-
-task.spawn(function()
-    local frames, t = 0, 0
-    while H.fpsLbl.Parent do
-        frames = frames + 1
-        t = t + RunService.RenderStepped:Wait()
-        if t >= 1 then
-            H.fpsLbl.Text = "⚡ " .. frames .. " FPS"
-            frames = 0; t = 0
-        end
-    end
-end)
-
-H.closeBtn = Instance.new("TextButton")
-H.closeBtn.Size = UDim2.new(0, 34, 0, 34)
-H.closeBtn.Position = UDim2.new(1, -44, 0, 50)
-H.closeBtn.BackgroundColor3 = H.THEME.Panel
-H.closeBtn.BackgroundTransparency = 0.15
-H.closeBtn.Text = "✕"
-H.closeBtn.TextColor3 = H.THEME.Danger
-H.closeBtn.Font = Enum.Font.GothamBold
-H.closeBtn.TextSize = 14
-H.closeBtn.BorderSizePixel = 0
-H.closeBtn.AutoButtonColor = false
-H.closeBtn.ZIndex = 13
-H.closeBtn.Parent = H.topBar
-H.corner(H.closeBtn, 10)
-H.stroke(H.closeBtn, H.THEME.Border, 1, 0.5)
-H.protectInteraction(H.closeBtn)
-
-H.minBtn = Instance.new("TextButton")
-H.minBtn.Size = UDim2.new(0, 34, 0, 34)
-H.minBtn.Position = UDim2.new(1, -84, 0, 50)
-H.minBtn.BackgroundColor3 = H.THEME.Panel
-H.minBtn.BackgroundTransparency = 0.15
-H.minBtn.Text = "—"
-H.minBtn.TextColor3 = H.THEME.Warning
-H.minBtn.Font = Enum.Font.GothamBold
-H.minBtn.TextSize = 14
-H.minBtn.BorderSizePixel = 0
-H.minBtn.AutoButtonColor = false
-H.minBtn.ZIndex = 13
-H.minBtn.Parent = H.topBar
-H.corner(H.minBtn, 10)
-H.stroke(H.minBtn, H.THEME.Border, 1, 0.5)
-H.protectInteraction(H.minBtn)
-
-H.notifHolder = Instance.new("Frame")
-H.notifHolder.Size = UDim2.new(0, 260, 1, -20)
-H.notifHolder.Position = UDim2.new(1, -280, 0, 10)
-H.notifHolder.BackgroundTransparency = 1
-H.notifHolder.ZIndex = 60
-H.notifHolder.Parent = H.main
-H.notifList = Instance.new("UIListLayout", H.notifHolder)
-H.notifList.Padding = UDim.new(0, 6)
-H.notifList.SortOrder = Enum.SortOrder.LayoutOrder
-
-H.notify = function(text, color)
-    color = color or H.THEME.Accent
-    local n = Instance.new("Frame")
-    n.Size = UDim2.new(1, 0, 0, 34)
-    n.BackgroundColor3 = H.THEME.Panel
-    n.BackgroundTransparency = 0.15
-    n.BorderSizePixel = 0
-    n.ZIndex = 61
-    n.Parent = H.notifHolder
-    H.corner(n, 8)
-    H.stroke(n, color, 1.5, 0.3)
-    H.shadow(n, 10, 0.7)
-    local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 3, 1, 0)
-    bar.BackgroundColor3 = color
-    bar.BorderSizePixel = 0
-    bar.ZIndex = 62
-    bar.Parent = n
-    H.corner(bar, 2)
-    local t = Instance.new("TextLabel")
-    t.Size = UDim2.new(1, -20, 1, 0)
-    t.Position = UDim2.new(0, 12, 0, 0)
-    t.BackgroundTransparency = 1
-    t.Text = text
-    t.TextColor3 = H.THEME.Text
-    t.Font = Enum.Font.GothamBold
-    t.TextSize = 11
-    t.TextXAlignment = Enum.TextXAlignment.Left
-    t.ZIndex = 62
-    t.Parent = n
-    n.Position = UDim2.new(1.2, 0, 0, 0)
-    TweenService:Create(n, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-    task.delay(3, function()
-        if n.Parent then
-            TweenService:Create(n, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1.2, 0, 0, 0)}):Play()
-            task.wait(0.4)
-            if n.Parent then n:Destroy() end
-        end
-    end)
-end
-
-H.content = Instance.new("ScrollingFrame")
-H.content.Size = UDim2.new(1, -260, 1, -105)
-H.content.Position = UDim2.new(0, 232, 0, 92)
-H.content.BackgroundTransparency = 1
-H.content.BorderSizePixel = 0
-H.content.ScrollBarThickness = 4
-H.content.ScrollBarImageColor3 = H.THEME.Accent
-H.content.CanvasSize = UDim2.new(0, 0, 0, 0)
-H.content.ZIndex = 12
-H.content.Parent = H.main
-H.protectInteraction(H.content)
-
-H.contentList = Instance.new("UIListLayout", H.content)
-H.contentList.Padding = UDim.new(0, 14)
-H.contentList.SortOrder = Enum.SortOrder.LayoutOrder
-
-H.updateCanvas = function()
-    H.content.CanvasSize = UDim2.new(0, 0, 0, H.contentList.AbsoluteContentSize.Y + 20)
-end
-H.updateTabCanvas = function()
-    H.tabContainer.CanvasSize = UDim2.new(0, 0, 0, H.tabLayout.AbsoluteContentSize.Y + 10)
-end
-
--- WIDGETS
-H.sectionCard = function(title, subtitle)
-    local card = Instance.new("Frame")
-    card.Size = UDim2.new(1, -12, 0, 50)
-    card.BackgroundColor3 = H.THEME.Panel
-    card.BackgroundTransparency = 0.15
-    card.BorderSizePixel = 0
-    card.ZIndex = 13
-    card.Parent = H.content
-    H.corner(card, 12)
-    H.stroke(card, H.THEME.Border, 1, 0.6)
-    local accent = Instance.new("Frame")
-    accent.Size = UDim2.new(0, 3, 0, 26)
-    accent.Position = UDim2.new(0, 0, 0.5, -13)
-    accent.BackgroundColor3 = H.THEME.Accent
-    accent.BorderSizePixel = 0
-    accent.ZIndex = 14
-    accent.Parent = card
-    H.corner(accent, 2)
-    H.grad(accent, H.THEME.Accent, H.THEME.Purple, 90)
-    local t = Instance.new("TextLabel")
-    t.Size = UDim2.new(1, -40, 0, 20)
-    t.Position = UDim2.new(0, 18, 0, 8)
-    t.BackgroundTransparency = 1
-    t.Text = title
-    t.TextColor3 = H.THEME.Text
-    t.Font = Enum.Font.GothamBold
-    t.TextSize = 14
-    t.TextXAlignment = Enum.TextXAlignment.Left
-    t.ZIndex = 14
-    t.Parent = card
-    if subtitle then
-        local s = Instance.new("TextLabel")
-        s.Size = UDim2.new(1, -40, 0, 14)
-        s.Position = UDim2.new(0, 18, 0, 28)
-        s.BackgroundTransparency = 1
-        s.Text = subtitle
-        s.TextColor3 = H.THEME.TextDim
-        s.Font = Enum.Font.Gotham
-        s.TextSize = 10
-        s.TextXAlignment = Enum.TextXAlignment.Left
-        s.ZIndex = 14
-        s.Parent = card
-    end
-    return card
-end
-
-H.container = function()
-    local c = Instance.new("Frame")
-    c.Size = UDim2.new(1, -12, 0, 10)
-    c.AutomaticSize = Enum.AutomaticSize.Y
-    c.BackgroundColor3 = H.THEME.Panel
-    c.BackgroundTransparency = 0.15
-    c.BorderSizePixel = 0
-    c.ZIndex = 13
-    c.Parent = H.content
-    H.corner(c, 12)
-    H.stroke(c, H.THEME.Border, 1, 0.6)
-    local l = Instance.new("UIListLayout", c)
-    l.Padding = UDim.new(0, 4)
-    l.SortOrder = Enum.SortOrder.LayoutOrder
-    local u = Instance.new("UIPadding", c)
-    u.PaddingTop = UDim.new(0, 8); u.PaddingBottom = UDim.new(0, 8)
-    u.PaddingLeft = UDim.new(0, 8); u.PaddingRight = UDim.new(0, 8)
-    return c
-end
-
-H.toggleRow = function(parent, name, default, accent, stateKey, onChange)
-    accent = accent or H.THEME.Accent
-    if stateKey then
-        if H.State[stateKey] ~= nil then default = H.State[stateKey]
-        else H.State[stateKey] = default end
-    end
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 42)
-    row.BackgroundColor3 = H.THEME.PanelHi
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 14
-    row.Parent = parent
-    H.corner(row, 8)
-    H.protectInteraction(row)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -90, 1, 0)
-    lbl.Position = UDim2.new(0, 14, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = name
-    lbl.TextColor3 = H.THEME.Text
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = row
-    local swBg = Instance.new("Frame")
-    swBg.Size = UDim2.new(0, 42, 0, 22)
-    swBg.Position = UDim2.new(1, -56, 0.5, -11)
-    swBg.BackgroundColor3 = default and accent or H.THEME.Panel
-    swBg.BorderSizePixel = 0
-    swBg.ZIndex = 15
-    swBg.Parent = row
-    H.corner(swBg, 11)
-    local swStroke = H.stroke(swBg, H.THEME.Border, 1, default and 0 or 0.5)
-    local swKnob = Instance.new("Frame")
-    swKnob.Size = UDim2.new(0, 16, 0, 16)
-    swKnob.Position = default and UDim2.new(1, -20, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
-    swKnob.BackgroundColor3 = Color3.new(1,1,1)
-    swKnob.BorderSizePixel = 0
-    swKnob.ZIndex = 16
-    swKnob.Parent = swBg
-    H.corner(swKnob, 8)
-    local enabled = default
-    local function setState(v)
-        enabled = v
-        if v then H.playSound("ToggleOn", 0.3, 1.1) else H.playSound("ToggleOff", 0.3, 0.9) end
-        if stateKey then H.State[stateKey] = v end
-        TweenService:Create(swBg, TweenInfo.new(0.25, Enum.EasingStyle.Back), {BackgroundColor3 = v and accent or H.THEME.Panel}):Play()
-        TweenService:Create(swStroke, TweenInfo.new(0.25), {Transparency = v and 0 or 0.5}):Play()
-        TweenService:Create(swKnob, TweenInfo.new(0.25, Enum.EasingStyle.Back), {Position = v and UDim2.new(1,-20,0.5,-8) or UDim2.new(0,3,0.5,-8)}):Play()
-        if onChange then pcall(onChange, v) end
-    end
-    row.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then setState(not enabled) end
-    end)
-    return setState
-end
-
-H.sliderRow = function(parent, name, min, max, default, decimals, stateKey, onChange)
-    decimals = decimals or 0
-    if stateKey then
-        if H.State[stateKey] ~= nil then default = H.State[stateKey]
-        else H.State[stateKey] = default end
-    end
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 58)
-    row.BackgroundColor3 = H.THEME.PanelHi
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 14
-    row.Parent = parent
-    H.corner(row, 8)
-    H.protectInteraction(row)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(0.6, 0, 0, 18)
-    lbl.Position = UDim2.new(0, 14, 0, 8)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = name
-    lbl.TextColor3 = H.THEME.Text
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = row
-    local valLbl = Instance.new("TextLabel")
-    valLbl.Size = UDim2.new(0.3, 0, 0, 18)
-    valLbl.Position = UDim2.new(0.6, 0, 0, 8)
-    valLbl.BackgroundTransparency = 1
-    valLbl.Text = tostring(default)
-    valLbl.TextColor3 = H.THEME.AccentHi
-    valLbl.Font = Enum.Font.GothamBold
-    valLbl.TextSize = 12
-    valLbl.TextXAlignment = Enum.TextXAlignment.Right
-    valLbl.ZIndex = 15
-    valLbl.Parent = row
-    local track = Instance.new("Frame")
-    track.Size = UDim2.new(1, -28, 0, 6)
-    track.Position = UDim2.new(0, 14, 0, 38)
-    track.BackgroundColor3 = H.THEME.BG
-    track.BorderSizePixel = 0
-    track.ZIndex = 15
-    track.Parent = row
-    H.corner(track, 3)
-    local fill = Instance.new("Frame")
-    fill.Size = UDim2.new((default-min)/math.max((max-min), 0.0001), 0, 1, 0)
-    fill.BackgroundColor3 = H.THEME.Accent
-    fill.BorderSizePixel = 0
-    fill.ZIndex = 16
-    fill.Parent = track
-    H.corner(fill, 3)
-    H.grad(fill, H.THEME.Accent, H.THEME.Purple, 0)
-    local knob = Instance.new("Frame")
-    knob.Size = UDim2.new(0, 14, 0, 14)
-    knob.Position = UDim2.new((default-min)/math.max((max-min), 0.0001), 0, 0.5, -7)
-    knob.AnchorPoint = Vector2.new(0.5, 0)
-    knob.BackgroundColor3 = Color3.new(1,1,1)
-    knob.BorderSizePixel = 0
-    knob.ZIndex = 17
-    knob.Parent = track
-    H.corner(knob, 7)
-    H.stroke(knob, H.THEME.AccentHi, 1.5, 0)
-    local dragging = false
-    local function update(x)
-        local rel = math.clamp((x - track.AbsolutePosition.X) / track.AbsoluteSize.X, 0, 1)
-        local val = min + (max-min) * rel
-        if decimals > 0 then val = math.floor(val * (10^decimals)) / (10^decimals)
-        else val = math.floor(val + 0.5) end
-        fill.Size = UDim2.new((val-min)/math.max((max-min), 0.0001), 0, 1, 0)
-        knob.Position = UDim2.new((val-min)/math.max((max-min), 0.0001), 0, 0.5, -7)
-        valLbl.Text = tostring(val)
-        if stateKey then H.State[stateKey] = val end
-        if onChange then pcall(onChange, val) end
-    end
-    track.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input.Position.X) end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input.Position.X) end
-    end)
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-    end)
-end
-
-H.buttonRow = function(parent, name, color, onClick)
-    color = color or H.THEME.Accent
-    local b = Instance.new("TextButton")
-    b.Size = UDim2.new(1, 0, 0, 40)
-    b.BackgroundColor3 = color
-    b.Text = name
-    b.TextColor3 = Color3.new(1,1,1)
-    b.Font = Enum.Font.GothamBold
-    b.TextSize = 12
-    b.BorderSizePixel = 0
-    b.AutoButtonColor = false
-    b.ZIndex = 14
-    b.Parent = parent
-    H.corner(b, 8)
-    H.grad(b, color, color:Lerp(Color3.new(1,1,1), 0.2), 0)
-    H.protectInteraction(b)
-    b.MouseButton1Click:Connect(function()
-        H.playSound("Click", 0.3, 1)
-        if onClick then onClick() end
-    end)
-    return b
-end
-
-H.keybindRow = function(parent, name, defaultKey, stateKey)
-    if stateKey then
-        if H.State[stateKey] ~= nil then defaultKey = H.State[stateKey]
-        else H.State[stateKey] = defaultKey end
-    end
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 42)
-    row.BackgroundColor3 = H.THEME.PanelHi
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 14
-    row.Parent = parent
-    H.corner(row, 8)
-    H.protectInteraction(row)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(0.5, 0, 1, 0)
-    lbl.Position = UDim2.new(0, 14, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = name
-    lbl.TextColor3 = H.THEME.Text
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = row
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.45, 0, 0, 26)
-    btn.Position = UDim2.new(0.5, -14, 0.5, -13)
-    btn.BackgroundColor3 = H.THEME.Panel
-    btn.Text = tostring(defaultKey.Name)
-    btn.TextColor3 = H.THEME.AccentHi
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 11
-    btn.BorderSizePixel = 0
-    btn.AutoButtonColor = false
-    btn.ZIndex = 15
-    btn.Parent = row
-    H.corner(btn, 6)
-    H.stroke(btn, H.THEME.Border, 1, 0.5)
-    local listening = false
-    btn.MouseButton1Click:Connect(function()
-        if listening then return end
-        H.playSound("Click", 0.2, 1)
-        listening = true
-        btn.Text = "..."
-        btn.TextColor3 = H.THEME.Warning
-        local conn
-        conn = UserInputService.InputBegan:Connect(function(input, gp)
-            if gp then return end
-            if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-            if input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.Unknown then return end
-            btn.Text = tostring(input.KeyCode.Name)
-            btn.TextColor3 = H.THEME.AccentHi
-            listening = false
-            if stateKey then H.State[stateKey] = input.KeyCode end
-            conn:Disconnect()
-        end)
-    end)
-end
-
-H.dropdownRow = function(parent, name, options, default, stateKey, onChange)
-    if stateKey then
-        if H.State[stateKey] ~= nil then default = H.State[stateKey]
-        else H.State[stateKey] = default end
-    end
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 42)
-    row.BackgroundColor3 = H.THEME.PanelHi
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 14
-    row.Parent = parent
-    H.corner(row, 8)
-    H.protectInteraction(row)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(0.5, 0, 1, 0)
-    lbl.Position = UDim2.new(0, 14, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = name
-    lbl.TextColor3 = H.THEME.Text
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = row
-    local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0.45, 0, 0, 26)
-    btn.Position = UDim2.new(0.5, -14, 0.5, -13)
-    btn.BackgroundColor3 = H.THEME.Panel
-    btn.Text = tostring(default)
-    btn.TextColor3 = H.THEME.AccentHi
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 11
-    btn.BorderSizePixel = 0
-    btn.AutoButtonColor = false
-    btn.ZIndex = 15
-    btn.Parent = row
-    H.corner(btn, 6)
-    H.stroke(btn, H.THEME.Border, 1, 0.5)
-    local listFrame = Instance.new("Frame")
-    listFrame.Size = UDim2.new(0.45, 0, 0, 0)
-    listFrame.Position = UDim2.new(0.5, -14, 1, 4)
-    listFrame.BackgroundColor3 = H.THEME.Panel
-    listFrame.BorderSizePixel = 0
-    listFrame.Visible = false
-    listFrame.ZIndex = 50
-    listFrame.Parent = row
-    H.corner(listFrame, 6)
-    H.stroke(listFrame, H.THEME.Border, 1, 0.4)
-    local listLayout = Instance.new("UIListLayout", listFrame)
-    listLayout.Padding = UDim.new(0, 2)
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    local u = Instance.new("UIPadding", listFrame)
-    u.PaddingTop = UDim.new(0, 4); u.PaddingBottom = UDim.new(0, 4)
-    u.PaddingLeft = UDim.new(0, 4); u.PaddingRight = UDim.new(0, 4)
-    for _, opt in ipairs(options) do
-        local optBtn = Instance.new("TextButton")
-        optBtn.Size = UDim2.new(1, 0, 0, 24)
-        optBtn.BackgroundColor3 = H.THEME.PanelHi
-        optBtn.Text = tostring(opt)
-        optBtn.TextColor3 = H.THEME.Text
-        optBtn.Font = Enum.Font.Gotham
-        optBtn.TextSize = 11
-        optBtn.BorderSizePixel = 0
-        optBtn.AutoButtonColor = false
-        optBtn.ZIndex = 51
-        optBtn.Parent = listFrame
-        H.corner(optBtn, 4)
-        optBtn.MouseButton1Click:Connect(function()
-            H.playSound("Click", 0.2, 1.1)
-            btn.Text = tostring(opt)
-            listFrame.Visible = false
-            if stateKey then H.State[stateKey] = opt end
-            if onChange then pcall(onChange, opt) end
-        end)
-    end
-    btn.MouseButton1Click:Connect(function()
-        H.playSound("Click", 0.2, 1)
-        listFrame.Visible = not listFrame.Visible
-        if listFrame.Visible then
-            listFrame.Size = UDim2.new(0.45, 0, 0, listLayout.AbsoluteContentSize.Y + 10)
-        end
-    end)
-end
-
-H.textInputRow = function(parent, name, placeholder, default, stateKey, onConfirm)
-    if stateKey then
-        if H.State[stateKey] ~= nil then default = H.State[stateKey]
-        else H.State[stateKey] = default end
-    end
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 42)
-    row.BackgroundColor3 = H.THEME.PanelHi
-    row.BackgroundTransparency = 0.3
-    row.BorderSizePixel = 0
-    row.ZIndex = 14
-    row.Parent = parent
-    H.corner(row, 8)
-    H.protectInteraction(row)
-    local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(0.5, 0, 1, 0)
-    lbl.Position = UDim2.new(0, 14, 0, 0)
-    lbl.BackgroundTransparency = 1
-    lbl.Text = name
-    lbl.TextColor3 = H.THEME.Text
-    lbl.Font = Enum.Font.GothamMedium
-    lbl.TextSize = 12
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-    lbl.ZIndex = 15
-    lbl.Parent = row
-    local box = Instance.new("TextBox")
-    box.Size = UDim2.new(0.45, 0, 0, 26)
-    box.Position = UDim2.new(0.5, -14, 0.5, -13)
-    box.BackgroundColor3 = H.THEME.Panel
-    box.Text = tostring(default or "")
-    box.PlaceholderText = placeholder or ""
-    box.PlaceholderColor3 = H.THEME.TextMuted
-    box.TextColor3 = H.THEME.AccentHi
-    box.Font = Enum.Font.GothamBold
-    box.TextSize = 11
-    box.BorderSizePixel = 0
-    box.ClearTextOnFocus = false
-    box.ZIndex = 15
-    box.Parent = row
-    H.corner(box, 6)
-    H.stroke(box, H.THEME.Border, 1, 0.5)
-    box.FocusLost:Connect(function()
-        if stateKey then H.State[stateKey] = box.Text end
-        if onConfirm then pcall(onConfirm, box.Text) end
-    end)
-end
-
--- CHARACTER
-H.Character = nil
-H.Humanoid = nil
-H.RootPart = nil
-local function onChar(char)
-    H.Character = char
-    H.Humanoid = char:WaitForChild("Humanoid", 5)
-    H.RootPart = char:WaitForChild("HumanoidRootPart", 5)
-end
+-- MODULES
+H.Character = nil; H.Humanoid = nil; H.RootPart = nil
+local function onChar(char) H.Character = char; H.Humanoid = char:WaitForChild("Humanoid", 5); H.RootPart = char:WaitForChild("HumanoidRootPart", 5) end
 if LocalPlayer.Character then onChar(LocalPlayer.Character) end
 LocalPlayer.CharacterAdded:Connect(onChar)
 
--- MODULES
-H.savedLighting = {}
-H.removedGrass = {}
-H.removedLeaves = {}
-H.noclipConn = nil
-H.antiFallConn = nil
-H.antiaimConn = nil
-H.djConn = nil
-H.djJumped = false
-H.savedGravity = nil
-H.freeCamActive = false
-H.freeCamPos = nil
-H.freeCamYaw = 0
-H.freeCamPitch = 0
-H.freeCamSavedMouse = nil
-H.defaultFOV = 70
-H.lastFOV = nil
-H.stealthSpeedConn = nil
-H.stealthFlyActive = false
-H.stealthFlyBurstStart = 0
-H.stealthFlyCooldownUntil = 0
+H.savedLighting = {}; H.removedGrass = {}; H.removedLeaves = {}; H.noclipConn = nil; H.antiFallConn = nil; H.antiaimConn = nil; H.djConn = nil; H.jumpCount = 0; H.savedGravity = nil
+H.freeCamActive = false; H.freeCamPos = nil; H.freeCamYaw = 0; H.freeCamPitch = 0; H.freeCamSavedMouse = nil; H.defaultFOV = 70; H.lastFOV = nil; H.stealthSpeedConn = nil; H.stealthFlyActive = false; H.isAimbotting = false
 
-H.setFullbright = function(on)
-    if on then
-        H.savedLighting.Ambient = Lighting.Ambient
-        H.savedLighting.OutdoorAmbient = Lighting.OutdoorAmbient
-        H.savedLighting.Brightness = Lighting.Brightness
-        H.savedLighting.ClockTime = Lighting.ClockTime
-        H.savedLighting.FogEnd = Lighting.FogEnd
-        H.savedLighting.GlobalShadows = Lighting.GlobalShadows
-        Lighting.Ambient = Color3.fromRGB(255,255,255)
-        Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255)
-        Lighting.Brightness = 3
-        Lighting.ClockTime = 12
-        Lighting.FogEnd = 100000
-        Lighting.GlobalShadows = false
-    else
-        if H.savedLighting.Ambient then
-            Lighting.Ambient = H.savedLighting.Ambient
-            Lighting.OutdoorAmbient = H.savedLighting.OutdoorAmbient
-            Lighting.Brightness = H.savedLighting.Brightness
-            Lighting.ClockTime = H.savedLighting.ClockTime
-            Lighting.FogEnd = H.savedLighting.FogEnd
-            Lighting.GlobalShadows = H.savedLighting.GlobalShadows
-        end
-    end
-end
+H.setFullbright = function(on) if on then H.savedLighting.Ambient = Lighting.Ambient; H.savedLighting.OutdoorAmbient = Lighting.OutdoorAmbient; H.savedLighting.Brightness = Lighting.Brightness; H.savedLighting.ClockTime = Lighting.ClockTime; H.savedLighting.FogEnd = Lighting.FogEnd; H.savedLighting.GlobalShadows = Lighting.GlobalShadows; Lighting.Ambient = Color3.fromRGB(255,255,255); Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255); Lighting.Brightness = 3; Lighting.ClockTime = 12; Lighting.FogEnd = 100000; Lighting.GlobalShadows = false else if H.savedLighting.Ambient then Lighting.Ambient = H.savedLighting.Ambient; Lighting.OutdoorAmbient = H.savedLighting.OutdoorAmbient; Lighting.Brightness = H.savedLighting.Brightness; Lighting.ClockTime = H.savedLighting.ClockTime; Lighting.FogEnd = H.savedLighting.FogEnd; Lighting.GlobalShadows = H.savedLighting.GlobalShadows end end end
+H.setRemoveGrass = function(on) if on then pcall(function() Workspace.Terrain.Decoration = false end); for _, obj in ipairs(Workspace:GetDescendants()) do if obj:IsA("BasePart") then local n = obj.Name:lower(); if (n:find("grass") or n:find("bush") or n:find("shrub")) and obj.Transparency < 1 then if not H.removedGrass[obj] then H.removedGrass[obj] = obj.Transparency; obj.Transparency = 1 end end end end else pcall(function() Workspace.Terrain.Decoration = true end); for p, t in pairs(H.removedGrass) do if p and p.Parent then p.Transparency = t end end; H.removedGrass = {} end end
+H.setRemoveLeaves = function(on) if on then for _, obj in ipairs(Workspace:GetDescendants()) do if obj:IsA("BasePart") then local n = obj.Name:lower(); if (n:find("leaf") or n:find("leaves") or n:find("foliage") or n:find("canopy")) and obj.Transparency < 1 then if not H.removedLeaves[obj] then H.removedLeaves[obj] = obj.Transparency; obj.Transparency = 1 end end end end else for p, t in pairs(H.removedLeaves) do if p and p.Parent then p.Transparency = t end end; H.removedLeaves = {} end end
 
-H.setRemoveGrass = function(on)
-    if on then
-        pcall(function() Workspace.Terrain.Decoration = false end)
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj:IsA("BasePart") then
-                local n = obj.Name:lower()
-                if (n:find("grass") or n:find("bush") or n:find("shrub")) and obj.Transparency < 1 then
-                    if not H.removedGrass[obj] then H.removedGrass[obj] = obj.Transparency; obj.Transparency = 1 end
-                end
-            end
-        end
-    else
-        pcall(function() Workspace.Terrain.Decoration = true end)
-        for p, t in pairs(H.removedGrass) do if p and p.Parent then p.Transparency = t end end
-        H.removedGrass = {}
-    end
-end
-
-H.setRemoveLeaves = function(on)
-    if on then
-        for _, obj in ipairs(Workspace:GetDescendants()) do
-            if obj:IsA("BasePart") then
-                local n = obj.Name:lower()
-                if (n:find("leaf") or n:find("leaves") or n:find("foliage") or n:find("canopy")) and obj.Transparency < 1 then
-                    if not H.removedLeaves[obj] then H.removedLeaves[obj] = obj.Transparency; obj.Transparency = 1 end
-                end
-            end
-        end
-    else
-        for p, t in pairs(H.removedLeaves) do if p and p.Parent then p.Transparency = t end end
-        H.removedLeaves = {}
-    end
-end
-
-H.enableSpeed = function()
-    if H.stealthSpeedConn then return end
-    H.stealthSpeedConn = RunService.Heartbeat:Connect(function()
-        if not H.State.SpeedHack then return end
-        local char = LocalPlayer.Character
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        if not root or not hum then return end
-        local moveDir = hum.MoveDirection
-        if moveDir.Magnitude > 0.1 then
-            local step = H.State.WalkSpeedValue / 200
-            if step > 0.5 then step = 0.5 end
-            root.CFrame = root.CFrame + moveDir.Unit * step
-        end
-    end)
-end
-H.disableSpeed = function()
-    if H.stealthSpeedConn then H.stealthSpeedConn:Disconnect(); H.stealthSpeedConn = nil end
-end
-
-H.enableFly = function()
-    if H.stealthFlyActive then return end
-    H.stealthFlyActive = true
-    task.spawn(function()
-        while H.stealthFlyActive do
-            if H.State.Fly then
-                local char = LocalPlayer.Character
-                local root = char and char:FindFirstChild("HumanoidRootPart")
-                if root and UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-                    local cam = H.getCam()
-                    if cam then
-                        local move = Vector3.zero
-                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + cam.CFrame.LookVector end
-                        if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - cam.CFrame.LookVector end
-                        if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - cam.CFrame.RightVector end
-                        if UserInputService:IsKeyDown(Enum.KeyCode.D) then move = move + cam.CFrame.RightVector end
-                        move = move + Vector3.new(0, 1, 0)
-                        if move.Magnitude > 0 then
-                            root.AssemblyLinearVelocity = move.Unit * (H.State.FlySpeed / 3)
-                        end
-                    end
-                end
-            end
-            RunService.Heartbeat:Wait()
-        end
-    end)
-end
-H.disableFly = function()
-    H.stealthFlyActive = false
-end
-
-H.enableNoclip = function()
-    if H.noclipConn then return end
-    H.noclipConn = RunService.Stepped:Connect(function()
-        if not H.State.Noclip or not H.Character then return end
-        for _, p in ipairs(H.Character:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = false end end
-    end)
-end
-H.disableNoclip = function()
-    if H.noclipConn then H.noclipConn:Disconnect(); H.noclipConn = nil end
-    if H.Character then for _, p in ipairs(H.Character:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = true end end end
-end
-
-H.jumpCount = 0
-H.maxJumps = 5
-H.enableDoubleJump = function()
-    if H.djConn then return end
-    H.djConn = UserInputService.JumpRequest:Connect(function()
-        if not H.State.DoubleJump then return end
-        local char = LocalPlayer.Character
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        if not hum or not root then return end
-        if hum:GetState() == Enum.HumanoidStateType.Freefall or hum:GetState() == Enum.HumanoidStateType.Jumping then
-            if H.jumpCount < H.maxJumps then
-                H.jumpCount = H.jumpCount + 1
-                root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 50, root.AssemblyLinearVelocity.Z)
-            end
-        end
-    end)
-    local char = LocalPlayer.Character
-    if char then
-        local hum = char:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.StateChanged:Connect(function(_, new)
-                if new == Enum.HumanoidStateType.Landed or new == Enum.HumanoidStateType.Running then
-                    H.jumpCount = 0
-                end
-            end)
-        end
-    end
-end
-H.disableDoubleJump = function()
-    if H.djConn then H.djConn:Disconnect(); H.djConn = nil end
-    H.jumpCount = 0
-end
-
-H.enableAntiFall = function()
-    if H.antiFallConn then return end
-    H.savedGravity = Workspace.Gravity
-    Workspace.Gravity = 0
-    H.antiFallConn = RunService.Heartbeat:Connect(function()
-        if not H.State.AntiFall then return end
-        local char = LocalPlayer.Character
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        if root and root.AssemblyLinearVelocity.Y < -1 then
-            root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z)
-        end
-    end)
-end
-H.disableAntiFall = function()
-    if H.antiFallConn then H.antiFallConn:Disconnect(); H.antiFallConn = nil end
-    if H.savedGravity then Workspace.Gravity = H.savedGravity end
-end
-
-H.updateZoomFOV = function()
-    local cam = H.getCam(); if not cam then return end
-    local target
-    if H.State.Zoom then target = H.State.ZoomValue
-    elseif H.State.FOVChanger then target = H.State.FOVValue
-    else target = H.defaultFOV end
-    if target ~= H.lastFOV then cam.FieldOfView = target; H.lastFOV = target end
-end
-
-H.startFreeCam = function()
-    if H.freeCamActive then return end
-    H.freeCamActive = true
-    local cam = H.getCam(); if not cam then return end
-    H.freeCamPos = cam.CFrame.Position
-    local look = cam.CFrame.LookVector
-    H.freeCamYaw = math.atan2(-look.X, -look.Z)
-    H.freeCamPitch = math.asin(look.Y)
-    H.freeCamSavedMouse = UserInputService.MouseBehavior
-    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-    cam.CameraType = Enum.CameraType.Scriptable
-end
-H.stopFreeCam = function()
-    if not H.freeCamActive then return end
-    H.freeCamActive = false
-    UserInputService.MouseBehavior = H.freeCamSavedMouse or Enum.MouseBehavior.Default
-    local cam = H.getCam(); if cam then cam.CameraType = Enum.CameraType.Custom end
-end
-
-H.enableAntiAim = function()
-    if H.antiaimConn then return end
-    H.antiaimConn = RunService.Heartbeat:Connect(function()
-        local char = LocalPlayer.Character
-        local root = char and char:FindFirstChild("HumanoidRootPart")
-        local hum = char and char:FindFirstChildOfClass("Humanoid")
-        if not root or not hum then return end
-        if H.State.AntiAim and H.State.AntiAimType == "Spin" then
-            hum.AutoRotate = false
-            local cam = H.getCam(); if not cam then return end
-            local angle = -math.atan2(cam.CFrame.LookVector.Z, cam.CFrame.LookVector.X) + tick() * H.State.AntiAimSpinSpeed % 360
-            root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, angle, 0)
-        elseif H.State.AntiAim and H.State.AntiAimType == "Jitter" then
-            hum.AutoRotate = false
-            root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, math.rad(math.random(-H.State.AntiAimJitter, H.State.AntiAimJitter)), 0)
-        else hum.AutoRotate = true end
-    end)
-end
+H.enableSpeed = function() if H.stealthSpeedConn then return end; H.stealthSpeedConn = RunService.Heartbeat:Connect(function() if not H.State.SpeedHack then return end; local char = LocalPlayer.Character; local root = char and char:FindFirstChild("HumanoidRootPart"); local hum = char and char:FindFirstChildOfClass("Humanoid"); if not root or not hum then return end; local moveDir = hum.MoveDirection; if moveDir.Magnitude > 0.1 then local step = H.State.WalkSpeedValue / 200; if step > 0.5 then step = 0.5 end; root.CFrame = root.CFrame + moveDir.Unit * step end end) end
+H.disableSpeed = function() if H.stealthSpeedConn then H.stealthSpeedConn:Disconnect(); H.stealthSpeedConn = nil end end
+H.enableFly = function() if H.stealthFlyActive then return end; H.stealthFlyActive = true; task.spawn(function() while H.stealthFlyActive do if H.State.Fly then local char = LocalPlayer.Character; local root = char and char:FindFirstChild("HumanoidRootPart"); if root and UserInputService:IsKeyDown(Enum.KeyCode.Space) then local cam = H.getCam(); if cam then local move = Vector3.zero; if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + cam.CFrame.LookVector end; if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - cam.CFrame.LookVector end; if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - cam.CFrame.RightVector end; if UserInputService:IsKeyDown(Enum.KeyCode.D) then move = move + cam.CFrame.RightVector end; move = move + Vector3.new(0, 1, 0); if move.Magnitude > 0 then root.AssemblyLinearVelocity = move.Unit * (H.State.FlySpeed / 3) end end end end RunService.Heartbeat:Wait() end end) end
+H.disableFly = function() H.stealthFlyActive = false end
+H.enableNoclip = function() if H.noclipConn then return end; H.noclipConn = RunService.Stepped:Connect(function() if not H.State.Noclip or not H.Character then return end; for _, p in ipairs(H.Character:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = false end end end) end
+H.disableNoclip = function() if H.noclipConn then H.noclipConn:Disconnect(); H.noclipConn = nil end; if H.Character then for _, p in ipairs(H.Character:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = true end end end end
+H.enableDoubleJump = function() if H.djConn then return end; H.djConn = UserInputService.JumpRequest:Connect(function() if not H.State.DoubleJump then return end; local char = LocalPlayer.Character; local hum = char and char:FindFirstChildOfClass("Humanoid"); local root = char and char:FindFirstChild("HumanoidRootPart"); if not hum or not root then return end; if hum:GetState() == Enum.HumanoidStateType.Freefall or hum:GetState() == Enum.HumanoidStateType.Jumping then if H.jumpCount < 5 then H.jumpCount = H.jumpCount + 1; root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 50, root.AssemblyLinearVelocity.Z) end end end); local char = LocalPlayer.Character; if char then local hum = char:FindFirstChildOfClass("Humanoid"); if hum then hum.StateChanged:Connect(function(_, new) if new == Enum.HumanoidStateType.Landed or new == Enum.HumanoidStateType.Running then H.jumpCount = 0 end end) end end end
+H.disableDoubleJump = function() if H.djConn then H.djConn:Disconnect(); H.djConn = nil end; H.jumpCount = 0 end
+H.enableAntiFall = function() if H.antiFallConn then return end; H.savedGravity = Workspace.Gravity; Workspace.Gravity = 0; H.antiFallConn = RunService.Heartbeat:Connect(function() if not H.State.AntiFall then return end; local char = LocalPlayer.Character; local root = char and char:FindFirstChild("HumanoidRootPart"); if root and root.AssemblyLinearVelocity.Y < -1 then root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z) end end) end
+H.disableAntiFall = function() if H.antiFallConn then H.antiFallConn:Disconnect(); H.antiFallConn = nil end; if H.savedGravity then Workspace.Gravity = H.savedGravity end end
+H.updateZoomFOV = function() local cam = H.getCam(); if not cam then return end; local target; if H.State.Zoom then target = H.State.ZoomValue elseif H.State.FOVChanger then target = H.State.FOVValue else target = H.defaultFOV end; if target ~= H.lastFOV then cam.FieldOfView = target; H.lastFOV = target end end
+H.startFreeCam = function() if H.freeCamActive then return end; H.freeCamActive = true; local cam = H.getCam(); if not cam then return end; H.freeCamPos = cam.CFrame.Position; local look = cam.CFrame.LookVector; H.freeCamYaw = math.atan2(-look.X, -look.Z); H.freeCamPitch = math.asin(look.Y); H.freeCamSavedMouse = UserInputService.MouseBehavior; UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter; cam.CameraType = Enum.CameraType.Scriptable end
+H.stopFreeCam = function() if not H.freeCamActive then return end; H.freeCamActive = false; UserInputService.MouseBehavior = H.freeCamSavedMouse or Enum.MouseBehavior.Default; local cam = H.getCam(); if cam then cam.CameraType = Enum.CameraType.Custom end end
+H.enableAntiAim = function() if H.antiaimConn then return end; H.antiaimConn = RunService.Heartbeat:Connect(function() local char = LocalPlayer.Character; local root = char and char:FindFirstChild("HumanoidRootPart"); local hum = char and char:FindFirstChildOfClass("Humanoid"); if not root or not hum then return end; if H.State.AntiAim and H.State.AntiAimType == "Spin" then hum.AutoRotate = false; local cam = H.getCam(); if not cam then return end; local angle = -math.atan2(cam.CFrame.LookVector.Z, cam.CFrame.LookVector.X) + tick() * H.State.AntiAimSpinSpeed % 360; root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, angle, 0) elseif H.State.AntiAim and H.State.AntiAimType == "Jitter" then hum.AutoRotate = false; root.CFrame = CFrame.new(root.Position) * CFrame.Angles(0, math.rad(math.random(-H.State.AntiAimJitter, H.State.AntiAimJitter)), 0) else hum.AutoRotate = true end end) end
 
 H.hitboxRestore = {}
-H.hitboxUpdate = function()
-    if not H.State.HitboxExpand then
-        for obj, data in pairs(H.hitboxRestore) do
-            if obj and obj.Parent then obj.Size = data.Size; obj.Transparency = data.Transparency; obj.CanCollide = data.CanCollide end
-        end
-        H.hitboxRestore = {}
-        return
-    end
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer and plr.Character then
-            local target = (H.State.HitboxPart == "Body") and plr.Character:FindFirstChild("HumanoidRootPart") or plr.Character:FindFirstChild("Head")
-            if target then
-                if not H.hitboxRestore[target] then H.hitboxRestore[target] = {Size=target.Size, Transparency=target.Transparency, CanCollide=target.CanCollide} end
-                local s = H.State.HitboxSize
-                target.Size = Vector3.new(s, s, s)
-                target.Transparency = 0.5
-                target.CanCollide = false
-            end
-        end
-    end
-end
+H.hitboxUpdate = function() if not H.State.HitboxExpand then for obj, data in pairs(H.hitboxRestore) do if obj and obj.Parent then obj.Size = data.Size; obj.Transparency = data.Transparency; obj.CanCollide = data.CanCollide end end; H.hitboxRestore = {}; return end; for _, plr in ipairs(Players:GetPlayers()) do if plr ~= LocalPlayer and plr.Character then local target = (H.State.HitboxPart == "Body") and plr.Character:FindFirstChild("HumanoidRootPart") or plr.Character:FindFirstChild("Head"); if target then if not H.hitboxRestore[target] then H.hitboxRestore[target] = {Size=target.Size, Transparency=target.Transparency, CanCollide=target.CanCollide} end; local s = H.State.HitboxSize; target.Size = Vector3.new(s, s, s); target.Transparency = 0.5; target.CanCollide = false end end end end
 
 H.oldTime = Lighting.ClockTime
-task.spawn(function()
-    while true do
-        if H.State.TimeChanger then Lighting.ClockTime = H.State.TimeValue
-        else if Lighting.ClockTime ~= H.oldTime then Lighting.ClockTime = H.oldTime end end
-        task.wait(0.5)
-    end
-end)
+task.spawn(function() while true do if H.State.TimeChanger then Lighting.ClockTime = H.State.TimeValue end; task.wait(0.5) end end)
 
 -- ESP GUI
-H.espGui = Instance.new("ScreenGui")
-H.espGui.Name = "QwertyESP"
-H.espGui.ResetOnSpawn = false
-H.espGui.IgnoreGuiInset = true
-H.espGui.DisplayOrder = 4
-H.espGui.Parent = PlayerGui
+H.espGui = Instance.new("ScreenGui"); H.espGui.Name = "QwertyESP"; H.espGui.ResetOnSpawn = false; H.espGui.IgnoreGuiInset = true; H.espGui.DisplayOrder = 4; H.espGui.Parent = PlayerGui
+H.tracerGui = Instance.new("ScreenGui"); H.tracerGui.Name = "QwertyTracer"; H.tracerGui.ResetOnSpawn = false; H.tracerGui.IgnoreGuiInset = true; H.tracerGui.DisplayOrder = 3; H.tracerGui.Parent = PlayerGui
+H.espStorage = {}; H.skelStorage = {}; H.traceLines = {}; H.chamsStorage = {}; H.npcEspStorage = {}; H.npcSkelStorage = {}; H.ValidTargets = {}
+H.SKELETON_PAIRS = {{"Head","UpperTorso"}, {"UpperTorso","LowerTorso"}, {"UpperTorso","LeftUpperArm"}, {"LeftUpperArm","LeftLowerArm"}, {"LeftLowerArm","LeftHand"}, {"UpperTorso","RightUpperArm"}, {"RightUpperArm","RightLowerArm"}, {"RightLowerArm","RightHand"}, {"LowerTorso","LeftUpperLeg"}, {"LeftUpperLeg","LeftLowerLeg"}, {"LeftLowerLeg","LeftFoot"}, {"LowerTorso","RightUpperLeg"}, {"RightUpperLeg","RightLowerLeg"}, {"RightLowerLeg","RightFoot"}}
+H.colorFromName = function(name) if name == "Cyan" then return H.THEME.Cyan end; if name == "Accent" then return H.THEME.Accent end; if name == "Pink" then return H.THEME.Pink end; if name == "Purple" then return H.THEME.Purple end; if name == "Green" then return H.THEME.Success end; if name == "Red" then return H.THEME.Danger end; if name == "White" then return Color3.fromRGB(255,255,255) end; return H.THEME.Cyan end
+H.safeGetTextSize = function(text, size, font) if not text or text == "" then return Vector2.new(0, 0) end; local success, result = pcall(function() return game:GetService("TextService"):GetTextSize(text, size, font, Vector2.new(1000, 1000)) end); return success and result or Vector2.new(0, 0) end
+H.getPlayerFolder = function() return Workspace:FindFirstChild("Players") or Workspace:FindFirstChild("Characters") or Workspace:FindFirstChild("Entities") or Workspace end
+H.getHeldItemName = function(char) local wm = char:FindFirstChild("Worldmodel"); if wm then for _, child in ipairs(wm:GetChildren()) do if child:IsA("Model") and child.Name ~= "Attachments" then return child.Name end end; if wm:FindFirstChild("Attachments") then return "Rifle" end end; local hands = {char:FindFirstChild("RightHand"), char:FindFirstChild("LeftHand"), char:FindFirstChild("Right Arm"), char:FindFirstChild("Left Arm")}; for _, hand in ipairs(hands) do if hand then for _, child in ipairs(hand:GetChildren()) do if child:IsA("Tool") then return child.Name end; if child:IsA("Model") and child.Name ~= "Attachments" then return child.Name end end end end; for _, child in ipairs(char:GetChildren()) do if child:IsA("Tool") then return child.Name end end; local holsters = {"WeaponHolster", "ToolHolster1", "ToolHolster2"}; for _, hName in ipairs(holsters) do local h = char:FindFirstChild(hName); if h then for _, child in ipairs(h:GetChildren()) do if child:IsA("Model") or child:IsA("Tool") then return child.Name end end end end; return "Nothing" end
 
-H.tracerGui = Instance.new("ScreenGui")
-H.tracerGui.Name = "QwertyTracer"
-H.tracerGui.ResetOnSpawn = false
-H.tracerGui.IgnoreGuiInset = true
-H.tracerGui.DisplayOrder = 3
-H.tracerGui.Parent = PlayerGui
-
-H.espStorage = {}
-H.skelStorage = {}
-H.traceLines = {}
-H.chamsStorage = {}
-H.npcEspStorage = {}
-H.npcSkelStorage = {}
-
-H.SKELETON_PAIRS = {
-    {"Head","UpperTorso"}, {"UpperTorso","LowerTorso"},
-    {"UpperTorso","LeftUpperArm"}, {"LeftUpperArm","LeftLowerArm"}, {"LeftLowerArm","LeftHand"},
-    {"UpperTorso","RightUpperArm"}, {"RightUpperArm","RightLowerArm"}, {"RightLowerArm","RightHand"},
-    {"LowerTorso","LeftUpperLeg"}, {"LeftUpperLeg","LeftLowerLeg"}, {"LeftLowerLeg","LeftFoot"},
-    {"LowerTorso","RightUpperLeg"}, {"RightUpperLeg","RightLowerLeg"}, {"RightLowerLeg","RightFoot"},
-}
-
-H.colorFromName = function(name)
-    if name == "Cyan" then return H.THEME.Cyan end
-    if name == "Accent" then return H.THEME.Accent end
-    if name == "Pink" then return H.THEME.Pink end
-    if name == "Purple" then return H.THEME.Purple end
-    if name == "Green" then return H.THEME.Success end
-    if name == "Red" then return H.THEME.Danger end
-    if name == "White" then return Color3.fromRGB(255,255,255) end
-    return H.THEME.Cyan
-end
-
-H.getHeldItemName = function(char)
-    local wm = char:FindFirstChild("Worldmodel")
-    if wm then
-        for _, child in ipairs(wm:GetChildren()) do
-            if child:IsA("Model") and child.Name ~= "Attachments" then return child.Name end
-        end
-        if wm:FindFirstChild("Attachments") then return "Rifle" end
-    end
-    local hands = {
-        char:FindFirstChild("RightHand"), char:FindFirstChild("LeftHand"),
-        char:FindFirstChild("Right Arm"), char:FindFirstChild("Left Arm")
-    }
-    for _, hand in ipairs(hands) do
-        if hand then
-            for _, child in ipairs(hand:GetChildren()) do
-                if child:IsA("Tool") then return child.Name end
-                if child:IsA("Model") and child.Name ~= "Attachments" then return child.Name end
-            end
-        end
-    end
-    for _, child in ipairs(char:GetChildren()) do
-        if child:IsA("Tool") then return child.Name end
-    end
-    local holsters = {"WeaponHolster", "ToolHolster1", "ToolHolster2"}
-    for _, hName in ipairs(holsters) do
-        local h = char:FindFirstChild(hName)
-        if h then
-            for _, child in ipairs(h:GetChildren()) do
-                if child:IsA("Model") or child:IsA("Tool") then return child.Name end
-            end
-        end
-    end
-    return "Nothing"
-end
-
-H.makeESP = function(plr)
-    if H.espStorage[plr] then return end
-    local container = Instance.new("Frame")
-    container.BackgroundTransparency = 1
-    container.Visible = false
-    container.ZIndex = 5
-    container.Parent = H.espGui
-    local box = Instance.new("Frame")
-    box.BackgroundTransparency = 1
-    box.Size = UDim2.new(1, 0, 1, 0)
-    box.Parent = container
-    local boxStroke = Instance.new("UIStroke", box)
-    boxStroke.Color = H.THEME.Cyan
-    boxStroke.Thickness = 2
-    boxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    local boxFill = Instance.new("Frame")
-    boxFill.Size = UDim2.new(1, 0, 1, 0)
-    boxFill.BackgroundColor3 = H.THEME.Cyan
-    boxFill.BackgroundTransparency = 0.85
-    boxFill.BorderSizePixel = 0
-    boxFill.Visible = false
-    boxFill.Parent = container
-    local nameLbl = Instance.new("TextLabel")
-    nameLbl.BackgroundTransparency = 1
-    nameLbl.TextColor3 = Color3.fromRGB(255,255,255)
-    nameLbl.TextStrokeTransparency = 0
-    nameLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    nameLbl.Font = Enum.Font.GothamBold
-    nameLbl.Parent = container
-    local distLbl = Instance.new("TextLabel")
-    distLbl.BackgroundTransparency = 1
-    distLbl.TextColor3 = Color3.fromRGB(255,220,120)
-    distLbl.TextStrokeTransparency = 0
-    distLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    distLbl.Font = Enum.Font.GothamBold
-    distLbl.Parent = container
-    local weaponLbl = Instance.new("TextLabel")
-    weaponLbl.BackgroundTransparency = 1
-    weaponLbl.TextColor3 = Color3.fromRGB(180,220,255)
-    weaponLbl.TextStrokeTransparency = 0
-    weaponLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    weaponLbl.Font = Enum.Font.GothamBold
-    weaponLbl.Parent = container
-    local hpBarBg = Instance.new("Frame")
-    hpBarBg.BackgroundColor3 = Color3.fromRGB(20,20,20)
-    hpBarBg.BorderSizePixel = 0
-    hpBarBg.Parent = container
-    H.corner(hpBarBg, 2)
-    local hpFill = Instance.new("Frame")
-    hpFill.Size = UDim2.new(1, 0, 1, 0)
-    hpFill.BackgroundColor3 = Color3.fromRGB(0,220,90)
-    hpFill.BorderSizePixel = 0
-    hpFill.Parent = hpBarBg
-    H.corner(hpFill, 2)
-    local hpText = Instance.new("TextLabel")
-    hpText.BackgroundTransparency = 1
-    hpText.TextColor3 = Color3.fromRGB(255,255,255)
-    hpText.TextStrokeTransparency = 0
-    hpText.TextStrokeColor3 = Color3.new(0,0,0)
-    hpText.Font = Enum.Font.GothamBold
-    hpText.Parent = container
-    H.espStorage[plr] = {container=container, box=box, boxStroke=boxStroke, boxFill=boxFill,
-        nameLbl=nameLbl, distLbl=distLbl, weaponLbl=weaponLbl,
-        hpBarBg=hpBarBg, hpFill=hpFill, hpText=hpText}
-end
-
-H.makeSkeleton = function(plr)
-    if H.skelStorage[plr] then return end
-    local lines = {}
-    for i = 1, #H.SKELETON_PAIRS do
-        local l = Instance.new("Frame")
-        l.AnchorPoint = Vector2.new(0.5, 0.5)
-        l.BackgroundColor3 = H.THEME.Accent
-        l.BorderSizePixel = 0
-        l.ZIndex = 6
-        l.Visible = false
-        l.Parent = H.espGui
-        lines[i] = l
-    end
-    H.skelStorage[plr] = lines
-end
-
-H.makeNpcESP = function(npc)
-    if H.npcEspStorage[npc] then return end
-    local container = Instance.new("Frame")
-    container.BackgroundTransparency = 1
-    container.Visible = false
-    container.ZIndex = 3
-    container.Parent = H.espGui
-    local box = Instance.new("Frame")
-    box.BackgroundTransparency = 1
-    box.Size = UDim2.new(1, 0, 1, 0)
-    box.Parent = container
-    local boxStroke = Instance.new("UIStroke", box)
-    boxStroke.Color = Color3.fromRGB(255,80,80)
-    boxStroke.Thickness = 2
-    boxStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    local nameLbl = Instance.new("TextLabel")
-    nameLbl.BackgroundTransparency = 1
-    nameLbl.TextColor3 = Color3.fromRGB(255,140,140)
-    nameLbl.TextStrokeTransparency = 0
-    nameLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    nameLbl.Font = Enum.Font.GothamBold
-    nameLbl.Parent = container
-    local distLbl = Instance.new("TextLabel")
-    distLbl.BackgroundTransparency = 1
-    distLbl.TextColor3 = Color3.fromRGB(255,220,120)
-    distLbl.TextStrokeTransparency = 0
-    distLbl.TextStrokeColor3 = Color3.new(0,0,0)
-    distLbl.Font = Enum.Font.GothamBold
-    distLbl.Parent = container
-    local hpBarBg = Instance.new("Frame")
-    hpBarBg.BackgroundColor3 = Color3.fromRGB(20,20,20)
-    hpBarBg.BorderSizePixel = 0
-    hpBarBg.Parent = container
-    H.corner(hpBarBg, 2)
-    local hpFill = Instance.new("Frame")
-    hpFill.Size = UDim2.new(1, 0, 1, 0)
-    hpFill.BackgroundColor3 = Color3.fromRGB(255,80,80)
-    hpFill.BorderSizePixel = 0
-    hpFill.Parent = hpBarBg
-    H.corner(hpFill, 2)
-    local hpText = Instance.new("TextLabel")
-    hpText.BackgroundTransparency = 1
-    hpText.TextColor3 = Color3.fromRGB(255,255,255)
-    hpText.TextStrokeTransparency = 0
-    hpText.TextStrokeColor3 = Color3.new(0,0,0)
-    hpText.Font = Enum.Font.GothamBold
-    hpText.Parent = container
-    H.npcEspStorage[npc] = {container=container, box=box, boxStroke=boxStroke,
-        nameLbl=nameLbl, distLbl=distLbl, hpBarBg=hpBarBg, hpFill=hpFill, hpText=hpText}
-end
-
-H.makeNpcSkeleton = function(npc)
-    if H.npcSkelStorage[npc] then return end
-    local lines = {}
-    for i = 1, #H.SKELETON_PAIRS do
-        local l = Instance.new("Frame")
-        l.AnchorPoint = Vector2.new(0.5, 0.5)
-        l.BackgroundColor3 = Color3.fromRGB(255,100,100)
-        l.BorderSizePixel = 0
-        l.ZIndex = 4
-        l.Visible = false
-        l.Parent = H.espGui
-        lines[i] = l
-    end
-    H.npcSkelStorage[npc] = lines
-end
+H.makeESP = function(plr) if H.espStorage[plr] then return end; local container = Instance.new("Frame"); container.BackgroundTransparency = 1; container.Visible = false; container.ZIndex = 5; container.Parent = H.espGui; local box = Instance.new("Frame"); box.BackgroundTransparency = 1; box.Size = UDim2.new(1, 0, 1, 0); box.Parent = container; local stroke = Instance.new("UIStroke", box); stroke.Color = H.THEME.Cyan; stroke.Thickness = 2; stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; local name = Instance.new("TextLabel"); name.BackgroundTransparency = 1; name.TextColor3 = Color3.fromRGB(255, 255, 255); name.TextStrokeTransparency = 0; name.TextStrokeColor3 = Color3.new(0,0,0); name.Font = Enum.Font.GothamBold; name.Parent = container; local dist = Instance.new("TextLabel"); dist.BackgroundTransparency = 1; dist.TextColor3 = Color3.fromRGB(255, 220, 120); dist.TextStrokeTransparency = 0; dist.TextStrokeColor3 = Color3.new(0,0,0); dist.Font = Enum.Font.GothamBold; dist.Parent = container; local weapon = Instance.new("TextLabel"); weapon.BackgroundTransparency = 1; weapon.TextColor3 = Color3.fromRGB(180, 220, 255); weapon.TextStrokeTransparency = 0; weapon.TextStrokeColor3 = Color3.new(0,0,0); weapon.Font = Enum.Font.GothamBold; weapon.Parent = container; local hpBarBg = Instance.new("Frame"); hpBarBg.BackgroundColor3 = Color3.fromRGB(20, 20, 20); hpBarBg.BorderSizePixel = 0; hpBarBg.Parent = container; H.corner(hpBarBg, 2); local hpFill = Instance.new("Frame"); hpFill.Size = UDim2.new(1, 0, 1, 0); hpFill.BackgroundColor3 = Color3.fromRGB(0, 220, 90); hpFill.BorderSizePixel = 0; hpFill.Parent = hpBarBg; H.corner(hpFill, 2); local hpText = Instance.new("TextLabel"); hpText.BackgroundTransparency = 1; hpText.TextColor3 = Color3.fromRGB(255, 255, 255); hpText.TextStrokeTransparency = 0; hpText.TextStrokeColor3 = Color3.new(0,0,0); hpText.Font = Enum.Font.GothamBold; hpText.Parent = container; H.espStorage[plr] = {container = container, box = box, stroke = stroke, name = name, dist = dist, weapon = weapon, hpBarBg = hpBarBg, hpFill = hpFill, hpText = hpText} end
+H.makeSkeleton = function(plr) if H.skelStorage[plr] then return end; local lines = {}; for i = 1, #H.SKELETON_PAIRS do local l = Instance.new("Frame"); l.AnchorPoint = Vector2.new(0.5, 0.5); l.BackgroundColor3 = H.THEME.Accent; l.BorderSizePixel = 0; l.ZIndex = 6; l.Visible = false; l.Parent = H.espGui; lines[i] = l end; H.skelStorage[plr] = lines end
+H.makeTracer = function(plr) if H.traceLines[plr] then return end; local l = Instance.new("Frame"); l.AnchorPoint = Vector2.new(0.5, 0.5); l.BackgroundColor3 = H.THEME.Pink; l.BorderSizePixel = 0; l.ZIndex = 3; l.Visible = false; l.Parent = H.tracerGui; H.traceLines[plr] = l end
+H.makeChams = function(char) if H.chamsStorage[char] then return end; local hl = Instance.new("Highlight"); hl.Adornee = char; hl.FillColor = H.THEME.Pink; hl.OutlineColor = Color3.new(1,1,1); hl.FillTransparency = 0.5; hl.OutlineTransparency = 0; hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop; hl.Parent = char; H.chamsStorage[char] = hl end
 
 H.updatePlayerESP = function()
-    local cam = H.getCam(); if not cam then return end
-    local myChar = LocalPlayer.Character
-    local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
-    for _, plr in ipairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer then
-            local char = plr.Character
-            local head = char and char:FindFirstChild("Head")
-            local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if not H.State.PlayerESP then
-                if H.espStorage[plr] then H.espStorage[plr].container.Visible = false end
-                if H.skelStorage[plr] then for _, l in ipairs(H.skelStorage[plr]) do l.Visible = false end end
-                if H.traceLines[plr] then H.traceLines[plr].Visible = false end
-                if H.chamsStorage[plr] then H.chamsStorage[plr].Enabled = false end
-            else
-                if not H.espStorage[plr] then H.makeESP(plr) end
-                if not H.skelStorage[plr] then H.makeSkeleton(plr) end
-                local d = H.espStorage[plr]
-                local skelLines = H.skelStorage[plr]
-                if hum and head and hrp and hum.Health > 0 and myHRP then
-                    local distVal = (head.Position - myHRP.Position).Magnitude
-                    if distVal <= H.State.ESPSMaxDist then
-                        local ts = cam:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
-                        local bs = cam:WorldToViewportPoint(hrp.Position - Vector3.new(0, 2.5, 0))
-                        if ts.Z > 0 and bs.Z > 0 then
-                            local scale = math.clamp(100 / math.max(distVal, 5), 0.35, 1.5)
-                            local textSize = math.clamp(math.floor(12 * scale), 8, 18)
-                            local topY = math.min(ts.Y, bs.Y)
-                            local botY = math.max(ts.Y, bs.Y)
-                            local h = math.max(botY - topY, 40 * scale)
-                            local w = h * 0.55
-                            if h > (botY - topY) then topY = topY - (h - (botY - topY)) / 2 end
-                            d.container.Position = UDim2.new(0, ts.X - w/2, 0, topY)
-                            d.container.Size = UDim2.new(0, w, 0, h)
-                            local boxCol = H.colorFromName(H.State.ESPBoxColor)
-                            d.boxStroke.Color = boxCol
-                            d.boxStroke.Thickness = H.State.ESPBoxThickness
-                            d.box.Visible = H.State.ESPBox
-                            d.boxFill.Visible = H.State.ESPBoxFilled
-                            d.boxFill.BackgroundColor3 = boxCol
-                            d.nameLbl.Text = plr.Name
-                            d.distLbl.Text = math.floor(distVal) .. " m"
-                            d.weaponLbl.Text = H.getHeldItemName(char)
-                            d.nameLbl.TextSize = textSize
-                            d.distLbl.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
-                            d.weaponLbl.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
-                            d.hpText.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
-                            local nameSize = game:GetService("TextService"):GetTextSize(d.nameLbl.Text, d.nameLbl.TextSize, d.nameLbl.Font, Vector2.new(1000, 1000))
-                            local distSize = game:GetService("TextService"):GetTextSize(d.distLbl.Text, d.distLbl.TextSize, d.distLbl.Font, Vector2.new(1000, 1000))
-                            local weaponSize = game:GetService("TextService"):GetTextSize(d.weaponLbl.Text, d.weaponLbl.TextSize, d.weaponLbl.Font, Vector2.new(1000, 1000))
-                            local hpSize = game:GetService("TextService"):GetTextSize(d.hpText.Text, d.hpText.TextSize, d.hpText.Font, Vector2.new(1000, 1000))
-                            d.nameLbl.Size = UDim2.new(1, 0, 0, nameSize.Y + 2)
-                            d.nameLbl.Position = UDim2.new(0, 0, 0, -(nameSize.Y + 2 + 2 + distSize.Y + 2))
-                            d.distLbl.Size = UDim2.new(1, 0, 0, distSize.Y + 2)
-                            d.distLbl.Position = UDim2.new(0, 0, 0, -(distSize.Y + 2 + 2))
-                            local barH = math.clamp(4 * scale, 2, 6)
-                            d.hpBarBg.Size = UDim2.new(1, 0, 0, barH)
-                            d.hpBarBg.Position = UDim2.new(0, 0, 1, 4)
-                            d.hpBarBg.Visible = H.State.ESPHealth
-                            d.hpText.Size = UDim2.new(1, 0, 0, hpSize.Y + 2)
-                            d.hpText.Position = UDim2.new(0, 0, 1, 4 + barH + 2)
-                            d.hpText.Visible = H.State.ESPHealth
-                            d.weaponLbl.Size = UDim2.new(1, 0, 0, weaponSize.Y + 2)
-                            d.weaponLbl.Position = UDim2.new(0, 0, 1, 4 + barH + 2 + hpSize.Y + 2 + 2)
-                            d.nameLbl.Visible = H.State.ESPName
-                            d.distLbl.Visible = H.State.ESPDistance
-                            if hum.MaxHealth > 0 then
-                                local r = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
-                                d.hpFill.Size = UDim2.new(r, 0, 1, 0)
-                                d.hpFill.BackgroundColor3 = r > 0.6 and Color3.fromRGB(0,220,90) or (r > 0.3 and Color3.fromRGB(255,200,0) or Color3.fromRGB(255,50,50))
-                                d.hpText.Text = math.floor(hum.Health) .. " / " .. math.floor(hum.MaxHealth)
-                            end
-                            d.container.Visible = true
-                            if H.State.ESPSkeleton then
-                                local col = H.colorFromName(H.State.ESPSkeletonColor)
-                                for i, pair in ipairs(H.SKELETON_PAIRS) do
-                                    local a = char:FindFirstChild(pair[1])
-                                    local b = char:FindFirstChild(pair[2])
-                                    local line = skelLines[i]
-                                    if a and b then
-                                        local sp1 = cam:WorldToViewportPoint(a.Position)
-                                        local sp2 = cam:WorldToViewportPoint(b.Position)
-                                        if sp1.Z > 0 and sp2.Z > 0 then
-                                            local v1 = Vector2.new(sp1.X, sp1.Y)
-                                            local v2 = Vector2.new(sp2.X, sp2.Y)
-                                            local mid = (v1 + v2) / 2
-                                            local delta = v2 - v1
-                                            local angle = math.deg(math.atan2(delta.Y, delta.X)) - 90
-                                            line.Position = UDim2.new(0, mid.X, 0, mid.Y)
-                                            line.Size = UDim2.new(0, 1.5, 0, delta.Magnitude)
-                                            line.Rotation = angle
-                                            line.BackgroundColor3 = col
-                                            line.Visible = true
-                                        else line.Visible = false end
-                                    else line.Visible = false end
-                                end
-                            else
-                                for _, l in ipairs(skelLines) do l.Visible = false end
-                            end
-                            if H.State.ESPTracer then
-                                if not H.traceLines[plr] then
-                                    local line = Instance.new("Frame")
-                                    line.AnchorPoint = Vector2.new(0.5, 0.5)
-                                    line.BackgroundColor3 = H.THEME.Pink
-                                    line.BorderSizePixel = 0
-                                    line.ZIndex = 3
-                                    line.Parent = H.tracerGui
-                                    H.traceLines[plr] = line
-                                end
-                                local sp = cam:WorldToViewportPoint(head.Position)
-                                if sp.Z > 0 and sp.X >= 0 and sp.X <= cam.ViewportSize.X and sp.Y >= 0 and sp.Y <= cam.ViewportSize.Y then
-                                    local origin
-                                    if H.State.ESPTracerOrigin == "Top" then origin = Vector2.new(cam.ViewportSize.X/2, 0)
-                                    elseif H.State.ESPTracerOrigin == "Bottom" then origin = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y)
-                                    else origin = UserInputService:GetMouseLocation() end
-                                    local target = Vector2.new(sp.X, sp.Y)
-                                    local delta = target - origin
-                                    local mid = (origin + target) / 2
-                                    local angle = math.deg(math.atan2(delta.Y, delta.X)) - 90
-                                    H.traceLines[plr].Position = UDim2.new(0, mid.X, 0, mid.Y)
-                                    H.traceLines[plr].Size = UDim2.new(0, H.State.ESPTracerThickness, 0, delta.Magnitude)
-                                    H.traceLines[plr].Rotation = angle
-                                    H.traceLines[plr].Visible = true
-                                else H.traceLines[plr].Visible = false end
-                            else
-                                if H.traceLines[plr] then H.traceLines[plr].Visible = false end
-                            end
-                        else
-                            d.container.Visible = false
-                            for _, l in ipairs(skelLines) do l.Visible = false end
-                            if H.traceLines[plr] then H.traceLines[plr].Visible = false end
-                        end
-                    else
-                        d.container.Visible = false
-                        for _, l in ipairs(skelLines) do l.Visible = false end
-                        if H.traceLines[plr] then H.traceLines[plr].Visible = false end
-                    end
-                else
-                    if d then d.container.Visible = false end
-                    if skelLines then for _, l in ipairs(skelLines) do l.Visible = false end end
-                    if H.traceLines[plr] then H.traceLines[plr].Visible = false end
-                end
-                if H.State.Chams and char then
-                    if not H.chamsStorage[plr] then
-                        local hl = Instance.new("Highlight")
-                        hl.Adornee = char
-                        hl.FillColor = H.THEME.Pink
-                        hl.OutlineColor = Color3.new(1,1,1)
-                        hl.FillTransparency = 0.5
-                        hl.OutlineTransparency = 0
-                        hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-                        hl.Parent = char
-                        H.chamsStorage[plr] = hl
-                    end
-                    H.chamsStorage[plr].Enabled = true
-                elseif H.chamsStorage[plr] then
-                    H.chamsStorage[plr].Enabled = false
-                end
-            end
-        end
-    end
-end
-
-H.updateNpcESP = function()
-    local cam = H.getCam(); if not cam then return end
-    local myChar = LocalPlayer.Character
-    local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
-    local aiFolder = Workspace:FindFirstChild("AI")
-    if not H.State.NPCEsp then
-        for _, d in pairs(H.npcEspStorage) do d.container.Visible = false end
-        for _, lines in pairs(H.npcSkelStorage) do for _, l in ipairs(lines) do l.Visible = false end end
+    table.clear(H.ValidTargets)
+    if not H.State.PlayerESP and not H.State.Aimbot and not H.State.Chams and not H.State.ESPTracer then
+        for _, d in pairs(H.espStorage) do d.container.Visible = false end
+        for _, lines in pairs(H.skelStorage) do for _, l in ipairs(lines) do l.Visible = false end end
+        for _, l in pairs(H.traceLines) do l.Visible = false end
+        for _, hl in pairs(H.chamsStorage) do hl.Enabled = false end
         return
     end
-    if not aiFolder then return end
-    for _, npc in ipairs(aiFolder:GetChildren()) do
-        if npc:IsA("Model") then
-            local head = npc:FindFirstChild("Head")
-            local hrp = npc:FindFirstChild("HumanoidRootPart")
-            local hum = npc:FindFirstChildOfClass("Humanoid")
-            if hum and hum.Health > 0 and head and hrp and myHRP then
-                if not H.npcEspStorage[npc] then H.makeNpcESP(npc) end
-                if not H.npcSkelStorage[npc] then H.makeNpcSkeleton(npc) end
-                local d = H.npcEspStorage[npc]
-                local skelLines = H.npcSkelStorage[npc]
+    local wp = H.getPlayerFolder(); if not wp then return end
+    local cam = H.getCam(); if not cam then return end
+    local myChar = LocalPlayer.Character; local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart"); if not myHRP then return end
+    
+    local viewportCenter = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
+    local fovRadius = math.tan(math.rad(H.State.AimbotFOV / 2)) / math.tan(math.rad(cam.FieldOfView / 2)) * (cam.ViewportSize.Y / 2)
+
+    for _, obj in ipairs(wp:GetChildren()) do
+        if obj:IsA("Model") and obj ~= myChar then
+            local head = obj:FindFirstChild("Head"); local hrp = obj:FindFirstChild("HumanoidRootPart"); local hum = obj:FindFirstChildOfClass("Humanoid")
+            if obj.Name ~= LocalPlayer.Name and head and hrp and hum and hum.Health > 0 then
+                if not H.espStorage[obj] then H.makeESP(obj) end
+                if not H.skelStorage[obj] then H.makeSkeleton(obj) end
+                if not H.traceLines[obj] then H.makeTracer(obj) end
+                
+                local d = H.espStorage[obj]; local skelLines = H.skelStorage[obj]; local traceLine = H.traceLines[obj]
                 local distVal = (head.Position - myHRP.Position).Magnitude
+                
                 if distVal <= H.State.ESPSMaxDist then
                     local ts = cam:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
                     local bs = cam:WorldToViewportPoint(hrp.Position - Vector3.new(0, 2.5, 0))
+                    
                     if ts.Z > 0 and bs.Z > 0 then
-                        local scale = math.clamp(100 / math.max(distVal, 5), 0.35, 1.5)
-                        local textSize = math.clamp(math.floor(12 * scale), 8, 18)
-                        local topY = math.min(ts.Y, bs.Y)
-                        local botY = math.max(ts.Y, bs.Y)
-                        local h = math.max(botY - topY, 40 * scale)
-                        local w = h * 0.55
-                        if h > (botY - topY) then topY = topY - (h - (botY - topY)) / 2 end
-                        d.container.Position = UDim2.new(0, ts.X - w/2, 0, topY)
-                        d.container.Size = UDim2.new(0, w, 0, h)
-                        d.nameLbl.Text = npc.Name
-                        d.distLbl.Text = math.floor(distVal) .. " m"
-                        d.nameLbl.TextSize = textSize
-                        d.distLbl.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
-                        d.hpText.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
-                        local nameSize = game:GetService("TextService"):GetTextSize(d.nameLbl.Text, d.nameLbl.TextSize, d.nameLbl.Font, Vector2.new(1000, 1000))
-                        local distSize = game:GetService("TextService"):GetTextSize(d.distLbl.Text, d.distLbl.TextSize, d.distLbl.Font, Vector2.new(1000, 1000))
-                        local hpSize = game:GetService("TextService"):GetTextSize(d.hpText.Text, d.hpText.TextSize, d.hpText.Font, Vector2.new(1000, 1000))
-                        d.nameLbl.Size = UDim2.new(1, 0, 0, nameSize.Y + 2)
-                        d.nameLbl.Position = UDim2.new(0, 0, 0, -(nameSize.Y + 2 + 2 + distSize.Y + 2))
-                        d.distLbl.Size = UDim2.new(1, 0, 0, distSize.Y + 2)
-                        d.distLbl.Position = UDim2.new(0, 0, 0, -(distSize.Y + 2 + 2))
-                        local barH = math.clamp(4 * scale, 2, 6)
-                        d.hpBarBg.Size = UDim2.new(1, 0, 0, barH)
-                        d.hpBarBg.Position = UDim2.new(0, 0, 1, 4)
-                        d.hpText.Size = UDim2.new(1, 0, 0, hpSize.Y + 2)
-                        d.hpText.Position = UDim2.new(0, 0, 1, 4 + barH + 2)
-                        if hum.MaxHealth > 0 then
-                            local r = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
-                            d.hpFill.Size = UDim2.new(r, 0, 1, 0)
-                            d.hpText.Text = math.floor(hum.Health) .. " / " .. math.floor(hum.MaxHealth)
+                        if H.State.Aimbot then
+                            local distToCrosshair = (Vector2.new(ts.X, ts.Y) - viewportCenter).Magnitude
+                            if distToCrosshair <= fovRadius then
+                                local visible = true
+                                if H.State.AimbotWallCheck then
+                                    local rayParams = RaycastParams.new()
+                                    rayParams.FilterType = Enum.RaycastFilterType.Exclude
+                                    rayParams.FilterDescendantsInstances = {myChar, obj}
+                                    local result = Workspace:Raycast(cam.CFrame.Position, (head.Position - cam.CFrame.Position).Unit * distVal, rayParams)
+                                    if result then visible = false end
+                                end
+                                if visible then
+                                    table.insert(H.ValidTargets, {model = obj, head = head, screenPos = Vector2.new(ts.X, ts.Y), distance = distToCrosshair})
+                                end
+                            end
                         end
-                        d.container.Visible = true
-                        for i, pair in ipairs(H.SKELETON_PAIRS) do
-                            local a = npc:FindFirstChild(pair[1])
-                            local b = npc:FindFirstChild(pair[2])
-                            local line = skelLines[i]
-                            if a and b then
-                                local sp1 = cam:WorldToViewportPoint(a.Position)
-                                local sp2 = cam:WorldToViewportPoint(b.Position)
-                                if sp1.Z > 0 and sp2.Z > 0 then
-                                    local v1 = Vector2.new(sp1.X, sp1.Y)
-                                    local v2 = Vector2.new(sp2.X, sp2.Y)
-                                    local mid = (v1 + v2) / 2
-                                    local delta = v2 - v1
-                                    local angle = math.deg(math.atan2(delta.Y, delta.X)) - 90
-                                    line.Position = UDim2.new(0, mid.X, 0, mid.Y)
-                                    line.Size = UDim2.new(0, 1.5, 0, delta.Magnitude)
-                                    line.Rotation = angle
-                                    line.Visible = true
-                                else line.Visible = false end
-                            else line.Visible = false end
+                        
+                        if H.State.PlayerESP then
+                            local scale = math.clamp(100 / math.max(distVal, 5), 0.35, 1.5); local textSize = math.clamp(math.floor(12 * scale), 8, 18)
+                            local topY = math.min(ts.Y, bs.Y); local botY = math.max(ts.Y, bs.Y); local h = math.max(botY - topY, 40 * scale); local w = h * 0.55
+                            if h > (botY - topY) then topY = topY - (h - (botY - topY)) / 2 end
+                            d.container.Position = UDim2.new(0, ts.X - w/2, 0, topY); d.container.Size = UDim2.new(0, w, 0, h)
+                            d.name.Text = tostring(obj.Name); d.dist.Text = math.floor(distVal) .. " m"; d.weapon.Text = H.getHeldItemName(obj)
+                            d.name.TextSize = textSize; d.dist.TextSize = math.clamp(math.floor(11 * scale), 8, 16); d.weapon.TextSize = math.clamp(math.floor(11 * scale), 8, 16); d.hpText.TextSize = math.clamp(math.floor(11 * scale), 8, 16)
+                            local nameSize = H.safeGetTextSize(d.name.Text, d.name.TextSize, d.name.Font); local distSize = H.safeGetTextSize(d.dist.Text, d.dist.TextSize, d.dist.Font)
+                            local weaponSize = H.safeGetTextSize(d.weapon.Text, d.weapon.TextSize, d.weapon.Font); local hpSize = H.safeGetTextSize(d.hpText.Text, d.hpText.TextSize, d.hpText.Font)
+                            d.name.Size = UDim2.new(1, 0, 0, nameSize.Y + 2); d.name.Position = UDim2.new(0, 0, 0, -(nameSize.Y + 2 + 2 + distSize.Y + 2))
+                            d.dist.Size = UDim2.new(1, 0, 0, distSize.Y + 2); d.dist.Position = UDim2.new(0, 0, 0, -(distSize.Y + 2 + 2))
+                            local barH = math.clamp(4 * scale, 2, 6); d.hpBarBg.Size = UDim2.new(1, 0, 0, barH); d.hpBarBg.Position = UDim2.new(0, 0, 1, 4); d.hpBarBg.Visible = H.State.ESPHealth
+                            d.hpText.Size = UDim2.new(1, 0, 0, hpSize.Y + 2); d.hpText.Position = UDim2.new(0, 0, 1, 4 + barH + 2); d.hpText.Visible = H.State.ESPHealth
+                            d.weapon.Size = UDim2.new(1, 0, 0, weaponSize.Y + 2); d.weapon.Position = UDim2.new(0, 0, 1, 4 + barH + 2 + hpSize.Y + 2 + 2)
+                            d.name.Visible = H.State.ESPName; d.dist.Visible = H.State.ESPDistance; d.stroke.Color = H.colorFromName(H.State.ESPBoxColor); d.stroke.Thickness = H.State.ESPBoxThickness; d.box.Visible = H.State.ESPBox
+                            if hum.MaxHealth > 0 then local r = math.clamp(hum.Health / hum.MaxHealth, 0, 1); d.hpFill.Size = UDim2.new(r, 0, 1, 0); d.hpFill.BackgroundColor3 = r > 0.6 and Color3.fromRGB(0,220,90) or (r > 0.3 and Color3.fromRGB(255,200,0) or Color3.fromRGB(255,50,50)); d.hpText.Text = math.floor(hum.Health) .. " / " .. math.floor(hum.MaxHealth) end
+                            d.container.Visible = true
+                            
+                            if H.State.ESPSkeleton then
+                                local col = H.colorFromName(H.State.ESPSkeletonColor)
+                                for i, pair in ipairs(H.SKELETON_PAIRS) do
+                                    local a = obj:FindFirstChild(pair[1]); local b = obj:FindFirstChild(pair[2]); local line = skelLines[i]
+                                    if a and b then local sp1 = cam:WorldToViewportPoint(a.Position); local sp2 = cam:WorldToViewportPoint(b.Position)
+                                        if sp1.Z > 0 and sp2.Z > 0 then local v1 = Vector2.new(sp1.X, sp1.Y); local v2 = Vector2.new(sp2.X, sp2.Y); local mid = (v1 + v2) / 2; local delta = v2 - v1
+                                            local angle = math.deg(math.atan2(delta.Y, delta.X)) - 90; line.Position = UDim2.new(0, mid.X, 0, mid.Y); line.Size = UDim2.new(0, 1.5, 0, delta.Magnitude); line.Rotation = angle; line.BackgroundColor3 = col; line.Visible = true
+                                        else line.Visible = false end
+                                    else line.Visible = false end
+                                end
+                            else for _, l in ipairs(skelLines) do l.Visible = false end end
+
+                            if H.State.ESPTracer then
+                                local origin = H.State.ESPTracerOrigin == "Top" and Vector2.new(viewportCenter.X, 0) or (H.State.ESPTracerOrigin == "Bottom" and Vector2.new(viewportCenter.X, cam.ViewportSize.Y) or viewportCenter)
+                                local target = Vector2.new(ts.X, ts.Y); local delta = target - origin; local mid = (origin + target) / 2; local angle = math.deg(math.atan2(delta.Y, delta.X)) - 90
+                                traceLine.Position = UDim2.new(0, mid.X, 0, mid.Y); traceLine.Size = UDim2.new(0, H.State.ESPTracerThickness, 0, delta.Magnitude); traceLine.Rotation = angle; traceLine.Visible = true
+                            else traceLine.Visible = false end
+                            
+                            if H.State.Chams then H.makeChams(obj) end
+                            if H.chamsStorage[obj] then H.chamsStorage[obj].Enabled = H.State.Chams end
+                        else
+                            d.container.Visible = false; for _, l in ipairs(skelLines) do l.Visible = false end; traceLine.Visible = false
+                            if H.chamsStorage[obj] then H.chamsStorage[obj].Enabled = false end
                         end
                     else
-                        d.container.Visible = false
-                        for _, l in ipairs(skelLines) do l.Visible = false end
+                        if H.espStorage[obj] then H.espStorage[obj].container.Visible = false end; if H.skelStorage[obj] then for _, l in ipairs(H.skelStorage[obj]) do l.Visible = false end end; if H.traceLines[obj] then H.traceLines[obj].Visible = false end; if H.chamsStorage[obj] then H.chamsStorage[obj].Enabled = false end
                     end
                 else
-                    d.container.Visible = false
-                    for _, l in ipairs(skelLines) do l.Visible = false end
+                    if H.espStorage[obj] then H.espStorage[obj].container.Visible = false end; if H.skelStorage[obj] then for _, l in ipairs(H.skelStorage[obj]) do l.Visible = false end end; if H.traceLines[obj] then H.traceLines[obj].Visible = false end; if H.chamsStorage[obj] then H.chamsStorage[obj].Enabled = false end
                 end
             else
-                if H.npcEspStorage[npc] then H.npcEspStorage[npc].container.Visible = false end
-                if H.npcSkelStorage[npc] then for _, l in ipairs(H.npcSkelStorage[npc]) do l.Visible = false end end
+                if H.espStorage[obj] then H.espStorage[obj].container.Visible = false end; if H.skelStorage[obj] then for _, l in ipairs(H.skelStorage[obj]) do l.Visible = false end end; if H.traceLines[obj] then H.traceLines[obj].Visible = false end; if H.chamsStorage[obj] then H.chamsStorage[obj].Enabled = false end
             end
         end
     end
+    for model, d in pairs(H.espStorage) do if not model.Parent or model.Parent ~= wp then d.container:Destroy(); H.espStorage[model] = nil end end
+    for model, lines in pairs(H.skelStorage) do if not model.Parent or model.Parent ~= wp then for _, l in ipairs(lines) do l:Destroy() end; H.skelStorage[model] = nil end end
+    for model, line in pairs(H.traceLines) do if not model.Parent or model.Parent ~= wp then line:Destroy(); H.traceLines[model] = nil end end
 end
 
--- Aimbot logic
 H.getAimbotTarget = function()
     if not H.State.Aimbot then return nil end
-    local cam = H.getCam(); if not cam then return nil end
-    local target, shortest = nil, H.State.AimbotFOV
-    local mousePos = UserInputService:GetMouseLocation()
-    
-    local function checkModel(model)
-        if not model or model == LocalPlayer.Character then return end
-        local hum = model:FindFirstChildOfClass("Humanoid")
-        if hum and hum.Health > 0 then
-            local head = model:FindFirstChild("Head")
-            if head then
-                local sp, on = cam:WorldToViewportPoint(head.Position)
-                if on and sp.Z > 0 then
-                    local d = (Vector2.new(sp.X, sp.Y) - mousePos).Magnitude
-                    if d < shortest then
-                        shortest = d
-                        target = head
-                    end
-                end
-            end
-        end
-    end
-
-    for _, plr in ipairs(Players:GetPlayers()) do
-        checkModel(plr.Character)
-    end
-    
-    local aiFolder = Workspace:FindFirstChild("AI")
-    if aiFolder then
-        for _, npc in ipairs(aiFolder:GetChildren()) do
-            if npc:IsA("Model") then
-                checkModel(npc)
-            end
-        end
-    end
-    return target
+    if not H.State.PlayerESP and #H.ValidTargets == 0 then H.updatePlayerESP() end
+    local bestTarget = nil; local shortestDist = math.huge
+    for _, data in ipairs(H.ValidTargets) do if data.distance < shortestDist then shortestDist = data.distance; bestTarget = data.head end end
+    return bestTarget
 end
 
 -- Crosshair
-H.crossGui = Instance.new("ScreenGui")
-H.crossGui.Name = "QwertyCross"
-H.crossGui.ResetOnSpawn = false
-H.crossGui.IgnoreGuiInset = true
-H.crossGui.DisplayOrder = 5
-H.crossGui.Parent = PlayerGui
-
-H.crossHolder = Instance.new("Frame")
-H.crossHolder.Size = UDim2.new(0, 200, 0, 200)
-H.crossHolder.AnchorPoint = Vector2.new(0.5, 0.5)
-H.crossHolder.Position = UDim2.new(0.5, 0, 0.5, 0)
-H.crossHolder.BackgroundTransparency = 1
-H.crossHolder.Visible = false
-H.crossHolder.Parent = H.crossGui
-
+H.crossGui = Instance.new("ScreenGui"); H.crossGui.Name = "QwertyCross"; H.crossGui.ResetOnSpawn = false; H.crossGui.IgnoreGuiInset = true; H.crossGui.DisplayOrder = 5; H.crossGui.Parent = PlayerGui
+H.crossHolder = Instance.new("Frame"); H.crossHolder.Size = UDim2.new(0, 200, 0, 200); H.crossHolder.AnchorPoint = Vector2.new(0.5, 0.5); H.crossHolder.Position = UDim2.new(0.5, 0, 0.5, 0); H.crossHolder.BackgroundTransparency = 1; H.crossHolder.Visible = false; H.crossHolder.Parent = H.crossGui
 H.crossLines = {}
-H.clearCross = function()
-    for _, l in ipairs(H.crossLines) do if l.Parent then l:Destroy() end end
-    H.crossLines = {}
-end
-H.makeLine = function(w, h, x, y, rot, col)
-    local l = Instance.new("Frame")
-    l.Size = UDim2.new(0, w, 0, h)
-    l.Position = UDim2.new(0.5, x, 0.5, y)
-    l.AnchorPoint = Vector2.new(0.5, 0.5)
-    l.BackgroundColor3 = col or H.THEME.Accent
-    l.BorderSizePixel = 0
-    l.Rotation = rot or 0
-    l.Parent = H.crossHolder
-    H.corner(l, 2)
-    table.insert(H.crossLines, l)
-    return l
-end
+H.clearCross = function() for _, l in ipairs(H.crossLines) do if l.Parent then l:Destroy() end end H.crossLines = {} end
+H.makeLine = function(w, h, x, y, rot, col) local l = Instance.new("Frame"); l.Size = UDim2.new(0, w, 0, h); l.Position = UDim2.new(0.5, x, 0.5, y); l.AnchorPoint = Vector2.new(0.5, 0.5); l.BackgroundColor3 = col or H.THEME.Accent; l.BorderSizePixel = 0; l.Rotation = rot or 0; l.Parent = H.crossHolder; H.corner(l, 2); table.insert(H.crossLines, l); return l end
 H.drawCross = function()
-    H.clearCross()
-    if not H.State.Crosshair then return end
+    H.clearCross(); if not H.State.Crosshair then return end
     local s, t, g = H.State.CrosshairSize, H.State.CrosshairThickness, H.State.CrosshairGap
     local c = H.State.CrosshairRGB and Color3.fromHSV((tick() * H.State.CrosshairRGBSpeed * 0.2) % 1, 1, 1) or H.THEME.Accent
-    if H.State.CrosshairShape == "Cross" then
-        H.makeLine(t, s, 0, -(g + s/2), 0, c)
-        H.makeLine(t, s, 0, (g + s/2), 0, c)
-        H.makeLine(s, t, -(g + s/2), 0, 0, c)
-        H.makeLine(s, t, (g + s/2), 0, 0, c)
-    elseif H.State.CrosshairShape == "Dot" then
-        local d = Instance.new("Frame")
-        d.Size = UDim2.new(0, t*2, 0, t*2)
-        d.Position = UDim2.new(0.5, 0, 0.5, 0)
-        d.AnchorPoint = Vector2.new(0.5, 0.5)
-        d.BackgroundColor3 = c
-        d.BorderSizePixel = 0
-        d.Parent = H.crossHolder
-        H.corner(d, 999)
-        table.insert(H.crossLines, d)
-    elseif H.State.CrosshairShape == "Circle" then
-        local c2 = Instance.new("Frame")
-        c2.Size = UDim2.new(0, s*2, 0, s*2)
-        c2.Position = UDim2.new(0.5, 0, 0.5, 0)
-        c2.AnchorPoint = Vector2.new(0.5, 0.5)
-        c2.BackgroundTransparency = 1
-        c2.Parent = H.crossHolder
-        H.corner(c2, 999)
-        local st = Instance.new("UIStroke", c2)
-        st.Color = c; st.Thickness = t
-        table.insert(H.crossLines, c2)
-    elseif H.State.CrosshairShape == "Swastika" then
-        local arm, hook = s, s * 0.6
-        H.makeLine(t, arm, 0, -arm/2, 0, c); H.makeLine(hook, t, hook/2, -arm, 0, c)
-        H.makeLine(arm, t, arm/2, 0, 0, c); H.makeLine(t, hook, arm, hook/2, 0, c)
-        H.makeLine(t, arm, 0, arm/2, 0, c); H.makeLine(hook, t, -hook/2, arm, 0, c)
-        H.makeLine(arm, t, -arm/2, 0, 0, c); H.makeLine(t, hook, -arm, -hook/2, 0, c)
-    elseif H.State.CrosshairShape == "Star" then
-        local r = s
-        local side = r * math.sqrt(3)
-        local function tri(rot)
-            for i = 1, 3 do
-                local a1 = math.rad((i-1)*120 + rot)
-                local a2 = math.rad((i%3)*120 + rot)
-                local x1, y1 = math.cos(a1)*r, math.sin(a1)*r
-                local x2, y2 = math.cos(a2)*r, math.sin(a2)*r
-                local mx, my = (x1+x2)/2, (y1+y2)/2
-                local ang = math.deg(math.atan2(y2-y1, x2-x1))
-                H.makeLine(side, t, mx, my, ang, c)
-            end
-        end
-        tri(-90); tri(90)
-    end
+    if H.State.CrosshairShape == "Cross" then H.makeLine(t, s, 0, -(g + s/2), 0, c); H.makeLine(t, s, 0, (g + s/2), 0, c); H.makeLine(s, t, -(g + s/2), 0, 0, c); H.makeLine(s, t, (g + s/2), 0, 0, c)
+    elseif H.State.CrosshairShape == "Dot" then local d = Instance.new("Frame"); d.Size = UDim2.new(0, t*2, 0, t*2); d.Position = UDim2.new(0.5, 0, 0.5, 0); d.AnchorPoint = Vector2.new(0.5, 0.5); d.BackgroundColor3 = c; d.BorderSizePixel = 0; d.Parent = H.crossHolder; H.corner(d, 999); table.insert(H.crossLines, d)
+    elseif H.State.CrosshairShape == "Circle" then local c2 = Instance.new("Frame"); c2.Size = UDim2.new(0, s*2, 0, s*2); c2.Position = UDim2.new(0.5, 0, 0.5, 0); c2.AnchorPoint = Vector2.new(0.5, 0.5); c2.BackgroundTransparency = 1; c2.Parent = H.crossHolder; H.corner(c2, 999); local st = Instance.new("UIStroke", c2); st.Color = c; st.Thickness = t; table.insert(H.crossLines, c2)
+    elseif H.State.CrosshairShape == "Swastika" then local arm, hook = s, s * 0.6; H.makeLine(t, arm, 0, -arm/2, 0, c); H.makeLine(hook, t, hook/2, -arm, 0, c); H.makeLine(arm, t, arm/2, 0, 0, c); H.makeLine(t, hook, arm, hook/2, 0, c); H.makeLine(t, arm, 0, arm/2, 0, c); H.makeLine(hook, t, -hook/2, arm, 0, c); H.makeLine(arm, t, -arm/2, 0, 0, c); H.makeLine(t, hook, -arm, -hook/2, 0, c)
+    elseif H.State.CrosshairShape == "Star" then local r = s; local side = r * math.sqrt(3); local function tri(rot) for i = 1, 3 do local a1 = math.rad((i-1)*120 + rot); local a2 = math.rad((i%3)*120 + rot); local x1, y1 = math.cos(a1)*r, math.sin(a1)*r; local x2, y2 = math.cos(a2)*r, math.sin(a2)*r; local mx, my = (x1+x2)/2, (y1+y2)/2; local ang = math.deg(math.atan2(y2-y1, x2-x1)); H.makeLine(side, t, mx, my, ang, c) end end; tri(-90); tri(90) end
 end
 
 -- FOV, Watermark
-H.fovGui = Instance.new("ScreenGui")
-H.fovGui.Name = "QwertyFov"
-H.fovGui.ResetOnSpawn = false
-H.fovGui.IgnoreGuiInset = true
-H.fovGui.DisplayOrder = 5
-H.fovGui.Parent = PlayerGui
-H.fovCircle = Instance.new("Frame")
-H.fovCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-H.fovCircle.Size = UDim2.new(0, 200, 0, 200)
-H.fovCircle.BackgroundTransparency = 1
-H.fovCircle.Visible = false
-H.fovCircle.Parent = H.fovGui
-H.corner(H.fovCircle, 999)
-H.fovStroke = Instance.new("UIStroke", H.fovCircle)
-H.fovStroke.Color = H.THEME.Accent
-H.fovStroke.Thickness = 1.5
-H.aimFovCircle = Instance.new("Frame")
-H.aimFovCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-H.aimFovCircle.Size = UDim2.new(0, 200, 0, 200)
-H.aimFovCircle.BackgroundTransparency = 1
-H.aimFovCircle.Visible = false
-H.aimFovCircle.Parent = H.fovGui
-H.corner(H.aimFovCircle, 999)
-H.aimFovStroke = Instance.new("UIStroke", H.aimFovCircle)
-H.aimFovStroke.Color = H.THEME.Purple
-H.aimFovStroke.Thickness = 1.5
+H.fovGui = Instance.new("ScreenGui"); H.fovGui.Name = "QwertyFov"; H.fovGui.ResetOnSpawn = false; H.fovGui.IgnoreGuiInset = true; H.fovGui.DisplayOrder = 5; H.fovGui.Parent = PlayerGui
+H.fovCircle = Instance.new("Frame"); H.fovCircle.AnchorPoint = Vector2.new(0.5, 0.5); H.fovCircle.Size = UDim2.new(0, 200, 0, 200); H.fovCircle.BackgroundTransparency = 1; H.fovCircle.Visible = false; H.fovCircle.Parent = H.fovGui; H.corner(H.fovCircle, 999)
+H.fovStroke = Instance.new("UIStroke", H.fovCircle); H.fovStroke.Color = H.THEME.Accent; H.fovStroke.Thickness = 1.5
+H.aimFovCircle = Instance.new("Frame"); H.aimFovCircle.AnchorPoint = Vector2.new(0.5, 0.5); H.aimFovCircle.Size = UDim2.new(0, 200, 0, 200); H.aimFovCircle.BackgroundTransparency = 1; H.aimFovCircle.Visible = false; H.aimFovCircle.Parent = H.fovGui; H.corner(H.aimFovCircle, 999)
+H.aimFovStroke = Instance.new("UIStroke", H.aimFovCircle); H.aimFovStroke.Color = H.THEME.Purple; H.aimFovStroke.Thickness = 1.5
 
-H.wmGui = Instance.new("ScreenGui")
-H.wmGui.Name = "QwertyWM"
-H.wmGui.ResetOnSpawn = false
-H.wmGui.IgnoreGuiInset = true
-H.wmGui.DisplayOrder = 50
-H.wmGui.Parent = PlayerGui
-H.wm = Instance.new("Frame")
-H.wm.Size = UDim2.new(0, 280, 0, 30)
-H.wm.Position = UDim2.new(0, 12, 0, 12)
-H.wm.BackgroundColor3 = H.THEME.Panel
-H.wm.BackgroundTransparency = 0.2
-H.wm.BorderSizePixel = 0
-H.wm.Visible = false
-H.wm.Parent = H.wmGui
-H.corner(H.wm, 8)
-H.stroke(H.wm, H.THEME.Accent, 1, 0.4)
-H.wmText = Instance.new("TextLabel")
-H.wmText.Size = UDim2.new(1, -20, 1, 0)
-H.wmText.Position = UDim2.new(0, 10, 0, 0)
-H.wmText.BackgroundTransparency = 1
-H.wmText.Text = "QWERTY-HUB | FPS: --"
-H.wmText.TextColor3 = H.THEME.AccentHi
-H.wmText.Font = Enum.Font.GothamBold
-H.wmText.TextSize = 11
-H.wmText.TextXAlignment = Enum.TextXAlignment.Left
-H.wmText.Parent = H.wm
-task.spawn(function()
-    local frames, t = 0, 0
-    while H.wm.Parent do
-        frames = frames + 1
-        t = t + RunService.RenderStepped:Wait()
-        if t >= 1 then
-            H.wmText.Text = "QWERTY-HUB | FPS: " .. frames
-            frames = 0; t = 0
-        end
-        H.wm.Visible = H.State.Watermark
-    end
-end)
+H.wmGui = Instance.new("ScreenGui"); H.wmGui.Name = "QwertyWM"; H.wmGui.ResetOnSpawn = false; H.wmGui.IgnoreGuiInset = true; H.wmGui.DisplayOrder = 50; H.wmGui.Parent = PlayerGui
+H.wm = Instance.new("Frame"); H.wm.Size = UDim2.new(0, 280, 0, 30); H.wm.Position = UDim2.new(0, 12, 0, 12); H.wm.BackgroundColor3 = H.THEME.Panel; H.wm.BackgroundTransparency = 0.2; H.wm.BorderSizePixel = 0; H.wm.Visible = false; H.wm.Parent = H.wmGui; H.corner(H.wm, 8); H.stroke(H.wm, H.THEME.Accent, 1, 0.4)
+H.wmText = Instance.new("TextLabel"); H.wmText.Size = UDim2.new(1, -20, 1, 0); H.wmText.Position = UDim2.new(0, 10, 0, 0); H.wmText.BackgroundTransparency = 1; H.wmText.Text = "QWERTY-HUB | FPS: --"; H.wmText.TextColor3 = H.THEME.AccentHi; H.wmText.Font = Enum.Font.GothamBold; H.wmText.TextSize = 11; H.wmText.TextXAlignment = Enum.TextXAlignment.Left; H.wmText.Parent = H.wm
+task.spawn(function() local frames, t = 0, 0; while H.wm.Parent do frames = frames + 1; t = t + RunService.RenderStepped:Wait(); if t >= 1 then H.wmText.Text = "QWERTY-HUB | FPS: " .. frames; frames = 0; t = 0 end; H.wm.Visible = H.State.Watermark end end)
 
 -- PAGES BUILDING
-H.clearContent = function()
-    for _, c in ipairs(H.content:GetChildren()) do
-        if not c:IsA("UIListLayout") then c:Destroy() end
-    end
-end
+H.clearContent = function() for _, c in ipairs(H.content:GetChildren()) do if not c:IsA("UIListLayout") then c:Destroy() end end end
 
-H.buildCombat = function()
-    H.clearContent()
-    H.sectionCard("Aimbot", "Hold RMB to lock")
-    local g2 = H.container()
-    H.toggleRow(g2, "Enable Aimbot", false, H.THEME.Purple, "Aimbot")
-    H.sliderRow(g2, "Smoothness %", 1, 100, 80, 0, "AimbotSmooth")
-    H.sliderRow(g2, "Aimbot FOV", 0, 800, 150, 0, "AimbotFOV")
-    H.toggleRow(g2, "Show Aimbot FOV", false, H.THEME.Purple, "ShowAimbotFOV")
-    H.sectionCard("Hitbox")
-    local g3 = H.container()
-    H.toggleRow(g3, "Enable Hitbox Expand", false, H.THEME.Pink, "HitboxExpand")
-    H.toggleRow(g3, "NPC Hitbox", false, H.THEME.Pink, "NPCHitbox")
-    H.dropdownRow(g3, "Target Body", {"Body", "Head"}, "Body", "HitboxPart")
-    H.sliderRow(g3, "Hitbox Size", 0, 30, 8, 0, "HitboxSize")
-end
+H.buildCombat = function() H.clearContent(); H.sectionCard("Aimbot", "Aims at ESP Targets"); local g2 = H.container(); H.toggleRow(g2, "Enable Aimbot", false, H.THEME.Purple, "Aimbot"); H.keybindRow(g2, "Aimbot Key", Enum.UserInputType.MouseButton2, "AimbotKey"); H.toggleRow(g2, "Wall Check", true, H.THEME.Purple, "AimbotWallCheck"); H.sliderRow(g2, "Smoothness %", 1, 100, 80, 0, "AimbotSmooth"); H.sliderRow(g2, "Aimbot FOV", 0, 180, 90, 0, "AimbotFOV"); H.toggleRow(g2, "Show Aimbot FOV", true, H.THEME.Purple, "ShowAimbotFOV"); H.sectionCard("Hitbox"); local g3 = H.container(); H.toggleRow(g3, "Enable Hitbox Expand", false, H.THEME.Pink, "HitboxExpand"); H.toggleRow(g3, "NPC Hitbox", false, H.THEME.Pink, "NPCHitbox"); H.dropdownRow(g3, "Target Body", {"Body", "Head"}, "Body", "HitboxPart"); H.sliderRow(g3, "Hitbox Size", 0, 30, 8, 0, "HitboxSize") end
 
-H.buildVisual = function()
-    H.clearContent()
-    H.sectionCard("Player ESP", "Box · Name · Distance · HP · Weapon")
-    local g1 = H.container()
-    H.toggleRow(g1, "Enable Player ESP", false, H.THEME.Cyan, "PlayerESP")
-    H.toggleRow(g1, "Show Box", true, H.THEME.Cyan, "ESPBox")
-    H.toggleRow(g1, "Filled Box", false, H.THEME.Cyan, "ESPBoxFilled")
-    H.dropdownRow(g1, "Box Color", {"Cyan", "Accent", "Pink", "Purple", "Green", "Red", "White"}, "Cyan", "ESPBoxColor")
-    H.sliderRow(g1, "Box Thickness", 0, 5, 2, 0, "ESPBoxThickness")
-    H.toggleRow(g1, "Show Name", true, H.THEME.Cyan, "ESPName")
-    H.toggleRow(g1, "Show Distance", true, H.THEME.Cyan, "ESPDistance")
-    H.toggleRow(g1, "Show Health Bar", true, H.THEME.Cyan, "ESPHealth")
-    H.sliderRow(g1, "Max ESP Distance", 0, 5000, 1000, 0, "ESPSMaxDist")
-    H.sectionCard("NPC ESP", "AI folder — red boxes")
-    local gN = H.container()
-    H.toggleRow(gN, "Enable NPC ESP", false, H.THEME.Danger, "NPCEsp")
-    H.sectionCard("Skeleton ESP")
-    local g2 = H.container()
-    H.toggleRow(g2, "Enable Skeleton", false, H.THEME.Purple, "ESPSkeleton")
-    H.dropdownRow(g2, "Skeleton Color", {"Accent", "Cyan", "Pink", "Purple", "Green", "Red", "White"}, "Accent", "ESPSkeletonColor")
-    H.sectionCard("Tracer")
-    local g3 = H.container()
-    H.toggleRow(g3, "Tracer Lines", false, H.THEME.Pink, "ESPTracer")
-    H.dropdownRow(g3, "Tracer Origin", {"Top", "Bottom", "Mouse"}, "Top", "ESPTracerOrigin")
-    H.sliderRow(g3, "Tracer Thickness", 0, 6, 2, 0, "ESPTracerThickness")
-    H.sectionCard("Chams")
-    local g4 = H.container()
-    H.toggleRow(g4, "Chams (AlwaysOnTop)", false, H.THEME.Pink, "Chams")
-end
+H.buildVisual = function() H.clearContent(); H.sectionCard("Player ESP", "Box · Name · Distance · HP · Weapon"); local g1 = H.container(); H.toggleRow(g1, "Enable Player ESP", false, H.THEME.Cyan, "PlayerESP"); H.toggleRow(g1, "Show Box", true, H.THEME.Cyan, "ESPBox"); H.toggleRow(g1, "Filled Box", false, H.THEME.Cyan, "ESPBoxFilled"); H.dropdownRow(g1, "Box Color", {"Cyan", "Accent", "Pink", "Purple", "Green", "Red", "White"}, "Cyan", "ESPBoxColor"); H.sliderRow(g1, "Box Thickness", 0, 5, 2, 0, "ESPBoxThickness"); H.toggleRow(g1, "Show Name", true, H.THEME.Cyan, "ESPName"); H.toggleRow(g1, "Show Distance", true, H.THEME.Cyan, "ESPDistance"); H.toggleRow(g1, "Show Health Bar", true, H.THEME.Cyan, "ESPHealth"); H.sliderRow(g1, "Max ESP Distance", 0, 5000, 1000, 0, "ESPSMaxDist"); H.sectionCard("Skeleton ESP"); local g2 = H.container(); H.toggleRow(g2, "Enable Skeleton", false, H.THEME.Purple, "ESPSkeleton"); H.dropdownRow(g2, "Skeleton Color", {"Accent", "Cyan", "Pink", "Purple", "Green", "Red", "White"}, "Accent", "ESPSkeletonColor"); H.sectionCard("Tracer"); local g3 = H.container(); H.toggleRow(g3, "Tracer Lines", false, H.THEME.Pink, "ESPTracer"); H.dropdownRow(g3, "Tracer Origin", {"Top", "Bottom", "Mouse"}, "Top", "ESPTracerOrigin"); H.sliderRow(g3, "Tracer Thickness", 0, 6, 2, 0, "ESPTracerThickness"); H.sectionCard("Chams"); local g4 = H.container(); H.toggleRow(g4, "Chams (AlwaysOnTop)", false, H.THEME.Pink, "Chams") end
 
-H.buildMovement = function()
-    H.clearContent()
-    H.sectionCard("Movement")
-    local g1 = H.container()
-    H.toggleRow(g1, "Fly", false, H.THEME.Success, "Fly", function(v) if v then H.enableFly() else H.disableFly() end end)
-    H.sliderRow(g1, "Fly Speed", 0, 300, 50, 0, "FlySpeed")
-    H.toggleRow(g1, "Noclip", false, H.THEME.Success, "Noclip", function(v) if v then H.enableNoclip() else H.disableNoclip() end end)
-    H.toggleRow(g1, "Multi Jump", false, H.THEME.Success, "DoubleJump", function(v) if v then H.enableDoubleJump() else H.disableDoubleJump() end end)
-    H.toggleRow(g1, "Anti-Fall (gravity=0)", false, H.THEME.Success, "AntiFall", function(v) if v then H.enableAntiFall() else H.disableAntiFall() end end)
-    H.sectionCard("Speed")
-    local g2 = H.container()
-    H.toggleRow(g2, "CFrame Speed", false, H.THEME.Accent, "SpeedHack", function(v) if v then H.enableSpeed() else H.disableSpeed() end end)
-    H.sliderRow(g2, "Speed Value", 0, 300, 60, 0, "WalkSpeedValue")
-    H.sectionCard("Camera")
-    local g3 = H.container()
-    H.toggleRow(g3, "Zoom (hold key)", false, H.THEME.Accent, "Zoom")
-    H.sliderRow(g3, "Zoom FOV", 0, 120, 20, 0, "ZoomValue")
-    H.toggleRow(g3, "FOV Changer", false, H.THEME.Accent, "FOVChanger")
-    H.sliderRow(g3, "FOV Value", 0, 120, 90, 0, "FOVValue")
-    H.toggleRow(g3, "Free Cam (hold key)", false, H.THEME.Purple, "FreeCam")
-    H.sliderRow(g3, "Free Cam Speed", 0, 300, 50, 0, "FreeCamSpeed")
-end
+H.buildMovement = function() H.clearContent(); H.sectionCard("Movement"); local g1 = H.container(); H.toggleRow(g1, "Fly", false, H.THEME.Success, "Fly", function(v) if v then H.enableFly() else H.disableFly() end end); H.sliderRow(g1, "Fly Speed", 0, 300, 50, 0, "FlySpeed"); H.toggleRow(g1, "Noclip", false, H.THEME.Success, "Noclip", function(v) if v then H.enableNoclip() else H.disableNoclip() end end); H.toggleRow(g1, "Multi Jump", false, H.THEME.Success, "DoubleJump", function(v) if v then H.enableDoubleJump() else H.disableDoubleJump() end end); H.toggleRow(g1, "Anti-Fall (gravity=0)", false, H.THEME.Success, "AntiFall", function(v) if v then H.enableAntiFall() else H.disableAntiFall() end end); H.sectionCard("Speed"); local g2 = H.container(); H.toggleRow(g2, "CFrame Speed", false, H.THEME.Accent, "SpeedHack", function(v) if v then H.enableSpeed() else H.disableSpeed() end end); H.sliderRow(g2, "Speed Value", 0, 300, 60, 0, "WalkSpeedValue"); H.sectionCard("Camera"); local g3 = H.container(); H.toggleRow(g3, "Zoom (hold key)", false, H.THEME.Accent, "Zoom"); H.sliderRow(g3, "Zoom FOV", 0, 120, 20, 0, "ZoomValue"); H.toggleRow(g3, "FOV Changer", false, H.THEME.Accent, "FOVChanger"); H.sliderRow(g3, "FOV Value", 0, 120, 90, 0, "FOVValue"); H.toggleRow(g3, "Free Cam (hold key)", false, H.THEME.Purple, "FreeCam"); H.sliderRow(g3, "Free Cam Speed", 0, 300, 50, 0, "FreeCamSpeed") end
 
-H.buildKeybinds = function()
-    H.clearContent()
-    H.sectionCard("Keybinds", "Click button → press any key")
-    local g1 = H.container()
-    H.keybindRow(g1, "Fly Key", Enum.KeyCode.G, "FlyKey")
-    H.keybindRow(g1, "Noclip Key", Enum.KeyCode.N, "NoclipKey")
-    H.keybindRow(g1, "Speed Key", Enum.KeyCode.M, "SpeedKey")
-    H.keybindRow(g1, "Anti-Fall Key", Enum.KeyCode.F, "AntiFallKey")
-    H.keybindRow(g1, "Zoom Key", Enum.KeyCode.Z, "ZoomKey")
-    H.keybindRow(g1, "Free Cam Key", Enum.KeyCode.V, "FreeCamKey")
-end
+H.buildKeybinds = function() H.clearContent(); H.sectionCard("Keybinds", "Click button → press any key/mouse"); local g1 = H.container(); H.keybindRow(g1, "Fly Key", Enum.KeyCode.G, "FlyKey"); H.keybindRow(g1, "Noclip Key", Enum.KeyCode.N, "NoclipKey"); H.keybindRow(g1, "Speed Key", Enum.KeyCode.M, "SpeedKey"); H.keybindRow(g1, "Anti-Fall Key", Enum.KeyCode.F, "AntiFallKey"); H.keybindRow(g1, "Zoom Key", Enum.KeyCode.Z, "ZoomKey"); H.keybindRow(g1, "Free Cam Key", Enum.KeyCode.V, "FreeCamKey"); H.keybindRow(g1, "Aimbot Key", Enum.UserInputType.MouseButton2, "AimbotKey") end
 
-H.buildOptimization = function()
-    H.clearContent()
-    H.sectionCard("Lighting")
-    local g1 = H.container()
-    H.toggleRow(g1, "Fullbright", false, H.THEME.Warning, "Fullbright", function(v) H.setFullbright(v) end)
-    H.sectionCard("World")
-    local g2 = H.container()
-    H.toggleRow(g2, "Remove Grass", false, H.THEME.Warning, "RemoveGrass", function(v) H.setRemoveGrass(v) end)
-    H.toggleRow(g2, "Remove Leaves", false, H.THEME.Warning, "RemoveLeaves", function(v) H.setRemoveLeaves(v) end)
-end
+H.buildOptimization = function() H.clearContent(); H.sectionCard("Lighting"); local g1 = H.container(); H.toggleRow(g1, "Fullbright", false, H.THEME.Warning, "Fullbright", function(v) H.setFullbright(v) end); H.sectionCard("World"); local g2 = H.container(); H.toggleRow(g2, "Remove Grass", false, H.THEME.Warning, "RemoveGrass", function(v) H.setRemoveGrass(v) end); H.toggleRow(g2, "Remove Leaves", false, H.THEME.Warning, "RemoveLeaves", function(v) H.setRemoveLeaves(v) end) end
 
-H.buildReticle = function()
-    H.clearContent()
-    H.sectionCard("Crosshair")
-    local g1 = H.container()
-    H.toggleRow(g1, "Enable Crosshair", true, H.THEME.Accent, "Crosshair", function() H.drawCross() end)
-    H.dropdownRow(g1, "Shape", {"Cross", "Dot", "Circle", "Swastika", "Star"}, "Cross", "CrosshairShape", function() H.drawCross() end)
-    H.sliderRow(g1, "Size", 0, 60, 12, 0, "CrosshairSize")
-    H.sliderRow(g1, "Gap", 0, 30, 4, 0, "CrosshairGap")
-    H.sliderRow(g1, "Thickness", 0, 10, 2, 0, "CrosshairThickness")
-    H.sliderRow(g1, "Spin", 0, 100, 0, 0, "CrosshairSpin")
-    H.toggleRow(g1, "RGB Mode", false, H.THEME.Pink, "CrosshairRGB")
-    H.sliderRow(g1, "RGB Speed", 0, 20, 5, 0, "CrosshairRGBSpeed")
-    H.buttonRow(g1, "Rebuild Crosshair", H.THEME.Accent, function() H.drawCross() end)
-end
+H.buildReticle = function() H.clearContent(); H.sectionCard("Crosshair"); local g1 = H.container(); H.toggleRow(g1, "Enable Crosshair", true, H.THEME.Accent, "Crosshair", function() H.drawCross() end); H.dropdownRow(g1, "Shape", {"Cross", "Dot", "Circle", "Swastika", "Star"}, "Star", "CrosshairShape", function() H.drawCross() end); H.sliderRow(g1, "Size", 0, 60, 12, 0, "CrosshairSize", function() H.drawCross() end); H.sliderRow(g1, "Gap", 0, 30, 4, 0, "CrosshairGap", function() H.drawCross() end); H.sliderRow(g1, "Thickness", 0, 10, 2, 0, "CrosshairThickness", function() H.drawCross() end); H.sliderRow(g1, "Spin", 0, 100, 0, 0, "CrosshairSpin", function() H.drawCross() end); H.toggleRow(g1, "RGB Mode", false, H.THEME.Pink, "CrosshairRGB", function() H.drawCross() end); H.sliderRow(g1, "RGB Speed", 0, 20, 5, 0, "CrosshairRGBSpeed", function() H.drawCross() end); H.buttonRow(g1, "Rebuild Crosshair", H.THEME.Accent, function() H.drawCross() end) end
 
-H.buildAntiAim = function()
-    H.clearContent()
-    H.sectionCard("Anti-Aim", "Rotate body to dodge aimbots")
-    local g1 = H.container()
-    H.toggleRow(g1, "Enable Anti-Aim", false, H.THEME.Purple, "AntiAim", function(v) if v then H.enableAntiAim() end end)
-    H.dropdownRow(g1, "Type", {"Spin", "Jitter"}, "Spin", "AntiAimType")
-    H.sliderRow(g1, "Spin Speed", 0, 30, 10, 0, "AntiAimSpinSpeed")
-    H.sliderRow(g1, "Jitter Range", 0, 20, 10, 0, "AntiAimJitter")
-end
+H.buildAntiAim = function() H.clearContent(); H.sectionCard("Anti-Aim", "Rotate body to dodge aimbots"); local g1 = H.container(); H.toggleRow(g1, "Enable Anti-Aim", false, H.THEME.Purple, "AntiAim", function(v) if v then H.enableAntiAim() end end); H.dropdownRow(g1, "Type", {"Spin", "Jitter"}, "Spin", "AntiAimType"); H.sliderRow(g1, "Spin Speed", 0, 30, 10, 0, "AntiAimSpinSpeed"); H.sliderRow(g1, "Jitter Range", 0, 20, 10, 0, "AntiAimJitter") end
 
-H.buildSettings = function()
-    H.clearContent()
-    H.sectionCard("Theme", "Change hub colors")
-    local gt = H.container()
-    H.dropdownRow(gt, "Color Scheme", {"Blue", "Red", "Green", "Purple", "Orange", "Mono"}, H.State.Theme or "Blue", "Theme", function(v) H.applyTheme(v) end)
-    H.sectionCard("Interface")
-    local g1 = H.container()
-    H.toggleRow(g1, "Watermark", true, H.THEME.Accent, "Watermark")
-    H.sectionCard("Sound")
-    local g2 = H.container()
-    H.toggleRow(g2, "UI Sounds", true, H.THEME.Cyan, "UISoundEnabled")
-    H.sliderRow(g2, "UI Volume %", 0, 100, 50, 0, "UISoundVolume")
-    H.sectionCard("Time Changer")
-    local g3 = H.container()
-    H.toggleRow(g3, "Enable Time Changer", false, H.THEME.Warning, "TimeChanger")
-    H.sliderRow(g3, "Time Value", 0, 24, 12, 0, "TimeValue")
-    H.sectionCard("Config", "Profiles are saved separately")
-    local g5 = H.container()
-    H.textInputRow(g5, "Profile Name", "default", H.State.ProfileName, "ProfileName")
-    local row1 = Instance.new("Frame")
-    row1.Size = UDim2.new(1, 0, 0, 40)
-    row1.BackgroundTransparency = 1
-    row1.Parent = g5
-    local l1 = Instance.new("UIListLayout", row1)
-    l1.FillDirection = Enum.FillDirection.Horizontal
-    l1.Padding = UDim.new(0, 6)
-    H.buttonRow(row1, "Save", H.THEME.Success, function() H.saveProfile(H.State.ProfileName); H.notify("Saved: " .. H.State.ProfileName, H.THEME.Success) end)
-    H.buttonRow(row1, "Load", H.THEME.Accent, function() H.loadProfile(H.State.ProfileName); H.notify("Loaded: " .. H.State.ProfileName, H.THEME.AccentHi) end)
-    for _, c in ipairs(row1:GetChildren()) do if c:IsA("TextButton") then c.Size = UDim2.new(0.5, -3, 1, 0) end end
-    H.buttonRow(g5, "Save & Apply Active", H.THEME.Cyan, function() H.saveProfile(H.State.ProfileName); H.notify("Active: " .. H.State.ProfileName, H.THEME.Cyan) end)
-    local profiles = H.listProfiles()
-    if #profiles > 0 then
-        H.dropdownRow(g5, "Load Profile", profiles, profiles[1], nil, function(v)
-            H.State.ProfileName = v
-            H.loadProfile(v)
-        end)
-    end
-    H.sectionCard("Security")
-    local g4 = H.container()
-    H.toggleRow(g4, "Anti-AFK (detected)", false, H.THEME.Danger, "AntiAFK")
-    H.sectionCard("Danger Zone")
-    local g6 = H.container()
-    local row = Instance.new("Frame")
-    row.Size = UDim2.new(1, 0, 0, 44)
-    row.BackgroundTransparency = 1
-    row.Parent = g6
-    local l = Instance.new("UIListLayout", row)
-    l.FillDirection = Enum.FillDirection.Horizontal
-    l.Padding = UDim.new(0, 6)
-    H.buttonRow(row, "Unload GUI", H.THEME.Danger, function() H.screenGui:Destroy() end)
-    H.buttonRow(row, "Rejoin", H.THEME.Warning, function() game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer) end)
-    for _, c in ipairs(row:GetChildren()) do
-        if c:IsA("TextButton") then c.Size = UDim2.new(0.5, -3, 1, 0) end
-    end
-end
+H.buildSettings = function() H.clearContent(); H.sectionCard("Theme", "Change hub colors"); local gt = H.container(); H.dropdownRow(gt, "Color Scheme", {"Blue", "Red", "Green", "Purple", "Orange", "Mono"}, H.State.Theme or "Blue", "Theme", function(v) H.applyTheme(v) end); H.sectionCard("Interface"); local g1 = H.container(); H.toggleRow(g1, "Watermark", true, H.THEME.Accent, "Watermark"); H.sectionCard("Sound"); local g2 = H.container(); H.toggleRow(g2, "UI Sounds", true, H.THEME.Cyan, "UISoundEnabled"); H.sliderRow(g2, "UI Volume %", 0, 100, 50, 0, "UISoundVolume"); H.sectionCard("Time Changer"); local g3 = H.container(); H.toggleRow(g3, "Enable Time Changer", false, H.THEME.Warning, "TimeChanger"); H.sliderRow(g3, "Time Value", 0, 24, 12, 0, "TimeValue"); H.sectionCard("Config", "Profiles are saved separately"); local g5 = H.container(); H.textInputRow(g5, "Profile Name", "default", H.State.ProfileName, "ProfileName"); local row1 = Instance.new("Frame"); row1.Size = UDim2.new(1, 0, 0, 40); row1.BackgroundTransparency = 1; row1.Parent = g5; local l1 = Instance.new("UIListLayout", row1); l1.FillDirection = Enum.FillDirection.Horizontal; l1.Padding = UDim.new(0, 6); H.buttonRow(row1, "Save", H.THEME.Success, function() H.saveProfile(H.State.ProfileName); H.notify("Saved: " .. H.State.ProfileName, H.THEME.Success) end); H.buttonRow(row1, "Load", H.THEME.Accent, function() H.loadProfile(H.State.ProfileName); H.notify("Loaded: " .. H.State.ProfileName, H.THEME.AccentHi) end); for _, c in ipairs(row1:GetChildren()) do if c:IsA("TextButton") then c.Size = UDim2.new(0.5, -3, 1, 0) end end; H.buttonRow(g5, "Save & Apply Active", H.THEME.Cyan, function() H.saveProfile(H.State.ProfileName); H.notify("Active: " .. H.State.ProfileName, H.THEME.Cyan) end); local profiles = H.listProfiles(); if #profiles > 0 then H.dropdownRow(g5, "Load Profile", profiles, profiles[1], nil, function(v) H.State.ProfileName = v; H.loadProfile(v) end) end; H.sectionCard("Security"); local g4 = H.container(); H.toggleRow(g4, "Anti-AFK (detected)", false, H.THEME.Danger, "AntiAFK"); H.sectionCard("Danger Zone"); local g6 = H.container(); local row = Instance.new("Frame"); row.Size = UDim2.new(1, 0, 0, 44); row.BackgroundTransparency = 1; row.Parent = g6; local l = Instance.new("UIListLayout", row); l.FillDirection = Enum.FillDirection.Horizontal; l.Padding = UDim.new(0, 6); H.buttonRow(row, "Unload GUI", H.THEME.Danger, function() H.screenGui:Destroy() end); H.buttonRow(row, "Rejoin", H.THEME.Warning, function() game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer) end); for _, c in ipairs(row:GetChildren()) do if c:IsA("TextButton") then c.Size = UDim2.new(0.5, -3, 1, 0) end end end
 
-H.createTab("Combat", "Combat", "⚔", H.THEME.Accent)
-H.createTab("Visual", "Visual", "👁", H.THEME.Cyan)
-H.createTab("Movement", "Movement", "🚀", H.THEME.Success)
-H.createTab("Keybinds", "Keybinds", "⌨", H.THEME.Warning)
-H.createTab("Optimization", "Optimization", "⚡", H.THEME.Warning)
-H.createTab("Reticle", "Reticle", "🎯", H.THEME.Pink)
-H.createTab("AntiAim", "Anti-Aim", "🌀", H.THEME.Purple)
-H.createTab("Settings", "Settings", "⚙", H.THEME.Warning)
+H.createTab("Combat", "Combat", "⚔", H.THEME.Accent); H.createTab("Visual", "Visual", "👁", H.THEME.Cyan); H.createTab("Movement", "Movement", "🚀", H.THEME.Success); H.createTab("Keybinds", "Keybinds", "⌨", H.THEME.Warning); H.createTab("Optimization", "Optimization", "⚡", H.THEME.Warning); H.createTab("Reticle", "Reticle", "🎯", H.THEME.Pink); H.createTab("AntiAim", "Anti-Aim", "🌀", H.THEME.Purple); H.createTab("Settings", "Settings", "⚙", H.THEME.Warning)
 
-H.pages = {
-    ["Combat"] = H.buildCombat, ["Visual"] = H.buildVisual, ["Movement"] = H.buildMovement,
-    ["Keybinds"] = H.buildKeybinds, ["Optimization"] = H.buildOptimization,
-    ["Reticle"] = H.buildReticle, ["AntiAim"] = H.buildAntiAim, ["Settings"] = H.buildSettings,
-}
-H.subs = {
-    ["Combat"] = "Aimbot · Hitbox", ["Visual"] = "ESP · Skeleton · Tracer · NPC",
-    ["Movement"] = "Fly · Noclip · Multi Jump · Speed", ["Keybinds"] = "Click button → press any key",
-    ["Optimization"] = "Fullbright · Grass", ["Reticle"] = "Crosshair · Shapes · RGB",
-    ["AntiAim"] = "Spin · Jitter", ["Settings"] = "Theme · Config · Profiles",
-}
+H.pages = {["Combat"] = H.buildCombat, ["Visual"] = H.buildVisual, ["Movement"] = H.buildMovement, ["Keybinds"] = H.buildKeybinds, ["Optimization"] = H.buildOptimization, ["Reticle"] = H.buildReticle, ["AntiAim"] = H.buildAntiAim, ["Settings"] = H.buildSettings}
+H.subs = {["Combat"] = "Aimbot · Hitbox", ["Visual"] = "ESP · Skeleton · Tracer · NPC", ["Movement"] = "Fly · Noclip · Multi Jump · Speed", ["Keybinds"] = "Click button → press any key/mouse", ["Optimization"] = "Fullbright · Grass", ["Reticle"] = "Crosshair · Shapes · RGB", ["AntiAim"] = "Spin · Jitter", ["Settings"] = "Theme · Config · Profiles"}
 
-H.switchTab = function(name)
-    H.setActiveTab(name)
-    H.pageTitle.Text = name
-    H.pageSub.Text = H.subs[name] or ""
-    H.glitchTitle.Text = name
-    if H.pages[name] then
-        H.pages[name]()
-        H.updateCanvas()
-    end
-end
+H.switchTab = function(name) H.setActiveTab(name); H.pageTitle.Text = name; H.pageSub.Text = H.subs[name] or ""; H.glitchTitle.Text = name; if H.pages[name] then H.pages[name](); H.updateCanvas() end end
+for name, data in pairs(H.tabs) do data.button.MouseButton1Click:Connect(function() H.switchTab(name) end) end
 
-for name, data in pairs(H.tabs) do
-    data.button.MouseButton1Click:Connect(function() H.switchTab(name) end)
-end
+H.resetAllFunctions = function() H.State.Fly = false; H.disableFly(); H.State.Noclip = false; H.disableNoclip(); H.State.SpeedHack = false; H.disableSpeed(); H.State.DoubleJump = false; H.disableDoubleJump(); H.State.AntiFall = false; H.disableAntiFall(); H.State.Aimbot = false; H.State.HitboxExpand = false; H.State.PlayerESP = false; H.State.NPCEsp = false; H.State.ESPSkeleton = false; H.State.ESPTracer = false; H.State.Chams = false; H.State.Crosshair = false; H.drawCross(); H.crossHolder.Visible = false; H.fovCircle.Visible = false; H.aimFovCircle.Visible = false; H.State.Zoom = false; H.State.FOVChanger = false; H.State.FreeCam = false; H.stopFreeCam(); H.State.Fullbright = false; H.setFullbright(false); H.State.RemoveGrass = false; H.setRemoveGrass(false); H.State.RemoveLeaves = false; H.setRemoveLeaves(false); H.State.TimeChanger = false; H.State.AntiAim = false; for _, d in pairs(H.espStorage) do d.container.Visible = false end; for _, lines in pairs(H.skelStorage) do for _, l in ipairs(lines) do l.Visible = false end end; for _, l in pairs(H.traceLines) do l.Visible = false end; for _, hl in pairs(H.chamsStorage) do hl.Enabled = false end; for _, d in pairs(H.npcEspStorage) do d.container.Visible = false end; for _, lines in pairs(H.npcSkelStorage) do for _, l in ipairs(lines) do l.Visible = false end end; H.notify("All functions disabled", H.THEME.Danger) end
 
-H.resetAllFunctions = function()
-    H.State.Fly = false; H.disableFly()
-    H.State.Noclip = false; H.disableNoclip()
-    H.State.SpeedHack = false; H.disableSpeed()
-    H.State.DoubleJump = false; H.disableDoubleJump()
-    H.State.AntiFall = false; H.disableAntiFall()
-    H.State.Aimbot = false
-    H.State.HitboxExpand = false
-    H.State.PlayerESP = false
-    H.State.NPCEsp = false
-    H.State.ESPSkeleton = false
-    H.State.ESPTracer = false
-    H.State.Chams = false
-    H.State.Crosshair = false
-    H.drawCross()
-    H.crossHolder.Visible = false
-    H.fovCircle.Visible = false
-    H.aimFovCircle.Visible = false
-    H.State.Zoom = false
-    H.State.FOVChanger = false
-    H.State.FreeCam = false
-    H.stopFreeCam()
-    H.State.Fullbright = false; H.setFullbright(false)
-    H.State.RemoveGrass = false; H.setRemoveGrass(false)
-    H.State.RemoveLeaves = false; H.setRemoveLeaves(false)
-    H.State.TimeChanger = false
-    H.State.AntiAim = false
-    for _, d in pairs(H.espStorage) do d.container.Visible = false end
-    for _, lines in pairs(H.skelStorage) do for _, l in ipairs(lines) do l.Visible = false end end
-    for _, l in pairs(H.traceLines) do l.Visible = false end
-    for _, hl in pairs(H.chamsStorage) do hl.Enabled = false end
-    for _, d in pairs(H.npcEspStorage) do d.container.Visible = false end
-    for _, lines in pairs(H.npcSkelStorage) do for _, l in ipairs(lines) do l.Visible = false end end
-    H.notify("All functions disabled", H.THEME.Danger)
-end
-
-H.isVisible = false
-H.isAnimating = false
-H.firstOpen = true
-
-H.cacheBG = function(obj)
-    if obj:IsA("GuiObject") and obj:GetAttribute("__orig_bg") == nil then
-        obj:SetAttribute("__orig_bg", obj.BackgroundTransparency)
-    end
-end
-H.cacheText = function(obj)
-    if (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and obj:GetAttribute("__orig_tx") == nil then
-        obj:SetAttribute("__orig_tx", obj.TextTransparency)
-    end
-end
-H.cacheAll = function(parent)
-    for _, d in ipairs(parent:GetDescendants()) do
-        if d:IsA("GuiObject") then H.cacheBG(d) end
-        if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then H.cacheText(d) end
-    end
-    if parent:IsA("GuiObject") then H.cacheBG(parent) end
-    if parent:IsA("TextLabel") or parent:IsA("TextButton") or parent:IsA("TextBox") then H.cacheText(parent) end
-end
+H.isVisible = false; H.isAnimating = false; H.firstOpen = true
+H.cacheBG = function(obj) if obj:IsA("GuiObject") and obj:GetAttribute("__orig_bg") == nil then obj:SetAttribute("__orig_bg", obj.BackgroundTransparency) end end
+H.cacheText = function(obj) if (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) and obj:GetAttribute("__orig_tx") == nil then obj:SetAttribute("__orig_tx", obj.TextTransparency) end end
+H.cacheAll = function(parent) for _, d in ipairs(parent:GetDescendants()) do if d:IsA("GuiObject") then H.cacheBG(d) end; if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then H.cacheText(d) end end; if parent:IsA("GuiObject") then H.cacheBG(parent) end; if parent:IsA("TextLabel") or parent:IsA("TextButton") or parent:IsA("TextBox") then H.cacheText(parent) end end
 H.cacheAll(H.main)
+H.unlockMouse = function() UserInputService.MouseIconEnabled = false; UserInputService.MouseBehavior = Enum.MouseBehavior.Default; H.cursorGui.Enabled = true end
+H.lockMouse = function() UserInputService.MouseIconEnabled = true; UserInputService.MouseBehavior = Enum.MouseBehavior.Default; H.cursorGui.Enabled = false end
+H.openMenuNow = function() H.main.Visible = true; H.main.Position = H.origPos; H.main.Rotation = 0; H.main.BackgroundTransparency = 0.15; H.unlockMouse(); H.playSound("Open", 0.3, 1.2); local mainStroke = H.main:FindFirstChildOfClass("UIStroke"); if mainStroke then mainStroke.Transparency = 0.3 end; for _, d in ipairs(H.sidebar:GetDescendants()) do if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end; if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end end; for _, d in ipairs(H.content:GetDescendants()) do if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end; if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end end; for _, d in ipairs(H.topBar:GetDescendants()) do if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end; if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end end; H.sidebar.BackgroundTransparency = 0.3; H.notify("Menu opened", H.THEME.Success); task.wait(0.05); H.isAnimating = false end
+H.showMain = function() if H.isVisible or H.isAnimating then return end; H.isAnimating = true; H.isVisible = true; if H.firstOpen then H.firstOpen = false; H.showLoading(H.openMenuNow) else H.openMenuNow() end end
+H.hideMain = function(force) if not H.isVisible then return end; H.isVisible = false; H.playSound("Close", 0.3, 0.85); H.main.Visible = false; H.lockMouse(); if force then H.resetAllFunctions() end end
+H.minBtn.MouseButton1Click:Connect(function() H.hideMain(false) end)
+H.closeBtn.MouseButton1Click:Connect(function() H.hideMain(true); H.screenGui:Destroy(); H.espGui:Destroy(); H.tracerGui:Destroy(); H.crossGui:Destroy(); H.fovGui:Destroy(); H.wmGui:Destroy(); H.cursorGui:Destroy(); H.loadingGui:Destroy(); H.keyGui:Destroy(); UserInputService.MouseIconEnabled = true; UserInputService.MouseBehavior = Enum.MouseBehavior.Default; pcall(function() for _, conn in pairs(getconnections(RunService.Heartbeat)) do conn:Disconnect() end end); pcall(function() for _, conn in pairs(getconnections(RunService.RenderStepped)) do conn:Disconnect() end end); pcall(function() for _, conn in pairs(getconnections(UserInputService.InputBegan)) do conn:Disconnect() end end); pcall(function() for _, conn in pairs(getconnections(UserInputService.InputEnded)) do conn:Disconnect() end end) end)
 
-H.unlockMouse = function()
-    UserInputService.MouseIconEnabled = false
-    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-    H.cursorGui.Enabled = true
-end
-H.lockMouse = function()
-    UserInputService.MouseIconEnabled = true
-    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-    H.cursorGui.Enabled = false
-end
-
-H.openMenuNow = function()
-    H.main.Visible = true
-    H.main.Position = H.origPos
-    H.main.Rotation = 0
-    H.main.BackgroundTransparency = 0.15
-    H.unlockMouse()
-    H.playSound("Open", 0.3, 1.2)
-    local mainStroke = H.main:FindFirstChildOfClass("UIStroke")
-    if mainStroke then mainStroke.Transparency = 0.3 end
-    for _, d in ipairs(H.sidebar:GetDescendants()) do
-        if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end
-        if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end
-    end
-    for _, d in ipairs(H.content:GetDescendants()) do
-        if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end
-        if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end
-    end
-    for _, d in ipairs(H.topBar:GetDescendants()) do
-        if d:IsA("GuiObject") and d:GetAttribute("__orig_bg") ~= nil then d.BackgroundTransparency = d:GetAttribute("__orig_bg") end
-        if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then d.TextTransparency = d:GetAttribute("__orig_tx") or 0 end
-    end
-    H.sidebar.BackgroundTransparency = 0.3
-    H.notify("Menu opened", H.THEME.Success)
-    task.wait(0.05)
-    H.isAnimating = false
-end
-
-H.showMain = function()
-    if H.isVisible or H.isAnimating then return end
-    H.isAnimating = true
-    H.isVisible = true
-    if H.firstOpen then
-        H.firstOpen = false
-        H.showLoading(H.openMenuNow)
-    else
-        H.openMenuNow()
-    end
-end
-
-H.hideMain = function()
-    if not H.isVisible then return end
-    H.isVisible = false
-    H.playSound("Close", 0.3, 0.85)
-    H.main.Visible = false
-    H.lockMouse()
-    H.resetAllFunctions()
-end
-
-H.minBtn.MouseButton1Click:Connect(function() H.hideMain() end)
-
-H.closeBtn.MouseButton1Click:Connect(function()
-    H.hideMain()
-    H.resetAllFunctions()
-    H.screenGui:Destroy()
-    H.espGui:Destroy()
-    H.tracerGui:Destroy()
-    H.crossGui:Destroy()
-    H.fovGui:Destroy()
-    H.wmGui:Destroy()
-    H.cursorGui:Destroy()
-    H.loadingGui:Destroy()
-    H.keyGui:Destroy()
-    UserInputService.MouseIconEnabled = true
-    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-    for _, conn in pairs(getconnections(RunService.Heartbeat)) do conn:Disconnect() end
-    for _, conn in pairs(getconnections(RunService.RenderStepped)) do conn:Disconnect() end
-    for _, conn in pairs(getconnections(UserInputService.InputBegan)) do conn:Disconnect() end
-    for _, conn in pairs(getconnections(UserInputService.InputEnded)) do conn:Disconnect() end
-end)
-
--- MAIN LOOPS
 RunService.Heartbeat:Connect(function()
     pcall(H.updatePlayerESP)
-    pcall(H.updateNpcESP)
     pcall(H.hitboxUpdate)
-    if H.State.Aimbot and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) and not H.isVisible then
-        local cam = H.getCam()
-        local t = H.getAimbotTarget()
-        if cam and t then
-            local cf = CFrame.new(cam.CFrame.Position, t.Position)
-            cam.CFrame = cam.CFrame:Lerp(cf, (H.State.AimbotSmooth or 80) / 100)
+    if H.State.Aimbot and not H.isVisible then
+        local key = H.State.AimbotKey
+        local isPressed = false
+        if typeof(key) == "EnumItem" then
+            if key.EnumType == Enum.KeyCode then isPressed = UserInputService:IsKeyDown(key)
+            elseif key.EnumType == Enum.UserInputType then isPressed = UserInputService:IsMouseButtonPressed(key) end
+        end
+        if isPressed then
+            local cam = H.getCam(); local t = H.getAimbotTarget()
+            if cam and t then local cf = CFrame.new(cam.CFrame.Position, t.Position); cam.CFrame = cam.CFrame:Lerp(cf, (H.State.AimbotSmooth or 80) / 100) end
         end
     end
 end)
 
 RunService.RenderStepped:Connect(function()
     pcall(H.updateZoomFOV)
-    H.crossHolder.Visible = H.State.Crosshair and not H.isVisible
+    H.crossHolder.Visible = H.State.Crosshair
     H.crossHolder.Rotation = H.State.CrosshairSpin > 0 and (tick() * H.State.CrosshairSpin * 36) % 360 or 0
-    if H.State.CrosshairRGB and #H.crossLines > 0 then
-        local hue = (tick() * H.State.CrosshairRGBSpeed * 0.2) % 1
-        local col = Color3.fromHSV(hue, 1, 1)
-        for _, l in ipairs(H.crossLines) do
-            if l.Parent then
-                if l:IsA("Frame") and l.BackgroundTransparency < 1 then l.BackgroundColor3 = col end
-                local st = l:FindFirstChildOfClass("UIStroke")
-                if st then st.Color = col end
-            end
-        end
-    end
-    H.fovCircle.Visible = H.State.ShowFOV and H.State.Aimbot and not H.isVisible
-    if H.fovCircle.Visible then
-        local r = H.State.AimbotFOV * 3
-        local mp = UserInputService:GetMouseLocation()
-        H.fovCircle.Position = UDim2.new(0, mp.X, 0, mp.Y)
-        H.fovCircle.Size = UDim2.new(0, r*2, 0, r*2)
-    end
+    if H.State.CrosshairRGB and #H.crossLines > 0 then local hue = (tick() * H.State.CrosshairRGBSpeed * 0.2) % 1; local col = Color3.fromHSV(hue, 1, 1); for _, l in ipairs(H.crossLines) do if l.Parent then if l:IsA("Frame") and l.BackgroundTransparency < 1 then l.BackgroundColor3 = col end; local st = l:FindFirstChildOfClass("UIStroke"); if st then st.Color = col end end end end
+    
     H.aimFovCircle.Visible = H.State.ShowAimbotFOV and H.State.Aimbot and not H.isVisible
     if H.aimFovCircle.Visible then
-        local r = H.State.AimbotFOV * 3
-        local mp = UserInputService:GetMouseLocation()
+        local cam = H.getCam()
+        local r = math.tan(math.rad(H.State.AimbotFOV / 2)) / math.tan(math.rad(cam.FieldOfView / 2)) * (cam.ViewportSize.Y / 2)
+        local mp = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
         H.aimFovCircle.Position = UDim2.new(0, mp.X, 0, mp.Y)
         H.aimFovCircle.Size = UDim2.new(0, r*2, 0, r*2)
     end
+    
     if H.freeCamActive then
-        local speed = H.State.FreeCamSpeed * 0.3
-        local rot = CFrame.fromEulerAnglesYXZ(H.freeCamPitch, H.freeCamYaw, 0)
-        local move = Vector3.new()
-        if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + rot.LookVector end
-        if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - rot.LookVector end
-        if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - rot.RightVector end
-        if UserInputService:IsKeyDown(Enum.KeyCode.D) then move = move + rot.RightVector end
-        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then move = move + Vector3.new(0,1,0) end
-        if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then move = move - Vector3.new(0,1,0) end
+        local speed = H.State.FreeCamSpeed * 0.3; local rot = CFrame.fromEulerAnglesYXZ(H.freeCamPitch, H.freeCamYaw, 0); local move = Vector3.new()
+        if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + rot.LookVector end; if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - rot.LookVector end
+        if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - rot.RightVector end; if UserInputService:IsKeyDown(Enum.KeyCode.D) then move = move + rot.RightVector end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then move = move + Vector3.new(0,1,0) end; if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then move = move - Vector3.new(0,1,0) end
         if move.Magnitude > 0 then H.freeCamPos = H.freeCamPos + move.Unit * speed * 0.15 end
-        local cam = H.getCam()
-        if cam then cam.CFrame = CFrame.new(H.freeCamPos) * rot end
+        local cam = H.getCam(); if cam then cam.CFrame = CFrame.new(H.freeCamPos) * rot end
     end
 end)
 
 UserInputService.InputBegan:Connect(function(input, gp)
     if gp then return end
-    if H.isVisible then return end
     if input.KeyCode == Enum.KeyCode.RightShift or input.KeyCode == Enum.KeyCode.Insert then
-        if H.isVisible then H.hideMain() else H.showMain() end
+        if H.isVisible then H.hideMain(false) else H.showMain() end
         return
     end
-    if input.KeyCode == H.State.FlyKey then
-        H.State.Fly = not H.State.Fly
-        if H.State.Fly then H.enableFly() else H.disableFly() end
-        H.notify("Fly: " .. tostring(H.State.Fly), H.State.Fly and H.THEME.Success or H.THEME.Danger)
-    end
-    if input.KeyCode == H.State.NoclipKey then
-        H.State.Noclip = not H.State.Noclip
-        if H.State.Noclip then H.enableNoclip() else H.disableNoclip() end
-        H.notify("Noclip: " .. tostring(H.State.Noclip), H.State.Noclip and H.THEME.Success or H.THEME.Danger)
-    end
-    if input.KeyCode == H.State.SpeedKey then
-        H.State.SpeedHack = not H.State.SpeedHack
-        if H.State.SpeedHack then H.enableSpeed() else H.disableSpeed() end
-        H.notify("Speed: " .. tostring(H.State.SpeedHack), H.State.SpeedHack and H.THEME.Success or H.THEME.Danger)
-    end
+    if H.isVisible then return end
+    if input.KeyCode == H.State.FlyKey then H.State.Fly = not H.State.Fly; if H.State.Fly then H.enableFly() else H.disableFly() end; H.notify("Fly: " .. tostring(H.State.Fly), H.State.Fly and H.THEME.Success or H.THEME.Danger) end
+    if input.KeyCode == H.State.NoclipKey then H.State.Noclip = not H.State.Noclip; if H.State.Noclip then H.enableNoclip() else H.disableNoclip() end; H.notify("Noclip: " .. tostring(H.State.Noclip), H.State.Noclip and H.THEME.Success or H.THEME.Danger) end
+    if input.KeyCode == H.State.SpeedKey then H.State.SpeedHack = not H.State.SpeedHack; if H.State.SpeedHack then H.enableSpeed() else H.disableSpeed() end; H.notify("Speed: " .. tostring(H.State.SpeedHack), H.State.SpeedHack and H.THEME.Success or H.THEME.Danger) end
     if input.KeyCode == H.State.ZoomKey then H.State.Zoom = true end
-    if input.KeyCode == H.State.FreeCamKey then
-        H.State.FreeCam = true
-        H.startFreeCam()
-    end
-    if input.KeyCode == H.State.AntiFallKey then
-        H.State.AntiFall = not H.State.AntiFall
-        if H.State.AntiFall then H.enableAntiFall() else H.disableAntiFall() end
-        H.notify("Anti-Fall: " .. tostring(H.State.AntiFall), H.State.AntiFall and H.THEME.Success or H.THEME.Danger)
-    end
+    if input.KeyCode == H.State.FreeCamKey then H.State.FreeCam = true; H.startFreeCam() end
+    if input.KeyCode == H.State.AntiFallKey then H.State.AntiFall = not H.State.AntiFall; if H.State.AntiFall then H.enableAntiFall() else H.disableAntiFall() end; H.notify("Anti-Fall: " .. tostring(H.State.AntiFall), H.State.AntiFall and H.THEME.Success or H.THEME.Danger) end
 end)
 
 UserInputService.InputEnded:Connect(function(input)
     if input.KeyCode == H.State.ZoomKey then H.State.Zoom = false end
-    if input.KeyCode == H.State.FreeCamKey then
-        H.State.FreeCam = false
-        H.stopFreeCam()
-    end
+    if input.KeyCode == H.State.FreeCamKey then H.State.FreeCam = false; H.stopFreeCam() end
 end)
 
--- KEY CHECK
 H.savedKey = H.loadKey()
-if H.savedKey and H.savedKey == H.CORRECT_KEY then
-    H.keyGui.Enabled = false
-    H.screenGui.Enabled = true
-    H.main.Visible = false
-    H.lockMouse()
-    task.wait(0.1)
-    H.State.Crosshair = true
-    H.drawCross()
+if H.savedKey and H.savedKey == H.CORRECT_KEY then H.keyGui.Enabled = false; H.screenGui.Enabled = true; H.main.Visible = false; H.lockMouse(); task.wait(0.1); H.State.Crosshair = true; H.drawCross()
 else
-    H.keyGui.Enabled = true
-    H.screenGui.Enabled = false
-    H.main.Visible = false
-    UserInputService.MouseIconEnabled = true
-    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-    H.cursorGui.Enabled = false
-    task.wait(0.1)
-    H.State.Crosshair = true
-    H.drawCross()
-
-    H.kBtn.MouseButton1Click:Connect(function()
-        local entered = H.kInput.Text:gsub("%s", "")
-        if entered == "" then
-            H.kStatus.Text = "Please enter a key"; H.kStatus.TextColor3 = H.THEME.Warning; return
-        end
-        if entered == H.CORRECT_KEY then
-            H.kStatus.Text = "✓ Access granted"; H.kStatus.TextColor3 = H.THEME.Success
-            H.saveKey(entered); task.wait(0.4)
-            H.keyGui.Enabled = false; H.screenGui.Enabled = true
-            H.showMain()
-        else
-            H.kStatus.Text = "✗ Invalid key"; H.kStatus.TextColor3 = H.THEME.Danger
-        end
-    end)
-
-    H.kInput.FocusLost:Connect(function(enterPressed)
-        if enterPressed then
-            local entered = H.kInput.Text:gsub("%s", "")
-            if entered == "" then
-                H.kStatus.Text = "Please enter a key"; H.kStatus.TextColor3 = H.THEME.Warning; return
-            end
-            if entered == H.CORRECT_KEY then
-                H.kStatus.Text = "✓ Access granted"; H.kStatus.TextColor3 = H.THEME.Success
-                H.saveKey(entered); task.wait(0.4)
-                H.keyGui.Enabled = false; H.screenGui.Enabled = true
-                H.showMain()
-            else
-                H.kStatus.Text = "✗ Invalid key"; H.kStatus.TextColor3 = H.THEME.Danger
-            end
-        end
-    end)
+    H.keyGui.Enabled = true; H.screenGui.Enabled = false; H.main.Visible = false; UserInputService.MouseIconEnabled = true; UserInputService.MouseBehavior = Enum.MouseBehavior.Default; H.cursorGui.Enabled = false; task.wait(0.1); H.State.Crosshair = true; H.drawCross()
+    H.kBtn.MouseButton1Click:Connect(function() local entered = H.kInput.Text:gsub("%s", ""); if entered == "" then H.kStatus.Text = "Please enter a key"; H.kStatus.TextColor3 = H.THEME.Warning; return end; if entered == H.CORRECT_KEY then H.kStatus.Text = "✓ Access granted"; H.kStatus.TextColor3 = H.THEME.Success; H.saveKey(entered); task.wait(0.4); H.keyGui.Enabled = false; H.screenGui.Enabled = true; H.showMain() else H.kStatus.Text = "✗ Invalid key"; H.kStatus.TextColor3 = H.THEME.Danger end end)
+    H.kInput.FocusLost:Connect(function(enterPressed) if enterPressed then local entered = H.kInput.Text:gsub("%s", ""); if entered == "" then H.kStatus.Text = "Please enter a key"; H.kStatus.TextColor3 = H.THEME.Warning; return end; if entered == H.CORRECT_KEY then H.kStatus.Text = "✓ Access granted"; H.kStatus.TextColor3 = H.THEME.Success; H.saveKey(entered); task.wait(0.4); H.keyGui.Enabled = false; H.screenGui.Enabled = true; H.showMain() else H.kStatus.Text = "✗ Invalid key"; H.kStatus.TextColor3 = H.THEME.Danger end end end)
 end
 
-H.updateCanvas()
-H.updateTabCanvas()
+H.updateCanvas(); H.updateTabCanvas()
 H.contentList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(H.updateCanvas)
 H.tabLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(H.updateTabCanvas)
 H.switchTab("Combat")
 
-print("[" .. H.HUB_NAME .. " " .. H.HUB_TAG .. "] v13 STEALTH Loaded. Key: LoneBetaKey")
+print("[" .. H.HUB_NAME .. " " .. H.HUB_TAG .. "] v17 STEALTH Loaded. Key: https://discord.gg/C5Z43gku8U")
